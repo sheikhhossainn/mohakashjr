@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "AGENT.md": {
-    "mtime": 1790095874.5808775,
-    "ast_hash": "e24c35fbf9daf2dd4ec48d5787feaecf",
+    "mtime": 1790096087.965722,
+    "ast_hash": "1dc8bec21e72b046bdac03686538d934",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
@@ -145,13 +145,13 @@
     "semantic_hash": ""
   },
   "implemented_features.md": {
-    "mtime": 1790095866.4319942,
-    "ast_hash": "1debab713766b467abeed963ef79449a",
+    "mtime": 1790096082.3107345,
+    "ast_hash": "a4ecf69a8fcd69eddf8c75ed45be202f",
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1790095879.104089,
-    "ast_hash": "2f8a2a8e4b3d309687bc7ba9e52e58bd",
+    "mtime": 1790096091.2887893,
+    "ast_hash": "5a2ca4e5ea12e7763e2dd8de352c07e4",
     "semantic_hash": ""
   },
   "TEAMCONTRIBUTION.md": {
@@ -170,8 +170,8 @@
     "semantic_hash": ""
   },
   "app/(tabs)/index.tsx": {
-    "mtime": 1790095794.9307368,
-    "ast_hash": "65533b532993d497744e4288b9d13338",
+    "mtime": 1790096470.5288475,
+    "ast_hash": "743c5ec13a4e2121c2b360d465a34fc5",
     "semantic_hash": ""
   },
   "app/(tabs)/lessons.tsx": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "HANDOFF.md": {
-    "mtime": 1790095887.5283966,
-    "ast_hash": "3f0377e4a9daac89b4e7c7b132d3ed3a",
+    "mtime": 1790096098.5859818,
+    "ast_hash": "232a35dbbf2db1fad9abe8d168867819",
     "semantic_hash": ""
   },
   "src/components/DoubleBezelCard.tsx": {

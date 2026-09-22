@@ -150,6 +150,7 @@
   "148": "muted",
   "149": "primary-foreground",
   "150": "ring",
+  "151": "muted",
   "152": "shadcn_add.py",
   "153": ".__init__",
   "154": "slides-create.md",
@@ -180,5 +181,6 @@
   "179": "[id].tsx",
   "180": "DoubleBezelCard.tsx",
   "181": "onboarding.tsx",
-  "182": "MascotFeedbackSlot.tsx"
+  "182": "MascotFeedbackSlot.tsx",
+  "183": "secondary-foreground"
 }

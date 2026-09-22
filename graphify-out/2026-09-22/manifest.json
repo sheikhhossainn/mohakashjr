@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "AGENT.md": {
-    "mtime": 1790095492.6594682,
-    "ast_hash": "f38d01757366afa06002866f3f84ed27",
+    "mtime": 1790095874.5808775,
+    "ast_hash": "e24c35fbf9daf2dd4ec48d5787feaecf",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
@@ -120,8 +120,8 @@
     "semantic_hash": ""
   },
   "CONTEXT.md": {
-    "mtime": 1790090578.450637,
-    "ast_hash": "93c0ed4b7793df4d335568b94e6c3372",
+    "mtime": 1790095896.0365074,
+    "ast_hash": "9c070d24b71bb12451fcfedc12178f13",
     "semantic_hash": ""
   },
   "IMPLEMENTATION_PLAN.md": {
@@ -145,13 +145,13 @@
     "semantic_hash": ""
   },
   "implemented_features.md": {
-    "mtime": 1790095466.5301375,
-    "ast_hash": "947c176242c3588d1b37102af273efe6",
+    "mtime": 1790095866.4319942,
+    "ast_hash": "1debab713766b467abeed963ef79449a",
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1790095478.9114783,
-    "ast_hash": "13075250d90c26fecd74d890e18ca2bc",
+    "mtime": 1790095879.104089,
+    "ast_hash": "2f8a2a8e4b3d309687bc7ba9e52e58bd",
     "semantic_hash": ""
   },
   "TEAMCONTRIBUTION.md": {
@@ -260,8 +260,8 @@
     "semantic_hash": ""
   },
   "src/state/useAppStore.ts": {
-    "mtime": 1790095731.5667017,
-    "ast_hash": "41b55cc5c84215566031fa836f369138",
+    "mtime": 1790096023.5795887,
+    "ast_hash": "c582826822c6db9d5c31e30cf6df0445",
     "semantic_hash": ""
   },
   "src/theme/colors.ts": {
@@ -275,8 +275,8 @@
     "semantic_hash": ""
   },
   "tests/appStore.test.ts": {
-    "mtime": 1790095819.8929987,
-    "ast_hash": "fb05c70698420c3dbaebf0c72748c6b9",
+    "mtime": 1790096050.5096838,
+    "ast_hash": "53c248109e5bb7cf21f30df1ce3a46c5",
     "semantic_hash": ""
   },
   "tsconfig.json": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "HANDOFF.md": {
-    "mtime": 1790095501.6442711,
-    "ast_hash": "7723082e1e725d6966ab8a2d93c0c316",
+    "mtime": 1790095887.5283966,
+    "ast_hash": "3f0377e4a9daac89b4e7c7b132d3ed3a",
     "semantic_hash": ""
   },
   "src/components/DoubleBezelCard.tsx": {
@@ -855,8 +855,8 @@
     "semantic_hash": ""
   },
   "app/onboarding.tsx": {
-    "mtime": 1790095776.3315258,
-    "ast_hash": "df1dda5d5e636bf8eeea9adaec2da53a",
+    "mtime": 1790096042.266523,
+    "ast_hash": "1bb0d0b11c0154539cbd2b644ebd2c14",
     "semantic_hash": ""
   },
   "app/splash.tsx": {

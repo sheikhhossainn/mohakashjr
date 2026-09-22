@@ -22,6 +22,9 @@ export default function TabsLayout() {
           fontSize: Typography.size.h3,
           color: Colors.text,
         },
+        // ← THE FIX: each tab screen painted solid white by default.
+        // sceneStyle (not contentStyle) is the correct prop for BottomTab navigator.
+        sceneStyle: { backgroundColor: 'transparent' },
         tabBarStyle: {
           backgroundColor: '#12173E',
           borderTopColor: 'rgba(255, 255, 255, 0.1)',

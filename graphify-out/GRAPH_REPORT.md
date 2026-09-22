@@ -1,16 +1,16 @@
 # Graph Report - mohakashjr  (2026-09-22)
 
 ## Corpus Check
-- 173 files · ~247,974 words
+- 173 files · ~249,356 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2453 nodes · 3193 edges · 182 communities (138 shown, 44 thin omitted)
+- 2454 nodes · 3200 edges · 184 communities (141 shown, 43 thin omitted)
 - Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 210 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `20f56a4d`
+- Built from commit: `7ff532fc`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -166,6 +166,7 @@
 - muted
 - primary-foreground
 - ring
+- muted
 - shadcn_add.py
 - .__init__
 - slides-create.md
@@ -197,6 +198,7 @@
 - DoubleBezelCard.tsx
 - onboarding.tsx
 - MascotFeedbackSlot.tsx
+- secondary-foreground
 
 ## God Nodes (most connected - your core abstractions)
 1. `TailwindConfigGenerator` - 57 edges
@@ -211,21 +213,21 @@
 10. `detect_domain()` - 17 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `RootLayout()` --calls--> `useAppStore`  [EXTRACTED]
-  app/_layout.tsx → src/state/useAppStore.ts
 - `DashboardScreen()` --calls--> `useAppStore`  [EXTRACTED]
   app/(tabs)/index.tsx → src/state/useAppStore.ts
 - `LessonsScreen()` --calls--> `useAppStore`  [EXTRACTED]
   app/(tabs)/lessons.tsx → src/state/useAppStore.ts
 - `ProfileScreen()` --calls--> `useAppStore`  [EXTRACTED]
   app/(tabs)/profile.tsx → src/state/useAppStore.ts
+- `RootLayout()` --calls--> `useAppStore`  [EXTRACTED]
+  app/_layout.tsx → src/state/useAppStore.ts
 - `LessonReaderScreen()` --calls--> `useAppStore`  [EXTRACTED]
   app/lessons/[id].tsx → src/state/useAppStore.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (182 total, 44 thin omitted)
+## Communities (184 total, 43 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -240,8 +242,8 @@ Cohesion: 0.07
 Nodes (46): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons, TestCurrentReactGuidance, TestSemanticColors, _catalog_date(), _check_app_interface_contract(), _check_catalog_contract() (+38 more)
 
 ### Community 3 - "/graphify"
-Cohesion: 0.19
-Nodes (14): LessonReaderScreen(), styles, QuizHubScreen(), styles, LessonsScreen(), styles, DoubleBezelCard(), DoubleBezelCardProps (+6 more)
+Cohesion: 0.17
+Nodes (11): QuizHubScreen(), styles, DashboardScreen(), LessonsScreen(), styles, MissionScreen(), styles, DoubleBezelCard() (+3 more)
 
 ### Community 4 - "Implementation Plan — Mohakash Jr (initial scaffold → MVP)"
 Cohesion: 0.20
@@ -329,7 +331,7 @@ Nodes (53): $type, $value, $type, $value, $type, $value, $type, $value (+45 more
 
 ### Community 37 - "HANDOFF — 2026-09-22 21:23"
 Cohesion: 0.33
-Nodes (5): Active blockers, Current task status, HANDOFF — 2026-09-22 22:52, Immediate next steps, Just completed
+Nodes (5): Active blockers, Current task status, HANDOFF — 2026-09-22 22:55, Immediate next steps, Just completed
 
 ### Community 38 - "BM25"
 Cohesion: 0.06
@@ -493,7 +495,7 @@ Nodes (18): 1. Wordmark (Logotype), 2. Lettermark (Monogram), 3. Pictorial Mark 
 
 ### Community 78 - "color"
 Cohesion: 0.11
-Nodes (19): $type, $value, background, destructive-foreground, muted, primary-foreground, secondary, secondary-foreground (+11 more)
+Nodes (19): $type, $value, background, foreground, muted-foreground, primary, primary-hover, secondary (+11 more)
 
 ### Community 79 - "main"
 Cohesion: 0.13
@@ -604,8 +606,8 @@ Cohesion: 0.22
 Nodes (7): main(), Add all available shadcn/ui components.          Args:             overwrite: If, List installed components.          Returns:             Tuple of (success, mess, Check if shadcn is initialized in project.          Returns:             True if, Get list of already installed components.          Returns:             List of, Read shadcn version from project package.json; fall back to a pinned default., Add shadcn/ui components.          Args:             components: List of compone
 
 ### Community 107 - "card"
-Cohesion: 0.15
-Nodes (17): $type, $value, $type, $value, bg, bg, border, padding (+9 more)
+Cohesion: 0.20
+Nodes (12): $type, $value, bg, bg, padding, shadow, card, bg (+4 more)
 
 ### Community 108 - "ShadcnInstaller"
 Cohesion: 0.17
@@ -673,7 +675,7 @@ Nodes (8): padding-x, input, $type, $value, focus-ring, padding-x, $type, $value
 
 ### Community 125 - "radius"
 Cohesion: 0.29
-Nodes (8): xl, $type, $value, radius, full, xl, $type, $value
+Nodes (8): $type, $value, $type, $value, radius, full, md, md
 
 ### Community 126 - "._generate_javascript"
 Cohesion: 0.20
@@ -728,12 +730,12 @@ Cohesion: 0.67
 Nodes (4): $type, $value, default, default
 
 ### Community 141 - "xl"
-Cohesion: 0.67
-Nodes (3): foreground, $type, $value
+Cohesion: 0.27
+Nodes (9): LessonReaderScreen(), styles, MOCK_LESSONS, Lesson, LessonContentBlock, SpaceRank, UserProfile, getLessonById() (+1 more)
 
 ### Community 142 - "md"
-Cohesion: 0.67
-Nodes (4): $type, $value, md, md
+Cohesion: 0.40
+Nodes (5): AstronautAvatar(), AstronautAvatarProps, styles, RankTier, LevelUpEvent
 
 ### Community 143 - "none"
 Cohesion: 0.67
@@ -744,45 +746,57 @@ Cohesion: 0.67
 Nodes (3): destructive, $type, $value
 
 ### Community 147 - "destructive-foreground"
-Cohesion: 0.67
-Nodes (3): muted-foreground, $type, $value
+Cohesion: 0.60
+Nodes (5): $type, $value, border, border, border
 
 ### Community 148 - "muted"
 Cohesion: 0.67
-Nodes (3): primary, $type, $value
+Nodes (4): xl, xl, $type, $value
 
 ### Community 149 - "primary-foreground"
 Cohesion: 0.67
-Nodes (3): primary-hover, $type, $value
+Nodes (3): destructive-foreground, $type, $value
 
 ### Community 150 - "ring"
 Cohesion: 0.67
 Nodes (3): ring, $type, $value
 
+### Community 151 - "muted"
+Cohesion: 0.67
+Nodes (3): muted, $type, $value
+
 ### Community 177 - "useAppStore"
 Cohesion: 0.15
-Nodes (18): SplashScreen(), styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }, DashboardScreen(), styles, styles, ProfileScreen(), styles (+10 more)
+Nodes (18): RootLayout(), styles, SplashScreen(), styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }, styles, ProfileScreen(), styles (+10 more)
 
 ### Community 178 - "colors.ts"
-Cohesion: 0.13
-Nodes (17): RootLayout(), styles, AstronautAvatar(), styles, CONFETTI_COLORS, ConfettiEffect(), ConfettiPiece, styles (+9 more)
+Cohesion: 0.33
+Nodes (5): CLUSTER_A, CLUSTER_B, CosmicBackground(), styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }
 
 ### Community 179 - "[id].tsx"
-Cohesion: 0.16
-Nodes (17): BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), AstronautAvatarProps, MOCK_QUIZZES, LessonContentBlock (+9 more)
+Cohesion: 0.14
+Nodes (16): BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), CONFETTI_COLORS, ConfettiEffect(), ConfettiPiece (+8 more)
+
+### Community 180 - "DoubleBezelCard.tsx"
+Cohesion: 0.67
+Nodes (3): primary-foreground, $type, $value
 
 ### Community 181 - "onboarding.tsx"
 Cohesion: 0.20
 Nodes (14): OnboardingScreen(), PsychometricOption, PsychometricQuestion, QUESTIONS, styles, SpaceChoiceBadge(), SpaceChoiceBadgeProps, styles (+6 more)
 
 ### Community 182 - "MascotFeedbackSlot.tsx"
-Cohesion: 0.29
-Nodes (6): AnimatedMascot(), AnimatedMascotProps, styles, MascotFeedbackSlot(), MascotFeedbackSlotProps, styles
+Cohesion: 0.21
+Nodes (11): COSMIC_FACTS, styles, AnimatedMascot(), AnimatedMascotProps, styles, MascotFeedbackSlot(), MascotFeedbackSlotProps, styles (+3 more)
+
+### Community 183 - "secondary-foreground"
+Cohesion: 0.67
+Nodes (3): secondary-foreground, $type, $value
 
 ## Knowledge Gaps
-- **1078 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1073 more)
+- **1079 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1074 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **44 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **43 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
