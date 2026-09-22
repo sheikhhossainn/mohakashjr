@@ -30,4 +30,4 @@
 - `HANDOFF.md` — current session state (created/updated as work progresses)
 - `implemented_features.md` — running log of what's been built and how
 
-**Status:** Pre-build — this repo is being scaffolded. Update this section as work starts.
+**Status:** Active Sprint — App shell, Expo Router navigation, Lesson Reader, Quiz Engine, XP/Level-up state, Earth-to-Mars Splash, and Kid-Centric Space Passions Assessment with Custom Vector Badges built on `feature/shahi-app-shell`. Ready for mascot animations (Mahim) and font/device testing (Jim).

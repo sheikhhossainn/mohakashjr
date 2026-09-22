@@ -1,0 +1,271 @@
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { Colors } from '../../src/theme/colors';
+import { Typography } from '../../src/theme/typography';
+import { DoubleBezelCard } from '../../src/components/DoubleBezelCard';
+import { Rocket, MapPin, PackageCheck, Award, AlertCircle, Compass, Radio } from 'lucide-react-native';
+
+export default function MissionScreen() {
+  return (
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+    >
+      {/* Hero Mission Control Briefing Card */}
+      <DoubleBezelCard
+        glow="cyan"
+        tag="চন্দ্রাভিযান কন্ট্রোল 🚀"
+        style={styles.heroMargin}
+      >
+        <View style={styles.tagRow}>
+          <View style={styles.missionTag}>
+            <Rocket size={13} color={Colors.hudCyan} />
+            <Text style={styles.missionTagText}>আর্টেমিস অভিযান ১</Text>
+          </View>
+          <View style={styles.statusLiveBadge}>
+            <View style={styles.liveDot} />
+            <Text style={styles.statusLiveText}>সিমুলেশন প্রস্তুত</Text>
+          </View>
+        </View>
+
+        <Text style={styles.heroTitle}>চন্দ্রপৃষ্ঠে অবতরণ মিশন 🌕</Text>
+        <Text style={styles.heroDescription}>
+          একজন জুনিয়র মিশন কমান্ডার হিসেবে তোমার মহাকাশযান নিরাপদে চাঁদের মাটিতে অবতরণ করানো এবং সীমিত ওজনের মধ্যে বৈজ্ঞানিক সরঞ্জাম সাজিয়ে চাঁদের ঘাঁটিতে টিকে থাকাই তোমার মূল অভিযান!
+        </Text>
+      </DoubleBezelCard>
+
+      {/* 3-Stage Mission Roadmap */}
+      <View style={styles.sectionHeaderRow}>
+        <Text style={styles.sectionHeading}>মিশনের কার্যনির্বাহী ধাপসমূহ</Text>
+        <Text style={styles.sectionCode}>অভিযান পরিকল্পনা</Text>
+      </View>
+
+      {/* Stage 1 */}
+      <DoubleBezelCard
+        glow="gold"
+        tag="ধাপ ১: অবতরণ স্থান 📍"
+        style={styles.stageMargin}
+      >
+        <View style={styles.stageContentRow}>
+          <View style={[styles.stageIconBox, { backgroundColor: Colors.thermalGoldBg }]}>
+            <MapPin size={22} color={Colors.thermalGold} />
+          </View>
+          <View style={styles.stageDetails}>
+            <View style={styles.stageNumberRow}>
+              <Text style={styles.stageNumber}>ধাপ ০১</Text>
+              <Text style={styles.telemetryTag}>টেলিমেট্রি স্ক্যান</Text>
+            </View>
+            <Text style={styles.stageTitle}>অবতরণ অঞ্চল নির্বাচন (Site Selection)</Text>
+            <Text style={styles.stageDesc}>
+              শ্যাকলটন গহ্বর (বরফ বেশি, কিন্তু গভীর অন্ধকার), শান্ত সাগর (নিরাপদ সমতল) কিংবা ঝড়ো মহাসাগর—ঝুঁকি ও পুরষ্কার বিবেচনা করে অবতরণ অঞ্চল নির্ধারণ করো।
+            </Text>
+          </View>
+        </View>
+      </DoubleBezelCard>
+
+      {/* Stage 2 */}
+      <DoubleBezelCard
+        glow="cyan"
+        tag="ধাপ ২: সরঞ্জাম ব্যালেন্স 📦"
+        style={styles.stageMargin}
+      >
+        <View style={styles.stageContentRow}>
+          <View style={[styles.stageIconBox, { backgroundColor: Colors.hudCyanBg }]}>
+            <PackageCheck size={22} color={Colors.hudCyan} />
+          </View>
+          <View style={styles.stageDetails}>
+            <View style={styles.stageNumberRow}>
+              <Text style={styles.stageNumber}>ধাপ ০২</Text>
+              <Text style={styles.telemetryTag}>ওজন ভারসাম্য</Text>
+            </View>
+            <Text style={styles.stageTitle}>কার্গো প্যাকিং ও সরঞ্জাম ভারসাম্য</Text>
+            <Text style={styles.stageDesc}>
+              সর্বোচ্চ ৫০০ কেজি ওজন সীমার মধ্যে অক্সিজেন সিলিন্ডার, সোলার প্যানেল এবং বরফ উত্তোলক ড্রিল ব্যালেন্স করে ল্যান্ডারে সাজাও।
+            </Text>
+          </View>
+        </View>
+      </DoubleBezelCard>
+
+      {/* Stage 3 */}
+      <DoubleBezelCard
+        glow="emerald"
+        tag="ধাপ ৩: মিশন ডিব্রিফ 🏆"
+        style={styles.stageMargin}
+      >
+        <View style={styles.stageContentRow}>
+          <View style={[styles.stageIconBox, { backgroundColor: Colors.telemetryGreenBg }]}>
+            <Award size={22} color={Colors.telemetryGreen} />
+          </View>
+          <View style={styles.stageDetails}>
+            <View style={styles.stageNumberRow}>
+              <Text style={styles.stageNumber}>ধাপ ০৩</Text>
+              <Text style={styles.telemetryTag}>ফলাফল রিপোর্ট</Text>
+            </View>
+            <Text style={styles.stageTitle}>মিশন ডিব্রিফ ও এক্সপি অর্জন</Text>
+            <Text style={styles.stageDesc}>
+              মিশন কন্ট্রোল কম্পিউটার তোমার ওজন ভারসাম্য বিশ্লেষণ করে বেঁচে থাকার সম্ভাবনা গণনা করবে এবং সফল অবতরণে +১০০ XP প্রদান করবে!
+            </Text>
+          </View>
+        </View>
+      </DoubleBezelCard>
+
+      {/* Teammate Integration Notice */}
+      <View style={styles.integrationNotice}>
+        <Radio size={18} color={Colors.plasmaViolet} />
+        <Text style={styles.integrationNoticeText}>
+          মাহিমের ইন্টারেক্টিভ মুন ল্যান্ডিং গেম ও মাসকট অ্যানিমেশন ইঞ্জিন এই স্ক্রিনের সাথে সরাসরি সংযুক্ত হতে প্রস্তুত।
+        </Text>
+      </View>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  content: {
+    padding: 16,
+    paddingBottom: 40,
+  },
+  heroMargin: {
+    marginBottom: 16,
+  },
+  tagRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  missionTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.hudCyanBg,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    gap: 6,
+  },
+  missionTagText: {
+    color: Colors.hudCyan,
+    fontSize: Typography.size.micro,
+    fontFamily: Typography.fontSans,
+    fontWeight: Typography.weight.bold,
+  },
+  statusLiveBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.telemetryGreenBg,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    gap: 5,
+  },
+  liveDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: Colors.telemetryGreen,
+  },
+  statusLiveText: {
+    color: Colors.telemetryGreen,
+    fontSize: Typography.size.micro,
+    fontFamily: Typography.fontSans,
+    fontWeight: Typography.weight.bold,
+  },
+  heroTitle: {
+    color: Colors.text,
+    fontSize: Typography.size.h1,
+    fontWeight: Typography.weight.heavy,
+    marginBottom: 8,
+  },
+  heroDescription: {
+    color: Colors.textSecondary,
+    fontSize: Typography.size.bodySmall,
+    lineHeight: Typography.lineHeight.bodySmall,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  sectionHeading: {
+    color: Colors.text,
+    fontSize: Typography.size.h3,
+    fontWeight: Typography.weight.bold,
+  },
+  sectionCode: {
+    color: Colors.hudCyan,
+    fontSize: 11,
+    fontFamily: Typography.fontSans,
+    letterSpacing: 0.5,
+  },
+  stageMargin: {
+    marginBottom: 12,
+  },
+  stageContentRow: {
+    flexDirection: 'row',
+    gap: 14,
+  },
+  stageIconBox: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  stageDetails: {
+    flex: 1,
+  },
+  stageNumberRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 2,
+  },
+  stageNumber: {
+    color: Colors.hudCyan,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.fontSans,
+    fontWeight: Typography.weight.heavy,
+  },
+  telemetryTag: {
+    color: Colors.textMuted,
+    fontSize: Typography.size.micro,
+    fontFamily: Typography.fontSans,
+    fontWeight: Typography.weight.semiBold,
+  },
+  stageTitle: {
+    color: Colors.text,
+    fontSize: Typography.size.body,
+    fontWeight: Typography.weight.bold,
+    marginBottom: 4,
+  },
+  stageDesc: {
+    color: Colors.textSecondary,
+    fontSize: Typography.size.bodySmall,
+    lineHeight: Typography.lineHeight.bodySmall,
+  },
+  integrationNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(138, 43, 226, 0.14)',
+    borderRadius: 14,
+    padding: 14,
+    marginTop: 8,
+    gap: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(138, 43, 226, 0.35)',
+  },
+  integrationNoticeText: {
+    flex: 1,
+    color: Colors.textSecondary,
+    fontSize: Typography.size.caption,
+    lineHeight: Typography.lineHeight.caption,
+  },
+});

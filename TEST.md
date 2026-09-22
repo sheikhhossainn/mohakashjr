@@ -3,11 +3,13 @@
 Guidelines for running and writing tests for Mohakash Jr.
 
 ## Running Tests
-*(To be populated once test framework is initialized in Phase 0)*
 
 ```bash
-# Unit & integration tests
-# npm test
+# Unit tests (Zustand state store, rank progression, and decoupled services)
+npm test
+
+# TypeScript typechecking
+npm run lint
 ```
 
 ## Testing Checklist

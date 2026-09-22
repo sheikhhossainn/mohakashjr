@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Mohakash Jr",
+    "slug": "mohakashjr",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "mohakashjr",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0B0F19"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-asset",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
