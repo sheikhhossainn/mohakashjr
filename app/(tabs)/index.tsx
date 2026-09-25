@@ -80,10 +80,10 @@ export default function DashboardScreen() {
   // Archetype affinity check
   const isAffinityLesson =
     nextLesson &&
-    ((cadetArchetype === 'pilot' && ['lesson-1', 'lesson-3'].includes(nextLesson.id)) ||
-      (cadetArchetype === 'astronomer' && ['lesson-2', 'lesson-6'].includes(nextLesson.id)) ||
-      (cadetArchetype === 'engineer' && ['lesson-3', 'lesson-5'].includes(nextLesson.id)) ||
-      (cadetArchetype === 'explorer' && ['lesson-1', 'lesson-4'].includes(nextLesson.id)));
+    ((cadetArchetype === 'pilot' && ['lesson-1', 'lesson-3', 'lesson-7'].includes(nextLesson.id)) ||
+      (cadetArchetype === 'astronomer' && ['lesson-2', 'lesson-6', 'lesson-8'].includes(nextLesson.id)) ||
+      (cadetArchetype === 'engineer' && ['lesson-3', 'lesson-5', 'lesson-6'].includes(nextLesson.id)) ||
+      (cadetArchetype === 'explorer' && ['lesson-1', 'lesson-4', 'lesson-7'].includes(nextLesson.id)));
 
   // Quest progress
   const totalQuizzes = Object.values(quizAttempts).reduce((a, b) => a + b.length, 0);

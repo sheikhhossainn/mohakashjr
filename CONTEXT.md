@@ -30,4 +30,5 @@
 - `HANDOFF.md` — current session state (created/updated as work progresses)
 - `implemented_features.md` — running log of what's been built and how
 
-**Status:** Active Sprint — App shell, Expo Router navigation, Lesson Reader, Quiz Engine, XP/Level-up state, Earth-to-Mars Splash, and Kid-Centric Space Passions Assessment with Custom Vector Badges built on `feature/shahi-app-shell`. Ready for mascot animations (Mahim) and font/device testing (Jim).
+**Status:** Active Sprint — Full 8-lesson NASA curriculum (4 Cadet + 4 Astronaut), 24 per-lesson quizzes, 5-question placement challenge, 30 offline Q&As in `offline_tutor.json` with keyword matching engine, AI Tutor "Captain Rover" prompt, and packaged `seed.json` delivered on `feature/humaira-content-pipeline`. Ready for Mahi's SQLite database seeder, Shahi's curriculum rendering, and Jim's offline/online AI chat integration.
+

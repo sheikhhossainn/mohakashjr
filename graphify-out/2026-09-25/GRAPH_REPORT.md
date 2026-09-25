@@ -1,16 +1,16 @@
-# Graph Report - mohakashjr  (2026-09-25)
+# Graph Report - mohakashjr  (2026-09-22)
 
 ## Corpus Check
-- 180 files · ~267,027 words
+- 173 files · ~249,356 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2510 nodes · 3297 edges · 194 communities (142 shown, 52 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 210 edges (avg confidence: 0.75)
+- 2454 nodes · 3200 edges · 184 communities (141 shown, 43 thin omitted)
+- Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 210 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bf7f7a58`
+- Built from commit: `7ff532fc`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -199,16 +199,6 @@
 - onboarding.tsx
 - MascotFeedbackSlot.tsx
 - secondary-foreground
-- md
-- expo
-- expo-constants
-- expo-font
-- expo-status-bar
-- lucide-react-native
-- react
-- react-dom
-- react-native
-- react-native-svg
 
 ## God Nodes (most connected - your core abstractions)
 1. `TailwindConfigGenerator` - 57 edges
@@ -223,21 +213,21 @@
 10. `detect_domain()` - 17 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `RootLayout()` --calls--> `useAppStore`  [EXTRACTED]
-  app/_layout.tsx → src/state/useAppStore.ts
+- `DashboardScreen()` --calls--> `useAppStore`  [EXTRACTED]
+  app/(tabs)/index.tsx → src/state/useAppStore.ts
+- `LessonsScreen()` --calls--> `useAppStore`  [EXTRACTED]
+  app/(tabs)/lessons.tsx → src/state/useAppStore.ts
 - `ProfileScreen()` --calls--> `useAppStore`  [EXTRACTED]
   app/(tabs)/profile.tsx → src/state/useAppStore.ts
+- `RootLayout()` --calls--> `useAppStore`  [EXTRACTED]
+  app/_layout.tsx → src/state/useAppStore.ts
 - `LessonReaderScreen()` --calls--> `useAppStore`  [EXTRACTED]
   app/lessons/[id].tsx → src/state/useAppStore.ts
-- `PsychometricOption` --references--> `CadetArchetype`  [EXTRACTED]
-  app/onboarding.tsx → src/state/useAppStore.ts
-- `OnboardingScreen()` --calls--> `useAppStore`  [EXTRACTED]
-  app/onboarding.tsx → src/state/useAppStore.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (194 total, 52 thin omitted)
+## Communities (184 total, 43 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -252,8 +242,8 @@ Cohesion: 0.07
 Nodes (46): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons, TestCurrentReactGuidance, TestSemanticColors, _catalog_date(), _check_app_interface_contract(), _check_catalog_contract() (+38 more)
 
 ### Community 3 - "/graphify"
-Cohesion: 0.21
-Nodes (8): LessonReaderScreen(), styles, MissionScreen(), styles, DoubleBezelCard(), DoubleBezelCardProps, styles, getLessonById()
+Cohesion: 0.17
+Nodes (11): QuizHubScreen(), styles, DashboardScreen(), LessonsScreen(), styles, MissionScreen(), styles, DoubleBezelCard() (+3 more)
 
 ### Community 4 - "Implementation Plan — Mohakash Jr (initial scaffold → MVP)"
 Cohesion: 0.20
@@ -324,16 +314,16 @@ Cohesion: 0.09
 Nodes (21): 1. Quick Start & Git Workflow (For Every Teammate & Agent), 2. Team Task Allocation & Dependency Matrix, 3. Step-by-Step "How-To" Instructions per Role, 4. Key Milestones Timeline, Guide for Humaira (Bangla Content & AI Knowledge), Guide for Jim (Typography, Design, Chat UI & QA), Guide for Mahi (Database & Cloudflare Proxy), Guide for Mahim (Mascot Motion & Moon Mission) (+13 more)
 
 ### Community 33 - "dependencies"
-Cohesion: 0.17
-Nodes (11): main, name, private, scripts, android, ios, lint, start (+3 more)
+Cohesion: 0.06
+Nodes (32): dependencies, expo, expo-asset, expo-constants, expo-font, expo-linking, expo-router, expo-status-bar (+24 more)
 
 ### Community 34 - "expo"
-Cohesion: 0.09
-Nodes (21): backgroundColor, adaptiveIcon, reactCompiler, typedRoutes, expo, android, experiments, ios (+13 more)
+Cohesion: 0.10
+Nodes (19): backgroundColor, adaptiveIcon, reactCompiler, typedRoutes, expo, android, experiments, ios (+11 more)
 
 ### Community 35 - "tsconfig.json"
-Cohesion: 0.13
-Nodes (14): expo-env.d.ts, expo/tsconfig.base, .expo/types/**/*.ts, node, ./src/*, **/*.ts, **/*.tsx, compilerOptions (+6 more)
+Cohesion: 0.25
+Nodes (7): compilerOptions, paths, strict, types, extends, include, @/*
 
 ### Community 36 - "babel.config.js"
 Cohesion: 0.05
@@ -413,7 +403,7 @@ Nodes (15): Test adding colors multiple times., Test adding full color palette.,
 
 ### Community 55 - "_select_palette_for_mode"
 Cohesion: 0.10
-Nodes (14): _contrast_ratio(), _derive_dark_palette(), _palette_is_dark(), WCAG relative luminance of a #RRGGBB string, or None if unparseable., True when a colors.csv row's Background is a dark surface., WCAG contrast ratio for two hex colors, or None if either is invalid., Keep product brand tokens while deriving accessible dark surfaces., Pick the highest-ranked palette matching the resolved mode.      Only the dark (+6 more)
+Nodes (14): _contrast_ratio(), _derive_dark_palette(), _palette_is_dark(), WCAG relative luminance of a #RRGGBB string, or None if unparseable., True when a colors.csv row's Background is a dark surface., WCAG contrast ratio for two hex colors, or None if either is invalid., Keep product brand tokens while deriving accessible dark surfaces., Pick the highest-ranked palette matching the resolved mode.      Only the dark c (+6 more)
 
 ### Community 56 - "html-token-validator.py"
 Cohesion: 0.14
@@ -508,8 +498,8 @@ Cohesion: 0.11
 Nodes (19): $type, $value, background, foreground, muted-foreground, primary, primary-hover, secondary (+11 more)
 
 ### Community 79 - "main"
-Cohesion: 0.11
-Nodes (10): main(), Add custom font families.          Args:             fonts: Dict of font_type, Add custom spacing values.          Args:             spacing: Dict of name:, Add custom breakpoints.          Args:             breakpoints: Dict of name:, Add plugin requirements.          Args:             plugins: List of plugin n, Get plugin recommendations based on configuration.          Returns:, Generate configuration file content.          Returns:             Configurat, Write configuration to file.          Returns:             Tuple of (success, (+2 more)
+Cohesion: 0.13
+Nodes (8): main(), Add custom font families.          Args:             fonts: Dict of font_type: [, Add custom spacing values.          Args:             spacing: Dict of name: val, Add custom breakpoints.          Args:             breakpoints: Dict of name: wi, Add plugin requirements.          Args:             plugins: List of plugin name, Get plugin recommendations based on configuration.          Returns:, Validate configuration.          Returns:             Tuple of (valid, message), Add custom colors to theme.          Args:             colors: Dict of color_nam
 
 ### Community 80 - "Brand Consistency Checklist"
 Cohesion: 0.11
@@ -569,11 +559,11 @@ Nodes (7): BM25, BM25 ranking algorithm for text search, Lowercase, normalize sy
 
 ### Community 95 - "detect_domain"
 Cohesion: 0.23
-Nodes (3): detect_domain(), Auto-detect the most relevant domain from query.      Matches are weighted by, TestDomainDetection
+Nodes (3): detect_domain(), Auto-detect the most relevant domain from query.      Matches are weighted by ke, TestDomainDetection
 
 ### Community 96 - ".generate"
 Cohesion: 0.14
-Nodes (8): Execute searches across multiple domains., Find matching reasoning rule for a category., Apply reasoning rules to search results., Select best matching result based on priority keywords., Extract results list from search result dict., Generate complete design system recommendation.          variance/motion/densi, Bucket a 1-10 dial value into its tier config. Returns None if value is None., _resolve_dial()
+Nodes (8): Execute searches across multiple domains., Find matching reasoning rule for a category., Apply reasoning rules to search results., Select best matching result based on priority keywords., Extract results list from search result dict., Generate complete design system recommendation.          variance/motion/density, Bucket a 1-10 dial value into its tier config. Returns None if value is None., _resolve_dial()
 
 ### Community 97 - "Banner Design - Multi-Format Creative Banner System"
 Cohesion: 0.14
@@ -613,7 +603,7 @@ Nodes (12): component, $type, $value, dark, semantic, $schema, $type, $value (+4
 
 ### Community 106 - ".add_components"
 Cohesion: 0.22
-Nodes (7): main(), Add all available shadcn/ui components.          Args:             overwrite:, List installed components.          Returns:             Tuple of (success, m, Check if shadcn is initialized in project.          Returns:             True, Get list of already installed components.          Returns:             List, Read shadcn version from project package.json; fall back to a pinned default., Add shadcn/ui components.          Args:             components: List of comp
+Nodes (7): main(), Add all available shadcn/ui components.          Args:             overwrite: If, List installed components.          Returns:             Tuple of (success, mess, Check if shadcn is initialized in project.          Returns:             True if, Get list of already installed components.          Returns:             List of, Read shadcn version from project package.json; fall back to a pinned default., Add shadcn/ui components.          Args:             components: List of compone
 
 ### Community 107 - "card"
 Cohesion: 0.20
@@ -641,7 +631,7 @@ Nodes (11): fast, normal, slow, $type, $value, $type, $value, primitive (+3 more
 
 ### Community 113 - "test_tailwind_config_gen.py"
 Cohesion: 0.20
-Nodes (7): Tests for tailwind_config_gen.py, Reduce a generated TS/JS config to a bare assignable object so it can be     ha, Regression guard for the missing-comma bug between the ``theme`` block and, The property preceding ``plugins`` must end with a comma (pure-Python         c, The emitted config parses as valid JS via ``node --check``., _strip_to_object(), TestGeneratedConfigIsValidJs
+Nodes (7): Tests for tailwind_config_gen.py, Reduce a generated TS/JS config to a bare assignable object so it can be     han, Regression guard for the missing-comma bug between the ``theme`` block and     `, The property preceding ``plugins`` must end with a comma (pure-Python         ch, The emitted config parses as valid JS via ``node --check``., _strip_to_object(), TestGeneratedConfigIsValidJs
 
 ### Community 115 - "Brand"
 Cohesion: 0.20
@@ -653,7 +643,7 @@ Nodes (9): Common Structures, Duarte Sparkline Pattern, Matching Strategy to Con
 
 ### Community 117 - "generate.py"
 Cohesion: 0.29
-Nodes (9): enhance_prompt(), generate_batch(), generate_logo(), load_env(), main(), Enhance the logo prompt with style and industry modifiers, Generate a logo using Gemini models with image generation      Args:, Generate multiple logo variants with different styles (+1 more)
+Nodes (9): enhance_prompt(), generate_batch(), generate_logo(), load_env(), main(), Enhance the logo prompt with style and industry modifiers, Generate a logo using Gemini models with image generation      Args:         asp, Generate multiple logo variants with different styles (+1 more)
 
 ### Community 118 - "button"
 Cohesion: 0.20
@@ -665,7 +655,7 @@ Nodes (9): Common Structures, Duarte Sparkline Pattern, Matching Strategy to Con
 
 ### Community 120 - "._base_config"
 Cohesion: 0.22
-Nodes (6): Path, Initialize generator.          Args:             typescript: If True, generat, Determine default output path., Create base configuration structure., Get default content paths for framework., Any
+Nodes (6): Path, Initialize generator.          Args:             typescript: If True, generate ., Determine default output path., Create base configuration structure., Get default content paths for framework., Any
 
 ### Community 121 - "parse_decision_rules"
 Cohesion: 0.27
@@ -673,7 +663,7 @@ Nodes (6): apply_decision_rules(), _object_without_duplicates(), parse_decision_
 
 ### Community 122 - "_run"
 Cohesion: 0.28
-Nodes (8): Path, Regression tests for validate-tokens.cjs.  The validator used to skip any line, A hardcoded hex on the same line as a var() token is still a violation., A line that references only tokens produces no false positives., _run(), test_flags_hardcoded_hex_sharing_line_with_token(), test_token_only_line_reports_no_violation(), CompletedProcess
+Nodes (8): Path, Regression tests for validate-tokens.cjs.  The validator used to skip any line c, A hardcoded hex on the same line as a var() token is still a violation., A line that references only tokens produces no false positives., _run(), test_flags_hardcoded_hex_sharing_line_with_token(), test_token_only_line_reports_no_violation(), CompletedProcess
 
 ### Community 123 - "_normalize"
 Cohesion: 0.25
@@ -685,11 +675,11 @@ Nodes (8): padding-x, input, $type, $value, focus-ring, padding-x, $type, $value
 
 ### Community 125 - "radius"
 Cohesion: 0.29
-Nodes (8): $type, $value, $type, $value, radius, default, full, default
+Nodes (8): $type, $value, $type, $value, radius, full, md, md
 
 ### Community 126 - "._generate_javascript"
-Cohesion: 0.29
-Nodes (4): Generate TypeScript configuration., Generate JavaScript configuration., Format plugins array for config.          Validates each plugin name against a, Add indentation to JSON string.
+Cohesion: 0.20
+Nodes (6): Generate configuration file content.          Returns:             Configuration, Generate TypeScript configuration., Generate JavaScript configuration., Format plugins array for config.          Validates each plugin name against a s, Add indentation to JSON string., Write configuration to file.          Returns:             Tuple of (success, me
 
 ### Community 128 - "Slides Reference"
 Cohesion: 0.29
@@ -736,16 +726,16 @@ Cohesion: 0.60
 Nodes (5): lg, $type, $value, lg, lg
 
 ### Community 140 - "padding-y"
-Cohesion: 0.15
-Nodes (13): expo-asset, expo-linking, expo-router, dependencies, expo-asset, expo-linking, expo-router, react-native-safe-area-context (+5 more)
+Cohesion: 0.67
+Nodes (4): $type, $value, default, default
 
 ### Community 141 - "xl"
-Cohesion: 0.12
-Nodes (25): styles, lessonQuizzes, outputPath, seedData, AI_TUTOR_CONFIG, ASTRONAUT_MENTOR_SYSTEM_PROMPT, MOCK_LESSONS, MOCK_QUIZZES (+17 more)
+Cohesion: 0.27
+Nodes (9): LessonReaderScreen(), styles, MOCK_LESSONS, Lesson, LessonContentBlock, SpaceRank, UserProfile, getLessonById() (+1 more)
 
 ### Community 142 - "md"
-Cohesion: 0.22
-Nodes (9): devDependencies, tsx, @types/node, @types/react, typescript, tsx, @types/node, @types/react (+1 more)
+Cohesion: 0.40
+Nodes (5): AstronautAvatar(), AstronautAvatarProps, styles, RankTier, LevelUpEvent
 
 ### Community 143 - "none"
 Cohesion: 0.67
@@ -776,16 +766,16 @@ Cohesion: 0.67
 Nodes (3): muted, $type, $value
 
 ### Community 177 - "useAppStore"
-Cohesion: 0.12
-Nodes (24): QuizHubScreen(), styles, SplashScreen(), styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }, COSMIC_FACTS, DashboardScreen(), GLOW_SHADOW (+16 more)
+Cohesion: 0.15
+Nodes (18): RootLayout(), styles, SplashScreen(), styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }, styles, ProfileScreen(), styles (+10 more)
 
 ### Community 178 - "colors.ts"
 Cohesion: 0.33
-Nodes (5): 1. Persona Overview, 2. Core Pedagogical Rules, 3. System Prompt (Ready for API Injection), 4. Example In-Flight Interaction, AI Tutor System Prompt & Persona Specification — Mohakash Jr
+Nodes (5): CLUSTER_A, CLUSTER_B, CosmicBackground(), styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }
 
 ### Community 179 - "[id].tsx"
-Cohesion: 0.17
-Nodes (14): BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), AstronautAvatar(), AstronautAvatarProps, styles (+6 more)
+Cohesion: 0.14
+Nodes (16): BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), CONFETTI_COLORS, ConfettiEffect(), ConfettiPiece (+8 more)
 
 ### Community 180 - "DoubleBezelCard.tsx"
 Cohesion: 0.67
@@ -796,27 +786,23 @@ Cohesion: 0.20
 Nodes (14): OnboardingScreen(), PsychometricOption, PsychometricQuestion, QUESTIONS, styles, SpaceChoiceBadge(), SpaceChoiceBadgeProps, styles (+6 more)
 
 ### Community 182 - "MascotFeedbackSlot.tsx"
-Cohesion: 0.10
-Nodes (22): RootLayout(), styles, expo-router, AnimatedMascot(), AnimatedMascotProps, styles, CONFETTI_COLORS, ConfettiEffect() (+14 more)
+Cohesion: 0.21
+Nodes (11): COSMIC_FACTS, styles, AnimatedMascot(), AnimatedMascotProps, styles, MascotFeedbackSlot(), MascotFeedbackSlotProps, styles (+3 more)
 
 ### Community 183 - "secondary-foreground"
 Cohesion: 0.67
 Nodes (3): secondary-foreground, $type, $value
 
-### Community 184 - "md"
-Cohesion: 0.67
-Nodes (4): $type, $value, md, md
-
 ## Knowledge Gaps
-- **1093 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1088 more)
+- **1079 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1074 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **52 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **43 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `DesignSystemGenerator` connect `DesignSystemGenerator` to `.generate`, `_filter_anti_patterns_for_mode`, `read_rows`, `search`, `design_system.py`, `_resolve_color_mode`, `_select_palette_for_mode`, `test_core.py`, `BM25`, `detect_domain`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `search()` connect `search` to `.generate`, `/graphify`, `_row_identities`, `design_system.py`, `search_stack`, `TestStyleTaxonomy`, `core.py`, `_normalize`, `test_core.py`, `BM25`, `detect_domain`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **Why does `BM25` connect `BM25` to `search`, `DesignSystemGenerator`, `design_system.py`, `test_core.py`, `BM25`, `detect_domain`?**

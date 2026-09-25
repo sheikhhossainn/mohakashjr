@@ -11,6 +11,11 @@ export async function getQuizQuestionsByLessonId(lessonId: string): Promise<Quiz
   return Promise.resolve(questions);
 }
 
+export async function getPlacementQuiz(): Promise<QuizQuestion[]> {
+  const questions = MOCK_QUIZZES['placement'] || [];
+  return Promise.resolve(questions);
+}
+
 export async function saveQuizAttempt(attempt: QuizAttemptRecord): Promise<boolean> {
   // Stubbed for Mahi's SQLite saveAttempt(attempt)
   // Currently verified via useAppStore.recordQuizAttempt()
