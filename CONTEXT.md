@@ -30,5 +30,5 @@
 - `HANDOFF.md` — current session state (created/updated as work progresses)
 - `implemented_features.md` — running log of what's been built and how
 
-**Status:** Active Sprint — Full 8-lesson NASA curriculum (4 Cadet + 4 Astronaut), 24 per-lesson quizzes, 5-question placement challenge, 30 offline Q&As in `offline_tutor.json` with keyword matching engine, AI Tutor "Captain Rover" prompt, and packaged `seed.json` delivered on `feature/humaira-content-pipeline`. Ready for Mahi's SQLite database seeder, Shahi's curriculum rendering, and Jim's offline/online AI chat integration.
+**Status:** Active Sprint — Full 8-lesson NASA curriculum (4 Cadet + 4 Astronaut), 24 per-lesson quizzes, 5-question placement challenge, 30 offline Q&As in `offline_tutor.json` with keyword matching engine, AI Tutor "Captain Rover" prompt, and packaged `seed.json` delivered on `feature/humaira-content-pipeline`. Jim's Bengali typography setup, design & Lottie assets, AI Tutor Chat Screen (`app/tutor.tsx`) with online/offline fallback, and device testing report delivered on `feature/jim-assets-tutor-ui`. Ready for Mahi's SQLite database seeder & Cloudflare proxy, and Shahi's curriculum rendering.
 

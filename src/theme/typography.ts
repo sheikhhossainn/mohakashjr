@@ -5,14 +5,32 @@
  * (কার-ফলা ও যুক্তবর্ণ) from clipping.
  */
 
-import { Platform } from 'react-native';
+// Safe font resolution that works across React Native runtime, Web, and Node.js test runners
+const fontSans = (() => {
+  try {
+    const { Platform } = require('react-native');
+    return Platform.select({
+      ios: 'System',
+      android: 'sans-serif-medium',
+      default: 'sans-serif',
+    });
+  } catch {
+    return 'sans-serif';
+  }
+})();
 
 export const Typography = {
-  fontSans: Platform.select({
-    ios: 'System',
-    android: 'sans-serif-medium',
-    default: 'sans-serif',
-  }),
+  fontSans,
+
+  // Bengali Typographic Families
+  family: {
+    notoRegular: 'NotoSansBengali-Regular',
+    notoSemiBold: 'NotoSansBengali-SemiBold',
+    notoBold: 'NotoSansBengali-Bold',
+    hindRegular: 'HindSiliguri-Regular',
+    hindSemiBold: 'HindSiliguri-SemiBold',
+    hindBold: 'HindSiliguri-Bold',
+  },
 
   // Font Sizes
   size: {

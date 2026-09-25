@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="skyGrad" cx="50%" cy="20%" r="80%">
+      <stop offset="0%" stop-color="#0E1236" />
+      <stop offset="50%" stop-color="#080B1C" />
+      <stop offset="100%" stop-color="#03050C" />
+    </radialGradient>
+    <radialGradient id="earthGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00F0FF" stop-opacity="0.8" />
+      <stop offset="40%" stop-color="#005BFF" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#001F54" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="lunarHill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2D354E" />
+      <stop offset="50%" stop-color="#1E2436" />
+      <stop offset="100%" stop-color="#141824" />
+    </linearGradient>
+    <linearGradient id="craterShade" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0B0E18" />
+      <stop offset="100%" stop-color="#1F2538" />
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Cosmos Background -->
+  <rect width="800" height="600" fill="url(#skyGrad)" />
+
+  <!-- Stars -->
+  <g fill="#FFFFFF" opacity="0.8">
+    <circle cx="50" cy="80" r="1.5" />
+    <circle cx="120" cy="40" r="1" />
+    <circle cx="210" cy="110" r="2" />
+    <circle cx="340" cy="60" r="1.5" />
+    <circle cx="480" cy="90" r="1" />
+    <circle cx="620" cy="50" r="2" />
+    <circle cx="730" cy="130" r="1.5" />
+    <circle cx="160" cy="180" r="1" />
+    <circle cx="300" cy="210" r="1.5" />
+    <circle cx="580" cy="190" r="1" />
+    <circle cx="700" cy="220" r="2" />
+  </g>
+
+  <!-- Earthrise in Lunar Sky -->
+  <circle cx="620" cy="140" r="60" fill="url(#earthGlow)" filter="blur(10px)" />
+  <circle cx="620" cy="140" r="48" fill="#0080FF" />
+  <!-- Continents & Clouds on Earth -->
+  <path d="M 600,120 Q 615,115 630,125 Q 640,140 625,155 Q 610,150 600,120 Z" fill="#2ED573" opacity="0.85" />
+  <path d="M 625,145 Q 645,150 648,165 Q 635,175 625,165 Z" fill="#2ED573" opacity="0.85" />
+  <circle cx="620" cy="140" r="48" fill="none" stroke="#00F0FF" stroke-width="2" opacity="0.6" />
+
+  <!-- Far Mountain Ridge -->
+  <path d="M 0,380 L 120,330 L 260,360 L 410,310 L 580,350 L 710,320 L 800,340 L 800,600 L 0,600 Z" fill="#141826" />
+
+  <!-- Mid Lunar Hills -->
+  <path d="M 0,420 Q 180,380 340,430 T 720,410 Q 770,420 800,435 L 800,600 L 0,600 Z" fill="url(#lunarHill)" />
+
+  <!-- Foreground Lunar Plains & Craters -->
+  <path d="M 0,480 Q 240,450 480,500 Q 640,470 800,490 L 800,600 L 0,600 Z" fill="#181D2D" />
+
+  <!-- Craters -->
+  <!-- Crater 1 -->
+  <ellipse cx="220" cy="510" rx="90" ry="24" fill="url(#craterShade)" stroke="#384360" stroke-width="3" />
+  <ellipse cx="220" cy="513" rx="75" ry="16" fill="#0D101A" />
+  <ellipse cx="220" cy="508" rx="85" ry="8" fill="none" stroke="#00F0FF" stroke-width="1.5" opacity="0.3" />
+
+  <!-- Crater 2 -->
+  <ellipse cx="580" cy="535" rx="130" ry="32" fill="url(#craterShade)" stroke="#384360" stroke-width="4" />
+  <ellipse cx="580" cy="538" rx="110" ry="22" fill="#0A0C14" />
+  <ellipse cx="578" cy="532" rx="122" ry="10" fill="none" stroke="#FFB800" stroke-width="1.5" opacity="0.3" />
+
+  <!-- Small Crater -->
+  <ellipse cx="380" cy="560" rx="35" ry="10" fill="#0B0E18" stroke="#2D354E" stroke-width="2" />
+</svg>

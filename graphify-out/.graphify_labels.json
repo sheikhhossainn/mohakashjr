@@ -192,5 +192,10 @@
   "190": "react",
   "191": "react-dom",
   "192": "react-native",
-  "193": "react-native-svg"
+  "193": "react-native-svg",
+  "194": "@expo-google-fonts/noto-sans-bengali",
+  "195": "expo-linking",
+  "196": "expo-router",
+  "197": "react-native-safe-area-context",
+  "198": "react-native-screens"
 }
