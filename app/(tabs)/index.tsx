@@ -201,7 +201,7 @@ export default function DashboardScreen() {
           <Text style={styles.buddyBubbleMsg}>{getBuddyMessage()}</Text>
           <Pressable
             style={({ pressed }) => [styles.buddyChatBtn, pressed && styles.buddyChatBtnPressed]}
-            onPress={() => router.push('/tutor')}
+            onPress={() => router.push('/tutor' as any)}
           >
             <Bot size={13} color={Colors.cyan} />
             <Text style={styles.buddyChatBtnText}>ক্যাপ্টেন রোভারের সাথে কথা বলো 💬</Text>
@@ -442,7 +442,7 @@ export default function DashboardScreen() {
       {/* ── AI Tutor Mission Mentor Card ─────────────────── */}
       <Pressable
         style={({ pressed }) => [styles.tutorCard, pressed && styles.tutorCardPressed]}
-        onPress={() => router.push('/tutor')}
+        onPress={() => router.push('/tutor' as any)}
       >
         <View style={styles.tutorCardLeft}>
           <View style={styles.tutorIconCircle}>
