@@ -36,6 +36,7 @@ import {
   CheckCircle2,
   Circle,
   ChevronRight,
+  Bot,
 } from 'lucide-react-native';
 
 // ─── Rotating NASA Facts ────────────────────────────────────────────────────
@@ -80,10 +81,10 @@ export default function DashboardScreen() {
   // Archetype affinity check
   const isAffinityLesson =
     nextLesson &&
-    ((cadetArchetype === 'pilot' && ['lesson-1', 'lesson-3'].includes(nextLesson.id)) ||
-      (cadetArchetype === 'astronomer' && ['lesson-2', 'lesson-6'].includes(nextLesson.id)) ||
-      (cadetArchetype === 'engineer' && ['lesson-3', 'lesson-5'].includes(nextLesson.id)) ||
-      (cadetArchetype === 'explorer' && ['lesson-1', 'lesson-4'].includes(nextLesson.id)));
+    ((cadetArchetype === 'pilot' && ['lesson-1', 'lesson-3', 'lesson-7'].includes(nextLesson.id)) ||
+      (cadetArchetype === 'astronomer' && ['lesson-2', 'lesson-6', 'lesson-8'].includes(nextLesson.id)) ||
+      (cadetArchetype === 'engineer' && ['lesson-3', 'lesson-5', 'lesson-6'].includes(nextLesson.id)) ||
+      (cadetArchetype === 'explorer' && ['lesson-1', 'lesson-4', 'lesson-7'].includes(nextLesson.id)));
 
   // Quest progress
   const totalQuizzes = Object.values(quizAttempts).reduce((a, b) => a + b.length, 0);
@@ -198,6 +199,14 @@ export default function DashboardScreen() {
             </Pressable>
           </View>
           <Text style={styles.buddyBubbleMsg}>{getBuddyMessage()}</Text>
+          <Pressable
+            style={({ pressed }) => [styles.buddyChatBtn, pressed && styles.buddyChatBtnPressed]}
+            onPress={() => router.push('/tutor')}
+          >
+            <Bot size={13} color={Colors.cyan} />
+            <Text style={styles.buddyChatBtnText}>ক্যাপ্টেন রোভারের সাথে কথা বলো 💬</Text>
+            <ChevronRight size={11} color={Colors.cyan} />
+          </Pressable>
         </View>
       </View>
 
@@ -429,6 +438,28 @@ export default function DashboardScreen() {
           </View>
         </Pressable>
       </View>
+
+      {/* ── AI Tutor Mission Mentor Card ─────────────────── */}
+      <Pressable
+        style={({ pressed }) => [styles.tutorCard, pressed && styles.tutorCardPressed]}
+        onPress={() => router.push('/tutor')}
+      >
+        <View style={styles.tutorCardLeft}>
+          <View style={styles.tutorIconCircle}>
+            <Bot size={22} color={Colors.cyan} />
+          </View>
+          <View style={styles.tutorTextBox}>
+            <View style={styles.tutorTitleRow}>
+              <Text style={styles.tutorTitle}>ক্যাপ্টেন রোভার এআই 🛰️</Text>
+              <View style={styles.tutorBadge}>
+                <Text style={styles.tutorBadgeText}>অফলাইন + অনলাইন</Text>
+              </View>
+            </View>
+            <Text style={styles.tutorSub}>মহাকাশ নিয়ে তোমার যেকোনো প্রশ্ন বাংলায় জিজ্ঞেস করো!</Text>
+          </View>
+        </View>
+        <ChevronRight size={16} color={Colors.cyan} />
+      </Pressable>
 
       {/* ── Cosmic Fact Widget ───────────────────────────── */}
       <View style={styles.factShell}>
@@ -1026,5 +1057,94 @@ const styles = StyleSheet.create({
     fontSize: Typography.size.caption,
     lineHeight: Typography.lineHeight.caption,
     fontWeight: Typography.weight.medium,
+  },
+  buddyChatBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 240, 255, 0.12)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
+    marginTop: 8,
+    gap: 6,
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 240, 255, 0.3)',
+  },
+  buddyChatBtnPressed: {
+    backgroundColor: 'rgba(0, 240, 255, 0.25)',
+  },
+  buddyChatBtnText: {
+    color: Colors.cyan,
+    fontSize: Typography.size.micro,
+    fontWeight: Typography.weight.bold,
+  },
+  tutorCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(14, 18, 60, 0.88)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(0, 240, 255, 0.45)',
+    borderRadius: 20,
+    padding: 14,
+    marginBottom: 20,
+    shadowColor: Colors.cyan,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  tutorCardPressed: {
+    transform: [{ scale: 0.98 }],
+    borderColor: Colors.cyan,
+  },
+  tutorCardLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  tutorIconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(0, 240, 255, 0.14)',
+    borderWidth: 1.5,
+    borderColor: Colors.cyan,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tutorTextBox: {
+    flex: 1,
+    gap: 3,
+  },
+  tutorTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  tutorTitle: {
+    color: Colors.text,
+    fontSize: Typography.size.h3,
+    fontWeight: Typography.weight.bold,
+  },
+  tutorBadge: {
+    backgroundColor: 'rgba(0, 230, 118, 0.15)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 230, 118, 0.4)',
+  },
+  tutorBadgeText: {
+    color: Colors.emerald,
+    fontSize: 9,
+    fontWeight: Typography.weight.bold,
+  },
+  tutorSub: {
+    color: Colors.textSecondary,
+    fontSize: Typography.size.micro,
+    lineHeight: 15,
   },
 });

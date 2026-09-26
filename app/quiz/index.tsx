@@ -51,7 +51,7 @@ export default function QuizHubScreen() {
 
         <TactileButton
           title="চ্যালেঞ্জ শুরু করো ➔"
-          onPress={() => router.push('/quiz/lesson-1')}
+          onPress={() => router.push('/quiz/placement')}
           variant="gold"
           size="normal"
         />

@@ -13,11 +13,47 @@ export interface Lesson {
   order_index: number;
   title_bn: string;
   summary_bn: string;
+  content_bn?: string;
   blocks: LessonContentBlock[];
   nasa_source?: string;
   read_time_minutes: number;
   xp_reward: number;
   icon_name?: string;
+}
+
+export interface OfflineQAItem {
+  id: string;
+  category: string;
+  keywords: string[];
+  question_bn: string;
+  answer_bn: string;
+  quick_replies_bn?: string[];
+}
+
+export interface AITutorConfig {
+  mentor_name: string;
+  mentor_title_bn: string;
+  persona_description: string;
+  system_prompt: string;
+  welcome_message_bn: string;
+  suggested_queries_bn: string[];
+}
+
+export interface CurriculumSeedData {
+  version: string;
+  generated_at: string;
+  curriculum_meta: {
+    title: string;
+    language: string;
+    target_audience: string;
+    total_lessons: number;
+    total_quizzes: number;
+  };
+  lessons: Lesson[];
+  quizzes: QuizQuestion[];
+  placement_quiz: QuizQuestion[];
+  offline_qa: OfflineQAItem[];
+  ai_tutor_config: AITutorConfig;
 }
 
 export interface QuizQuestion {

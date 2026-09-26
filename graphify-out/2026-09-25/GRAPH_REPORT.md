@@ -1,16 +1,16 @@
 # Graph Report - mohakashjr  (2026-09-25)
 
 ## Corpus Check
-- 187 files · ~274,136 words
+- 180 files · ~267,027 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2535 nodes · 3346 edges · 199 communities (145 shown, 54 thin omitted)
+- 2510 nodes · 3297 edges · 194 communities (142 shown, 52 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 210 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6fcf8431`
+- Built from commit: `bf7f7a58`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -209,11 +209,6 @@
 - react-dom
 - react-native
 - react-native-svg
-- @expo-google-fonts/noto-sans-bengali
-- expo-linking
-- expo-router
-- react-native-safe-area-context
-- react-native-screens
 
 ## God Nodes (most connected - your core abstractions)
 1. `TailwindConfigGenerator` - 57 edges
@@ -222,18 +217,18 @@
 4. `TestTailwindConfigGenerator` - 35 edges
 5. `ShadcnInstaller` - 33 edges
 6. `search_stack()` - 30 edges
-7. `useAppStore` - 28 edges
-8. `TestShadcnInstaller` - 26 edges
-9. `Colors` - 23 edges
-10. `Typography` - 19 edges
+7. `TestShadcnInstaller` - 26 edges
+8. `useAppStore` - 26 edges
+9. `Colors` - 22 edges
+10. `detect_domain()` - 17 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `ProfileScreen()` --calls--> `useAppStore`  [EXTRACTED]
-  app/(tabs)/profile.tsx → src/state/useAppStore.ts
 - `RootLayout()` --calls--> `useAppStore`  [EXTRACTED]
   app/_layout.tsx → src/state/useAppStore.ts
-- `SplashScreen()` --calls--> `useAppStore`  [EXTRACTED]
-  app/splash.tsx → src/state/useAppStore.ts
+- `ProfileScreen()` --calls--> `useAppStore`  [EXTRACTED]
+  app/(tabs)/profile.tsx → src/state/useAppStore.ts
+- `LessonReaderScreen()` --calls--> `useAppStore`  [EXTRACTED]
+  app/lessons/[id].tsx → src/state/useAppStore.ts
 - `PsychometricOption` --references--> `CadetArchetype`  [EXTRACTED]
   app/onboarding.tsx → src/state/useAppStore.ts
 - `OnboardingScreen()` --calls--> `useAppStore`  [EXTRACTED]
@@ -242,7 +237,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (199 total, 54 thin omitted)
+## Communities (194 total, 52 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -257,8 +252,8 @@ Cohesion: 0.07
 Nodes (46): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons, TestCurrentReactGuidance, TestSemanticColors, _catalog_date(), _check_app_interface_contract(), _check_catalog_contract() (+38 more)
 
 ### Community 3 - "/graphify"
-Cohesion: 0.20
-Nodes (15): LessonReaderScreen(), styles, QuizHubScreen(), styles, DashboardScreen(), LessonsScreen(), styles, DoubleBezelCard() (+7 more)
+Cohesion: 0.21
+Nodes (8): LessonReaderScreen(), styles, MissionScreen(), styles, DoubleBezelCard(), DoubleBezelCardProps, styles, getLessonById()
 
 ### Community 4 - "Implementation Plan — Mohakash Jr (initial scaffold → MVP)"
 Cohesion: 0.20
@@ -329,12 +324,12 @@ Cohesion: 0.09
 Nodes (21): 1. Quick Start & Git Workflow (For Every Teammate & Agent), 2. Team Task Allocation & Dependency Matrix, 3. Step-by-Step "How-To" Instructions per Role, 4. Key Milestones Timeline, Guide for Humaira (Bangla Content & AI Knowledge), Guide for Jim (Typography, Design, Chat UI & QA), Guide for Mahi (Database & Cloudflare Proxy), Guide for Mahim (Mascot Motion & Moon Mission) (+13 more)
 
 ### Community 33 - "dependencies"
-Cohesion: 0.29
-Nodes (7): scripts, android, ios, lint, start, test, web
+Cohesion: 0.17
+Nodes (11): main, name, private, scripts, android, ios, lint, start (+3 more)
 
 ### Community 34 - "expo"
-Cohesion: 0.11
-Nodes (18): backgroundColor, adaptiveIcon, reactCompiler, typedRoutes, expo, android, experiments, ios (+10 more)
+Cohesion: 0.09
+Nodes (21): backgroundColor, adaptiveIcon, reactCompiler, typedRoutes, expo, android, experiments, ios (+13 more)
 
 ### Community 35 - "tsconfig.json"
 Cohesion: 0.13
@@ -346,7 +341,7 @@ Nodes (53): $type, $value, $type, $value, $type, $value, $type, $value (+45 more
 
 ### Community 37 - "HANDOFF — 2026-09-22 21:23"
 Cohesion: 0.33
-Nodes (5): Active blockers, Current task status, HANDOFF — 2026-09-25 12:40, Immediate next steps, Just completed
+Nodes (5): Active blockers, Current task status, HANDOFF — 2026-09-22 22:55, Immediate next steps, Just completed
 
 ### Community 38 - "BM25"
 Cohesion: 0.06
@@ -641,8 +636,8 @@ Cohesion: 0.18
 Nodes (10): Bold Dynamic, CIP Design Style Guide, Classic Traditional, Color Psychology, Corporate Minimal, Fresh Modern, Luxury Premium, Modern Tech (+2 more)
 
 ### Community 112 - "primitive"
-Cohesion: 0.20
-Nodes (10): fast, normal, slow, $type, $value, $type, $value, duration (+2 more)
+Cohesion: 0.18
+Nodes (11): fast, normal, slow, $type, $value, $type, $value, primitive (+3 more)
 
 ### Community 113 - "test_tailwind_config_gen.py"
 Cohesion: 0.20
@@ -689,8 +684,8 @@ Cohesion: 0.29
 Nodes (8): padding-x, input, $type, $value, focus-ring, padding-x, $type, $value
 
 ### Community 125 - "radius"
-Cohesion: 0.24
-Nodes (10): $type, $value, $type, $value, primitive, radius, shadow, full (+2 more)
+Cohesion: 0.29
+Nodes (8): $type, $value, $type, $value, radius, default, full, default
 
 ### Community 126 - "._generate_javascript"
 Cohesion: 0.29
@@ -713,8 +708,8 @@ Cohesion: 0.43
 Nodes (3): _filter_anti_patterns_for_mode(), Drop "avoid dark mode" advice once dark mode is the resolved answer., TestAntiPatternGating
 
 ### Community 133 - "shadow"
-Cohesion: 0.60
-Nodes (5): sm, sm, sm, $type, $value
+Cohesion: 0.47
+Nodes (6): sm, shadow, sm, sm, $type, $value
 
 ### Community 134 - "Slides"
 Cohesion: 0.33
@@ -741,20 +736,20 @@ Cohesion: 0.60
 Nodes (5): lg, $type, $value, lg, lg
 
 ### Community 140 - "padding-y"
-Cohesion: 0.13
-Nodes (15): expo-asset, expo-constants, @expo-google-fonts/hind-siliguri, lucide-react-native, dependencies, expo-asset, expo-constants, @expo-google-fonts/hind-siliguri (+7 more)
+Cohesion: 0.15
+Nodes (13): expo-asset, expo-linking, expo-router, dependencies, expo-asset, expo-linking, expo-router, react-native-safe-area-context (+5 more)
 
 ### Community 141 - "xl"
-Cohesion: 0.14
-Nodes (22): lessonQuizzes, outputPath, seedData, AI_TUTOR_CONFIG, ASTRONAUT_MENTOR_SYSTEM_PROMPT, MOCK_QUIZZES, AITutorConfig, CurriculumSeedData (+14 more)
+Cohesion: 0.12
+Nodes (25): styles, lessonQuizzes, outputPath, seedData, AI_TUTOR_CONFIG, ASTRONAUT_MENTOR_SYSTEM_PROMPT, MOCK_LESSONS, MOCK_QUIZZES (+17 more)
 
 ### Community 142 - "md"
-Cohesion: 0.18
-Nodes (11): @expo/ngrok, devDependencies, @expo/ngrok, tsx, @types/node, @types/react, typescript, tsx (+3 more)
+Cohesion: 0.22
+Nodes (9): devDependencies, tsx, @types/node, @types/react, typescript, tsx, @types/node, @types/react (+1 more)
 
 ### Community 143 - "none"
-Cohesion: 0.22
-Nodes (11): AITutorChatScreen(), ChatMessage, styles, OfflineQAItem, findOfflineAnswer(), getAllOfflineQuestions(), getOfflineQuestionsByCategory(), ITEMS (+3 more)
+Cohesion: 0.67
+Nodes (4): $type, $value, none, none
 
 ### Community 146 - "destructive"
 Cohesion: 0.67
@@ -781,28 +776,28 @@ Cohesion: 0.67
 Nodes (3): muted, $type, $value
 
 ### Community 177 - "useAppStore"
-Cohesion: 0.11
-Nodes (26): SplashScreen(), styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }, COSMIC_FACTS, GLOW_SHADOW, styles, styles, ProfileScreen() (+18 more)
+Cohesion: 0.12
+Nodes (24): QuizHubScreen(), styles, SplashScreen(), styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }, COSMIC_FACTS, DashboardScreen(), GLOW_SHADOW (+16 more)
 
 ### Community 178 - "colors.ts"
 Cohesion: 0.33
 Nodes (5): 1. Persona Overview, 2. Core Pedagogical Rules, 3. System Prompt (Ready for API Injection), 4. Example In-Flight Interaction, AI Tutor System Prompt & Persona Specification — Mohakash Jr
 
 ### Community 179 - "[id].tsx"
-Cohesion: 0.12
-Nodes (18): BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), AstronautAvatar(), AstronautAvatarProps, styles (+10 more)
+Cohesion: 0.17
+Nodes (14): BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), AstronautAvatar(), AstronautAvatarProps, styles (+6 more)
 
 ### Community 180 - "DoubleBezelCard.tsx"
 Cohesion: 0.67
 Nodes (3): primary-foreground, $type, $value
 
 ### Community 181 - "onboarding.tsx"
-Cohesion: 0.24
-Nodes (10): OnboardingScreen(), PsychometricOption, PsychometricQuestion, QUESTIONS, styles, SpaceChoiceBadge(), SpaceChoiceBadgeProps, styles (+2 more)
+Cohesion: 0.20
+Nodes (14): OnboardingScreen(), PsychometricOption, PsychometricQuestion, QUESTIONS, styles, SpaceChoiceBadge(), SpaceChoiceBadgeProps, styles (+6 more)
 
 ### Community 182 - "MascotFeedbackSlot.tsx"
-Cohesion: 0.18
-Nodes (10): plugins, RootLayout(), styles, expo-asset, expo-font, CLUSTER_A, CLUSTER_B, CosmicBackground() (+2 more)
+Cohesion: 0.10
+Nodes (22): RootLayout(), styles, expo-router, AnimatedMascot(), AnimatedMascotProps, styles, CONFETTI_COLORS, ConfettiEffect() (+14 more)
 
 ### Community 183 - "secondary-foreground"
 Cohesion: 0.67
@@ -812,22 +807,10 @@ Nodes (3): secondary-foreground, $type, $value
 Cohesion: 0.67
 Nodes (4): $type, $value, md, md
 
-### Community 186 - "expo-constants"
-Cohesion: 0.15
-Nodes (12): 1. Executive Summary, 2.1 Embedded Bengali Fonts, 2.2 Conjunct & Diacritic Stress Testing, 2. Typography & Rendering Verification, 3. Full Airplane Mode Walkthrough, 4. Compiled Bug & Remediation List (Hour 44 Review), 5. Visual Asset Inventory Supplied in `assets/`, Device Testing, Typography & Bug Report — Mohakash Jr (+4 more)
-
-### Community 192 - "react-native"
-Cohesion: 0.40
-Nodes (4): main, name, private, version
-
-### Community 193 - "react-native-svg"
-Cohesion: 0.67
-Nodes (4): $type, $value, default, default
-
 ## Knowledge Gaps
-- **1107 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1102 more)
+- **1093 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1088 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **54 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **52 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_

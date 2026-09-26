@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useFonts } from 'expo-font';
 import { Colors } from '../src/theme/colors';
 import { Typography } from '../src/theme/typography';
 import { LevelUpModal } from '../src/components/LevelUpModal';
@@ -13,6 +14,15 @@ export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
   const { hasCompletedOnboarding } = useAppStore();
+
+  const [fontsLoaded] = useFonts({
+    'NotoSansBengali-Regular': require('../assets/fonts/NotoSansBengali-Regular.ttf'),
+    'NotoSansBengali-SemiBold': require('../assets/fonts/NotoSansBengali-SemiBold.ttf'),
+    'NotoSansBengali-Bold': require('../assets/fonts/NotoSansBengali-Bold.ttf'),
+    'HindSiliguri-Regular': require('../assets/fonts/HindSiliguri-Regular.ttf'),
+    'HindSiliguri-SemiBold': require('../assets/fonts/HindSiliguri-SemiBold.ttf'),
+    'HindSiliguri-Bold': require('../assets/fonts/HindSiliguri-Bold.ttf'),
+  });
 
   useEffect(() => {
     // If user has not completed onboarding and is not already on splash or onboarding, direct them to splash
@@ -70,6 +80,13 @@ export default function RootLayout() {
             name="mission/index"
             options={{
               title: 'চন্দ্রাভিযান মিশন কন্ট্রোল 🌕',
+              headerBackTitle: 'পেছনে',
+            }}
+          />
+          <Stack.Screen
+            name="tutor"
+            options={{
+              title: 'ক্যাপ্টেন রোভার এআই 🛰️',
               headerBackTitle: 'পেছনে',
             }}
           />

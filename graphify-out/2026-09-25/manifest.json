@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "AGENT.md": {
-    "mtime": 1790318297.9733324,
-    "ast_hash": "57fcd256af3a69e90798845e3fb35ae8",
+    "mtime": 1790313430.9446516,
+    "ast_hash": "9f1789e54f71bcc0d6759f48cbbfd886",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
@@ -120,8 +120,8 @@
     "semantic_hash": ""
   },
   "CONTEXT.md": {
-    "mtime": 1790318312.602185,
-    "ast_hash": "7387c31a5565210cb7b3b98e86d1ccd7",
+    "mtime": 1790313430.9556465,
+    "ast_hash": "9c070d24b71bb12451fcfedc12178f13",
     "semantic_hash": ""
   },
   "IMPLEMENTATION_PLAN.md": {
@@ -140,18 +140,18 @@
     "semantic_hash": ""
   },
   "docs/FEATURES.md": {
-    "mtime": 1790314918.3096423,
-    "ast_hash": "93875505d61debe8ab2fd537df80ed70",
+    "mtime": 1790313287.3840506,
+    "ast_hash": "cb64794c0a951a6dd58a4d98a4e2d77a",
     "semantic_hash": ""
   },
   "implemented_features.md": {
-    "mtime": 1790318288.5424495,
-    "ast_hash": "23e9271ced2217c2f7a6fb283645a009",
+    "mtime": 1790313431.7721617,
+    "ast_hash": "a6ede677815728d915d59af358738540",
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1790318305.261606,
-    "ast_hash": "9e9584f7e42a63f61039c99932af9ed3",
+    "mtime": 1790313430.947646,
+    "ast_hash": "9523fe795d1a12982f4857ffe0938a1f",
     "semantic_hash": ""
   },
   "TEAMCONTRIBUTION.md": {
@@ -170,8 +170,8 @@
     "semantic_hash": ""
   },
   "app/(tabs)/index.tsx": {
-    "mtime": 1790318101.162897,
-    "ast_hash": "a5cfcf944ff9e7ad3519ddcc41fa324f",
+    "mtime": 1790314700.0440147,
+    "ast_hash": "525aa3534243c856edd4068ac0ba3d8f",
     "semantic_hash": ""
   },
   "app/(tabs)/lessons.tsx": {
@@ -190,8 +190,8 @@
     "semantic_hash": ""
   },
   "app/_layout.tsx": {
-    "mtime": 1790317902.217498,
-    "ast_hash": "8fa4869df198d159f7bc4e24d43defcb",
+    "mtime": 1790313431.0366504,
+    "ast_hash": "a18bcb574f09b3dbf8a6d5b095758b4a",
     "semantic_hash": ""
   },
   "app/lessons/[id].tsx": {
@@ -215,8 +215,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1790317798.463972,
-    "ast_hash": "7cbf7fd9d739ba429a2b9bec370ec5ca",
+    "mtime": 1790313431.8071826,
+    "ast_hash": "0ed9d71696334f0c846dffeed266c7ba",
     "semantic_hash": ""
   },
   "src/components/LevelUpModal.tsx": {
@@ -270,8 +270,8 @@
     "semantic_hash": ""
   },
   "src/theme/typography.ts": {
-    "mtime": 1790318170.9155617,
-    "ast_hash": "bca12df938d402b5771a419cfd099b71",
+    "mtime": 1790313431.8991706,
+    "ast_hash": "23629c1d96527b592cad590e62c30f5d",
     "semantic_hash": ""
   },
   "tests/appStore.test.ts": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "HANDOFF.md": {
-    "mtime": 1790318321.2038567,
-    "ast_hash": "4b85cdf166d0b8dc5a72815e3e402e95",
+    "mtime": 1790313430.9566417,
+    "ast_hash": "bebc23fbbd83ed676191e0ac724e46b4",
     "semantic_hash": ""
   },
   "src/components/DoubleBezelCard.tsx": {
@@ -912,61 +912,6 @@
   "docs/AI_TUTOR_PROMPT.md": {
     "mtime": 1790314628.9495246,
     "ast_hash": "1aaa94d4c4f9f4fee66557a1be9339cf",
-    "semantic_hash": ""
-  },
-  "app/tutor.tsx": {
-    "mtime": 1790318001.2029314,
-    "ast_hash": "9321138a810e9c54c45407c88b700786",
-    "semantic_hash": ""
-  },
-  "assets/lottie/mascot-celebrate.json": {
-    "mtime": 1790317931.6748302,
-    "ast_hash": "df3e1929f309c1018db717187e70bdaf",
-    "semantic_hash": ""
-  },
-  "assets/lottie/mascot-idle.json": {
-    "mtime": 1790317923.3805237,
-    "ast_hash": "183765491cad478068734f0539ae1a75",
-    "semantic_hash": ""
-  },
-  "assets/lottie/mascot-incorrect.json": {
-    "mtime": 1790317940.557255,
-    "ast_hash": "1ceff94a1ce80eec1aba7f001adb5a62",
-    "semantic_hash": ""
-  },
-  "assets/lottie/mascot-thinking.json": {
-    "mtime": 1790317947.0446374,
-    "ast_hash": "0c8178bd8454a13575dd6f37ba4adbd1",
-    "semantic_hash": ""
-  },
-  "tests/tutorAndAssets.test.ts": {
-    "mtime": 1790318143.4027538,
-    "ast_hash": "b6886789c69256adc9ecb5c1bfa16fd7",
-    "semantic_hash": ""
-  },
-  "docs/DEVICE_TESTING_REPORT.md": {
-    "mtime": 1790318216.8430526,
-    "ast_hash": "bfdd1081873d489a6b02d7244f14e24a",
-    "semantic_hash": ""
-  },
-  "assets/badges/badges.svg": {
-    "mtime": 1790317981.7873158,
-    "ast_hash": "f0360c8cf0b46cfca1b93030932ad179",
-    "semantic_hash": ""
-  },
-  "assets/illustrations/cargo-items.svg": {
-    "mtime": 1790317973.9575865,
-    "ast_hash": "e271cee9e0ddfa42b4d6f09db53a80f2",
-    "semantic_hash": ""
-  },
-  "assets/illustrations/lunar-surface.svg": {
-    "mtime": 1790317957.4056833,
-    "ast_hash": "3f2fcb9ba9a68118b62e4d5de8695cce",
-    "semantic_hash": ""
-  },
-  "assets/illustrations/lunar-zones.svg": {
-    "mtime": 1790317965.324297,
-    "ast_hash": "9e40f36d1e032bcb408dba25d9becc75",
     "semantic_hash": ""
   }
 }
