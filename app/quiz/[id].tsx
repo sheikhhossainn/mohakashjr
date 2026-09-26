@@ -216,7 +216,9 @@ export default function QuizScreen() {
         <View style={styles.stepperTopRow}>
           <View style={styles.stepperBadge}>
             <Star size={13} color={Colors.gold} fill={Colors.gold} />
-            <Text style={styles.stepperTag}>মহাকাশ কুইজ</Text>
+            <Text style={styles.stepperTag}>
+              {id === 'placement' ? 'প্লেসমেন্ট চ্যালেঞ্জ' : 'মহাকাশ কুইজ'}
+            </Text>
           </View>
           <Text style={styles.stepperCounter}>
             প্রশ্ন {toBengaliNumber(currentIndex + 1)} / {toBengaliNumber(questions.length)}

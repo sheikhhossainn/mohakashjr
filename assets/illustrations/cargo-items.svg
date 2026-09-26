@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <!-- Oxygen Tank Item -->
+  <g id="item-oxygen" transform="translate(40, 40)">
+    <rect width="140" height="140" rx="16" fill="#0E1236" stroke="#00F0FF" stroke-width="2" />
+    <rect x="50" y="30" width="40" height="70" rx="20" fill="#00F0FF" fill-opacity="0.2" stroke="#00F0FF" stroke-width="3" />
+    <rect x="62" y="20" width="16" height="10" rx="3" fill="#00F0FF" />
+    <text x="70" y="70" fill="#00F0FF" font-size="16" font-weight="bold" text-anchor="middle" font-family="sans-serif">O₂</text>
+    <text x="70" y="122" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">অক্সিজেন ট্যাংক</text>
+  </g>
+
+  <!-- Solar Panel Item -->
+  <g id="item-solar" transform="translate(220, 40)">
+    <rect width="140" height="140" rx="16" fill="#0E1236" stroke="#FFB800" stroke-width="2" />
+    <!-- Panel Grid -->
+    <rect x="35" y="30" width="70" height="55" rx="6" fill="#1E293B" stroke="#FFB800" stroke-width="2.5" />
+    <line x1="70" y1="30" x2="70" y2="85" stroke="#FFB800" stroke-width="1.5" />
+    <line x1="35" y1="57" x2="105" y2="57" stroke="#FFB800" stroke-width="1.5" />
+    <line x1="70" y1="85" x2="70" y2="100" stroke="#94A3B8" stroke-width="4" />
+    <text x="70" y="122" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">সৌর প্যানেল</text>
+  </g>
+
+  <!-- Rover Battery Item -->
+  <g id="item-battery" transform="translate(40, 220)">
+    <rect width="140" height="140" rx="16" fill="#0E1236" stroke="#00E676" stroke-width="2" />
+    <rect x="45" y="40" width="50" height="60" rx="8" fill="#00E676" fill-opacity="0.2" stroke="#00E676" stroke-width="3" />
+    <rect x="62" y="32" width="16" height="8" rx="2" fill="#00E676" />
+    <!-- Lightning Bolt -->
+    <polygon points="72,48 64,66 71,66 68,84 80,63 73,63" fill="#00E676" />
+    <text x="70" y="122" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">রোভার ব্যাটারি</text>
+  </g>
+
+  <!-- Lunar Core Drill Item -->
+  <g id="item-drill" transform="translate(220, 220)">
+    <rect width="140" height="140" rx="16" fill="#0E1236" stroke="#E040FB" stroke-width="2" />
+    <rect x="62" y="30" width="16" height="35" rx="4" fill="#E040FB" />
+    <polygon points="62,65 78,65 70,95" fill="#E040FB" />
+    <line x1="60" y1="72" x2="80" y2="76" stroke="#FFFFFF" stroke-width="2" />
+    <line x1="62" y1="82" x2="78" y2="86" stroke="#FFFFFF" stroke-width="2" />
+    <text x="70" y="122" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle" font-family="sans-serif">লুনার কোর ড্রিল</text>
+  </g>
+</svg>

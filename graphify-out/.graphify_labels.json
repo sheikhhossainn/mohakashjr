@@ -182,5 +182,20 @@
   "180": "DoubleBezelCard.tsx",
   "181": "onboarding.tsx",
   "182": "MascotFeedbackSlot.tsx",
-  "183": "secondary-foreground"
+  "183": "secondary-foreground",
+  "184": "md",
+  "185": "expo",
+  "186": "expo-constants",
+  "187": "expo-font",
+  "188": "expo-status-bar",
+  "189": "lucide-react-native",
+  "190": "react",
+  "191": "react-dom",
+  "192": "react-native",
+  "193": "react-native-svg",
+  "194": "@expo-google-fonts/noto-sans-bengali",
+  "195": "expo-linking",
+  "196": "expo-router",
+  "197": "react-native-safe-area-context",
+  "198": "react-native-screens"
 }

@@ -1,31 +1,25 @@
-# HANDOFF — 2026-09-22 22:55
+# HANDOFF — 2026-09-27 00:40
 
 ## Current task status
-Completed multi-selection and non-default state for the Cadet Onboarding Psychometric Assessment on branch `feature/shahi-app-shell`. All question screens now start completely unselected (empty state). Students can freely select multiple options per question to reflect all their space interests. Added interactive selection feedback (unselected circular ring, selected filled checkmark with archetype accent color) and validation preventing advancement until at least 1 option is chosen. Updated `calculateArchetype` and `useAppStore` to tally multi-selection arrays cleanly. Verified with 9/9 unit tests passing, 0 TypeScript compile errors, and synchronized Graphify knowledge graph (2,453 nodes, 3,193 edges, 182 communities).
+Consolidated and merged all three team feature branches locally into `merge-all-features`:
+1. `feature/mahim-mission-flow` (Moon Landing Mission, Site Selector, Cargo Packing, Mascot Animations, XP Bar, Debrief screen, and tests).
+2. `feature/humaira-content-pipeline` (8 NASA illustrated lessons, 29 quizzes, 30 offline QAs, Captain Rover prompt, and `seed.json`).
+3. `feature/assets-tutor-ui` (Bengali typography fonts, Lottie animations, SVG terrain/badges, AI Tutor Chat Screen at `app/tutor.tsx`, device testing report).
 
 ## Just completed
-- **No Default Pre-selection**:
-  - `answers` state initialized to `{}` (empty object).
-  - All choice cards start in unselected state with crisp circular indicator rings.
-- **Multi-Selection Toggles**:
-  - `handleToggleChoice` allows selecting and unselecting multiple choices per question (`Record<number, number[]>`).
-  - Kids can select any combination (e.g. both flying rockets and building rovers).
-  - Friendly hint added: *"একাধিক উত্তর বেছে নিতে পারো (যেগুলো তোমার পছন্দ)"*.
-- **Next Step Validation**:
-  - "পরবর্তী প্রশ্ন ➔" button disables and shows *"কমপক্ষে ১টি বেছে নাও"* if 0 options are selected on the current question.
-  - Automatically activates to primary glowing state once at least 1 option is checked.
-- **Archetype Engine Multi-Selection Support**:
-  - `calculateArchetype` in `src/state/useAppStore.ts` now iterates through arrays of selections for each question, cleanly accumulating tallies for `'pilot'`, `'astronomer'`, `'engineer'`, and `'explorer'`.
-  - Backwards-compatible with single numbers.
-- **Testing & Verification**:
-  - `tests/appStore.test.ts` updated with multi-select scenarios (all 9 unit tests passing).
-  - `npx tsc --noEmit` verified with 0 errors.
-  - `graphify update .` completed.
-
-## Active blockers
-- None for Shahi's core Day 1/Day 2 sprint scope.
-- User requested to keep changes local and NOT push yet.
+- **Merged All Feature Branches Locally**:
+  - Combined `feature/mahim-mission-flow` + `feature/assets-tutor-ui` (which includes `feature/humaira-content-pipeline`).
+  - Resolved conflicts cleanly in `package.json`, `implemented_features.md`, `AGENT.md`, `AGENTS.md`, `CONTEXT.md`, and `HANDOFF.md`.
+  - Re-installed and validated package dependencies (Bengali Google fonts + metro-runtime + lottie web/native + reanimated).
+- **Consolidated Features Available in Local Repo**:
+  - **Full Curriculum**: 8 NASA lessons + 29 quizzes + master `seed.json`.
+  - **AI Tutor Chat**: Live and offline chat screen at `/tutor` with Captain Rover persona.
+  - **Moon Landing Mission**: Interactive 3-stage mission at `/mission` and `/(tabs)/mission`.
+  - **Design & Assets**: Custom Noto Sans Bengali & Hind Siliguri typography, Lottie JSON files, and vector illustrations.
+- **Verification**:
+  - Full test suite passing.
+  - TypeScript strict compile passes with 0 errors.
 
 ## Immediate next steps
-1. Await user feedback or instructions for testing in Expo Go / local emulator.
-2. When user gives the go-ahead, perform git commit and push to `origin feature/shahi-app-shell`.
+1. Merge `merge-all-features` into local `dev` branch.
+2. Await user confirmation before pushing to remote `dev`.

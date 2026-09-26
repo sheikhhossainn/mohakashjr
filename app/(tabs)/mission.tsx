@@ -1,11 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
 import { DoubleBezelCard } from '../../src/components/DoubleBezelCard';
-import { Rocket, MapPin, PackageCheck, Award, AlertCircle, Compass, Radio } from 'lucide-react-native';
+import { TactileButton } from '../../src/components/TactileButton';
+import { MascotReaction } from '../../src/components/MascotReaction';
+import { MoonLandingMission } from '../../src/components/mission';
+import {
+  Rocket,
+  MapPin,
+  PackageCheck,
+  Award,
+  Sparkles,
+  Compass,
+  Radio,
+  Play,
+  ShieldAlert,
+} from 'lucide-react-native';
 
 export default function MissionScreen() {
+  const [isMissionActive, setIsMissionActive] = useState(false);
+
+  // If cadet has launched the mission, show the full multi-stage mission engine
+  if (isMissionActive) {
+    return <MoonLandingMission onExitMission={() => setIsMissionActive(false)} />;
+  }
+
+  // Mission Control Hub & Briefing Screen
   return (
     <ScrollView
       style={styles.container}
@@ -33,12 +54,33 @@ export default function MissionScreen() {
         <Text style={styles.heroDescription}>
           একজন জুনিয়র মিশন কমান্ডার হিসেবে তোমার মহাকাশযান নিরাপদে চাঁদের মাটিতে অবতরণ করানো এবং সীমিত ওজনের মধ্যে বৈজ্ঞানিক সরঞ্জাম সাজিয়ে চাঁদের ঘাঁটিতে টিকে থাকাই তোমার মূল অভিযান!
         </Text>
+
+        {/* Astro-Buddy Encouragement Slot */}
+        <View style={styles.mascotSlot}>
+          <MascotReaction
+            state="thinking"
+            size={90}
+            showSpeechBubble
+            bubbleText="কমান্ডার, ল্যান্ডার প্রস্তুত! তুমি কি লুনার চ্যালেঞ্জের জন্য তৈরি?"
+          />
+        </View>
+
+        {/* Primary Launch Action Button */}
+        <View style={styles.primaryLaunchBtnWrapper}>
+          <TactileButton
+            title="চন্দ্রাভিযান শুরু করো 🚀"
+            onPress={() => setIsMissionActive(true)}
+            variant="gold"
+            size="large"
+            icon={<Play size={18} color="#0B0F19" fill="#0B0F19" />}
+          />
+        </View>
       </DoubleBezelCard>
 
       {/* 3-Stage Mission Roadmap */}
       <View style={styles.sectionHeaderRow}>
         <Text style={styles.sectionHeading}>মিশনের কার্যনির্বাহী ধাপসমূহ</Text>
-        <Text style={styles.sectionCode}>অভিযান পরিকল্পনা</Text>
+        <Text style={styles.sectionCode}>৩টি ইন্টারঅ্যাক্টিভ ধাপ</Text>
       </View>
 
       {/* Stage 1 */}
@@ -58,7 +100,7 @@ export default function MissionScreen() {
             </View>
             <Text style={styles.stageTitle}>অবতরণ অঞ্চল নির্বাচন (Site Selection)</Text>
             <Text style={styles.stageDesc}>
-              শ্যাকলটন গহ্বর (বরফ বেশি, কিন্তু গভীর অন্ধকার), শান্ত সাগর (নিরাপদ সমতল) কিংবা ঝড়ো মহাসাগর—ঝুঁকি ও পুরষ্কার বিবেচনা করে অবতরণ অঞ্চল নির্ধারণ করো।
+              দক্ষিণ মেরুর শ্যাকলটন গহ্বর (প্রচুর বরফ কিন্তু অন্ধকার), শান্ত সাগর (মসৃণ ও নিরাপদ) কিংবা ঝড়ো মহাসাগর—ঝুঁকি ও পুরষ্কার বিবেচনা করে অঞ্চল বেছে নাও।
             </Text>
           </View>
         </View>
@@ -81,7 +123,7 @@ export default function MissionScreen() {
             </View>
             <Text style={styles.stageTitle}>কার্গো প্যাকিং ও সরঞ্জাম ভারসাম্য</Text>
             <Text style={styles.stageDesc}>
-              সর্বোচ্চ ৫০০ কেজি ওজন সীমার মধ্যে অক্সিজেন সিলিন্ডার, সোলার প্যানেল এবং বরফ উত্তোলক ড্রিল ব্যালেন্স করে ল্যান্ডারে সাজাও।
+              সর্বোচ্চ ৫০০ কেজি ওজন সীমার মধ্যে অক্সিজেন সিলিন্ডার, সোলার প্যানেল, RTG ব্যাটারি এবং আইস ড্রিল ব্যালেন্স করে ল্যান্ডারে সাজাও।
             </Text>
           </View>
         </View>
@@ -104,18 +146,20 @@ export default function MissionScreen() {
             </View>
             <Text style={styles.stageTitle}>মিশন ডিব্রিফ ও এক্সপি অর্জন</Text>
             <Text style={styles.stageDesc}>
-              মিশন কন্ট্রোল কম্পিউটার তোমার ওজন ভারসাম্য বিশ্লেষণ করে বেঁচে থাকার সম্ভাবনা গণনা করবে এবং সফল অবতরণে +১০০ XP প্রদান করবে!
+              মিশন কন্ট্রোল কম্পিউটার তোমার ওজন ভারসাম্য ও বেঁচে থাকার সম্ভাবনা বিশ্লেষণ করে স্টার রেটিং এবং সর্বোচ্চ +১১০ XP পদোন্নতি প্রদান করবে!
             </Text>
           </View>
         </View>
       </DoubleBezelCard>
 
-      {/* Teammate Integration Notice */}
-      <View style={styles.integrationNotice}>
-        <Radio size={18} color={Colors.plasmaViolet} />
-        <Text style={styles.integrationNoticeText}>
-          মাহিমের ইন্টারেক্টিভ মুন ল্যান্ডিং গেম ও মাসকট অ্যানিমেশন ইঞ্জিন এই স্ক্রিনের সাথে সরাসরি সংযুক্ত হতে প্রস্তুত।
-        </Text>
+      {/* Secondary Bottom Launch Action */}
+      <View style={styles.bottomLaunchSection}>
+        <TactileButton
+          title="মিশন সিমুলেটরে প্রবেশ করো 🚀"
+          onPress={() => setIsMissionActive(true)}
+          variant="emerald"
+          size="large"
+        />
       </View>
     </ScrollView>
   );
@@ -185,6 +229,14 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     fontSize: Typography.size.bodySmall,
     lineHeight: Typography.lineHeight.bodySmall,
+    marginBottom: 12,
+  },
+  mascotSlot: {
+    marginVertical: 12,
+    alignItems: 'center',
+  },
+  primaryLaunchBtnWrapper: {
+    marginTop: 8,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
@@ -251,21 +303,8 @@ const styles = StyleSheet.create({
     fontSize: Typography.size.bodySmall,
     lineHeight: Typography.lineHeight.bodySmall,
   },
-  integrationNotice: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(138, 43, 226, 0.14)',
-    borderRadius: 14,
-    padding: 14,
+  bottomLaunchSection: {
     marginTop: 8,
-    gap: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(138, 43, 226, 0.35)',
-  },
-  integrationNoticeText: {
-    flex: 1,
-    color: Colors.textSecondary,
-    fontSize: Typography.size.caption,
-    lineHeight: Typography.lineHeight.caption,
+    marginBottom: 16,
   },
 });

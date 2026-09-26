@@ -30,4 +30,4 @@
 - `HANDOFF.md` — current session state (created/updated as work progresses)
 - `implemented_features.md` — running log of what's been built and how
 
-**Status:** Active Sprint — App shell, Expo Router navigation, Lesson Reader, Quiz Engine, XP/Level-up state, Earth-to-Mars Splash, and Kid-Centric Space Passions Assessment with Custom Vector Badges built on `feature/shahi-app-shell`. Ready for mascot animations (Mahim) and font/device testing (Jim).
+**Status:** Active Sprint — Consolidated integration of Mahim (Moon Landing Mission & Mascot Animations), Humaira (NASA Curriculum, 8 lessons, 29 quizzes, 30 offline Q&As, seed.json), and Jim (Bengali typography, design & Lottie assets, AI Tutor Chat Screen at `app/tutor.tsx`, device testing report). Ready for Mahi's SQLite database seeder & Cloudflare proxy, and final merge to `dev`.
