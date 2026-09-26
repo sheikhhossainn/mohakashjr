@@ -30,4 +30,4 @@
 - `HANDOFF.md` — current session state (created/updated as work progresses)
 - `implemented_features.md` — running log of what's been built and how
 
-**Status:** Active Sprint — App shell, Expo Router navigation, Lesson Reader, Quiz Engine, XP/Level-up state, Earth-to-Mars Splash, and Kid-Centric Space Passions Assessment with Custom Vector Badges built on `feature/shahi-app-shell`. Ready for mascot animations (Mahim) and font/device testing (Jim).
+**Status:** Active Sprint — Moon Landing Mission & Mascot Animations completed (Mahim) on `feature/mahim-mission-flow`: Screen 1 (Lunar Site Selector with animated radar), Screen 2 (Cargo Packing mini-game with 500kg payload HUD), Screen 3 (Mission Debrief with XP crediting and rating), MascotReaction (Reanimated + Lottie fallback), and AnimatedXPBar. Ready for font/device testing & AI tutor UI (Jim), and database client integration (Mahi).
