@@ -1,16 +1,16 @@
 # Graph Report - mohakashjr  (2026-10-02)
 
 ## Corpus Check
-- 201 files · ~286,967 words
+- 201 files · ~286,877 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2575 nodes · 3487 edges · 185 communities (145 shown, 40 thin omitted)
+- 2575 nodes · 3487 edges · 186 communities (146 shown, 40 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 210 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3534de61`
+- Built from commit: `b3249f5e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -161,6 +161,7 @@
 - none
 - test_sync_brand_to_tokens.py
 - main
+- destructive
 - destructive-foreground
 - muted
 - primary-foreground
@@ -228,7 +229,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (185 total, 40 thin omitted)
+## Communities (186 total, 40 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -244,7 +245,7 @@ Nodes (46): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons
 
 ### Community 3 - "/graphify"
 Cohesion: 0.67
-Nodes (3): $type, $value, 16
+Nodes (4): padding-y, padding-y, $type, $value
 
 ### Community 4 - "Implementation Plan — Mohakash Jr (initial scaffold → MVP)"
 Cohesion: 0.20
@@ -332,7 +333,7 @@ Nodes (53): $type, $value, $type, $value, $type, $value, $type, $value (+45 more
 
 ### Community 37 - "HANDOFF — 2026-09-22 21:23"
 Cohesion: 0.33
-Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-02 20:00, Immediate next steps, Just completed
+Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-02 20:30, Immediate next steps, Just completed
 
 ### Community 38 - "BM25"
 Cohesion: 0.06
@@ -379,8 +380,8 @@ Cohesion: 0.06
 Nodes (32): 1. Mobile-First Design, 2. Consistent Breakpoint Usage, 3. Test at Breakpoint Boundaries, 4. Use Container for Content Width, 5. Progressive Enhancement, 6. Avoid Too Many Breakpoints, Best Practices, Breakpoint System (+24 more)
 
 ### Community 49 - "search_stack"
-Cohesion: 0.10
-Nodes (8): _project_row(), Search stack-specific guidelines, search_stack(), _valid_max_results(), _rows(), TestNativeDesktopStackFreshness, _rows(), TestWebStackFreshness
+Cohesion: 0.09
+Nodes (10): _exact_stack_identifier(), _project_row(), Resolve a standalone API identifier even when its BM25 IDF is low., Search stack-specific guidelines, search_stack(), _valid_max_results(), _rows(), TestNativeDesktopStackFreshness (+2 more)
 
 ### Community 50 - "Typography Specifications"
 Cohesion: 0.06
@@ -459,8 +460,8 @@ Cohesion: 0.15
 Nodes (6): read_rows(), split_values(), style_identities(), TestGeneratedCatalogContract, TestLandingAndStackContract, TestStyleIdentityContract
 
 ### Community 69 - "search"
-Cohesion: 0.10
-Nodes (9): _exact_stack_identifier(), Resolve a deprecated in-domain alias, or expose a cross-domain redirect., Main search function with auto-domain detection, Resolve a standalone API identifier even when its BM25 IDF is low., search(), _style_search_destination(), TestSearchDomains, read_rows() (+1 more)
+Cohesion: 0.11
+Nodes (7): Resolve a deprecated in-domain alias, or expose a cross-domain redirect., Main search function with auto-domain detection, search(), _style_search_destination(), TestSearchDomains, read_rows(), TestStyleTaxonomy
 
 ### Community 70 - "Routing by Task Type"
 Cohesion: 0.10
@@ -496,7 +497,7 @@ Nodes (18): 1. Wordmark (Logotype), 2. Lettermark (Monogram), 3. Pictorial Mark 
 
 ### Community 78 - "color"
 Cohesion: 0.11
-Nodes (19): $type, $value, background, destructive, foreground, muted-foreground, primary-hover, secondary (+11 more)
+Nodes (19): $type, $value, background, foreground, muted-foreground, primary, primary-hover, secondary (+11 more)
 
 ### Community 79 - "main"
 Cohesion: 0.11
@@ -636,7 +637,7 @@ Nodes (7): Tests for tailwind_config_gen.py, Reduce a generated TS/JS config to 
 
 ### Community 114 - "TestStyleTaxonomy"
 Cohesion: 0.67
-Nodes (3): $type, $value, 0
+Nodes (4): $type, $value, none, none
 
 ### Community 115 - "Brand"
 Cohesion: 0.20
@@ -675,12 +676,12 @@ Cohesion: 0.25
 Nodes (9): _exact_match_diagnostic(), _legacy_successor_guidance(), _normalize(), Apply longest-first synonym substitution at token boundaries., Whether a stack query explicitly targets an older framework generation., Choose one coherent applicability generation for stack retrieval., Prefer the explicit successor row for a brand-new app on legacy-only stacks., _stack_query_requests_legacy() (+1 more)
 
 ### Community 124 - "input"
-Cohesion: 0.20
-Nodes (12): padding-x, padding-y, input, $type, $value, focus-ring, padding-x, padding-y (+4 more)
+Cohesion: 0.29
+Nodes (8): padding-x, input, $type, $value, focus-ring, padding-x, $type, $value
 
 ### Community 125 - "radius"
-Cohesion: 0.19
-Nodes (14): $type, $value, $type, $value, $type, $value, primitive, radius (+6 more)
+Cohesion: 0.18
+Nodes (15): $type, $value, lg, $type, $value, $type, $value, primitive (+7 more)
 
 ### Community 126 - "._generate_javascript"
 Cohesion: 0.29
@@ -735,8 +736,8 @@ Cohesion: 0.60
 Nodes (5): radius, radius, radius, $type, $value
 
 ### Community 139 - "lg"
-Cohesion: 0.60
-Nodes (5): lg, $type, $value, lg, lg
+Cohesion: 0.67
+Nodes (3): $type, $value, 12
 
 ### Community 140 - "padding-y"
 Cohesion: 0.05
@@ -748,11 +749,15 @@ Nodes (26): LessonReaderScreen(), BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(),
 
 ### Community 142 - "md"
 Cohesion: 0.67
-Nodes (3): primary, $type, $value
+Nodes (3): $type, $value, 2
 
 ### Community 143 - "none"
 Cohesion: 0.13
 Nodes (17): AITutorChatScreen(), ChatMessage, styles, AnimatedMascot(), AnimatedMascotProps, styles, MascotFeedbackSlot(), MascotFeedbackSlotProps (+9 more)
+
+### Community 146 - "destructive"
+Cohesion: 0.67
+Nodes (3): destructive, $type, $value
 
 ### Community 147 - "destructive-foreground"
 Cohesion: 0.60
@@ -811,7 +816,7 @@ Cohesion: 0.09
 Nodes (38): DoubleBezelCard(), DoubleBezelCardProps, styles, MascotFeedbackPopupProps, MascotReaction(), MascotReactionProps, MascotReactionState, styles (+30 more)
 
 ## Knowledge Gaps
-- **1131 isolated node(s):** `Current task status`, `Just completed`, `Active blockers`, `Immediate next steps`, `$schema` (+1126 more)
+- **1131 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1126 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **40 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -819,11 +824,11 @@ Nodes (38): DoubleBezelCard(), DoubleBezelCardProps, styles, MascotFeedbackPopup
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `DesignSystemGenerator` connect `DesignSystemGenerator` to `.generate`, `_filter_anti_patterns_for_mode`, `read_rows`, `search`, `design_system.py`, `_resolve_color_mode`, `_select_palette_for_mode`, `test_core.py`, `BM25`, `detect_domain`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
-- **Why does `BM25` connect `test_core.py` to `search`, `BM25`, `DesignSystemGenerator`, `design_system.py`, `BM25`, `detect_domain`?**
-  _High betweenness centrality (0.009) - this node is a cross-community bridge._
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Why does `search()` connect `search` to `.generate`, `/graphify`, `TestTextLayoutDataContracts`, `_row_identities`, `design_system.py`, `search_stack`, `core.py`, `_normalize`, `test_core.py`, `BM25`, `detect_domain`?**
   _High betweenness centrality (0.009) - this node is a cross-community bridge._
+- **Why does `BM25` connect `test_core.py` to `search`, `BM25`, `DesignSystemGenerator`, `design_system.py`, `BM25`, `detect_domain`?**
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **Are the 36 inferred relationships involving `TailwindConfigGenerator` (e.g. with `TestGeneratedConfigIsValidJs` and `.test_node_check_parses_generated_config()`) actually correct?**
   _`TailwindConfigGenerator` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 30 inferred relationships involving `DesignSystemGenerator` (e.g. with `TestBm25CoreBehavior` and `TestDiagnosticsContracts`) actually correct?**

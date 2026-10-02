@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "AGENT.md": {
-    "mtime": 1790947446.5138552,
-    "ast_hash": "67c18ecb7856b3b5341ba15e7e7e676c",
+    "mtime": 1790951298.5086186,
+    "ast_hash": "c1bd814a80cdfa6806028742a121dfb9",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
@@ -145,13 +145,13 @@
     "semantic_hash": ""
   },
   "implemented_features.md": {
-    "mtime": 1790947446.5508718,
-    "ast_hash": "8b59209c4c8a4beda7f32cd18166659e",
+    "mtime": 1790951282.8649652,
+    "ast_hash": "e904cddbf50bb294cf5e7363f96c6024",
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1790947446.5148644,
-    "ast_hash": "2e3e4eb5a9350aaf7fc28b23f621d3b3",
+    "mtime": 1790951307.9125175,
+    "ast_hash": "510b5c058733adb2d1987768b466f2d6",
     "semantic_hash": ""
   },
   "TEAMCONTRIBUTION.md": {
@@ -170,23 +170,23 @@
     "semantic_hash": ""
   },
   "app/(tabs)/index.tsx": {
-    "mtime": 1790948397.056439,
-    "ast_hash": "e32e74f33950521ed344f30efc5c3f2b",
+    "mtime": 1790951245.3634596,
+    "ast_hash": "7789d0f039464ff0f13bac0d851c0594",
     "semantic_hash": ""
   },
   "app/(tabs)/lessons.tsx": {
-    "mtime": 1790948410.0214682,
-    "ast_hash": "f5e7d2bf3506878c19a36b838fc2c7ce",
+    "mtime": 1790951245.3645551,
+    "ast_hash": "93089c1429894fca362adec334dee60e",
     "semantic_hash": ""
   },
   "app/(tabs)/mission.tsx": {
-    "mtime": 1790948576.1818335,
-    "ast_hash": "86434b72ba7de2dae474112372a5032f",
+    "mtime": 1790951245.3645551,
+    "ast_hash": "463a357ce1ff95506b16012dbf0db6b3",
     "semantic_hash": ""
   },
   "app/(tabs)/profile.tsx": {
-    "mtime": 1790948439.4442303,
-    "ast_hash": "5cc435c96bfade7567facb6571421bb7",
+    "mtime": 1790951245.3651104,
+    "ast_hash": "77955ad4cb4c2d2c6c6df33953972e77",
     "semantic_hash": ""
   },
   "app/_layout.tsx": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "app/lessons/[id].tsx": {
-    "mtime": 1790948335.075096,
-    "ast_hash": "7bfcca8ae0d0a232e1399f04b5876407",
+    "mtime": 1790951245.3656461,
+    "ast_hash": "60f2ec496991ff96ea450352e846fc37",
     "semantic_hash": ""
   },
   "app/mission/index.tsx": {
@@ -205,8 +205,8 @@
     "semantic_hash": ""
   },
   "app/quiz/[id].tsx": {
-    "mtime": 1790948350.911912,
-    "ast_hash": "d26cca19d401c85ca1857abbc1f94fa3",
+    "mtime": 1790951245.366202,
+    "ast_hash": "c21679b2b6d76efb9d7c26238140c43a",
     "semantic_hash": ""
   },
   "app/quiz/index.tsx": {
@@ -230,7 +230,7 @@
     "semantic_hash": ""
   },
   "src/components/XPProgressBar.tsx": {
-    "mtime": 1790948599.3552015,
+    "mtime": 1790951245.396352,
     "ast_hash": "6ed5a5b10dc1d4d5bdf599fd44cee742",
     "semantic_hash": ""
   },
@@ -265,13 +265,13 @@
     "semantic_hash": ""
   },
   "src/theme/colors.ts": {
-    "mtime": 1790947512.2999687,
-    "ast_hash": "aa4eb1b44c61339d089b2724f67af839",
+    "mtime": 1790951245.396352,
+    "ast_hash": "159a4e682f2d90d42ff8f8c3150359a4",
     "semantic_hash": ""
   },
   "src/theme/typography.ts": {
-    "mtime": 1790947532.9905005,
-    "ast_hash": "317f96601a9a8351a867e23de8dc5f16",
+    "mtime": 1790951245.3973508,
+    "ast_hash": "cc5d00f23eac608655bae4e9aa3c62a0",
     "semantic_hash": ""
   },
   "tests/appStore.test.ts": {
@@ -285,17 +285,17 @@
     "semantic_hash": ""
   },
   "HANDOFF.md": {
-    "mtime": 1790947446.515864,
-    "ast_hash": "4468e66339e3ca98a602c0df2ae9c433",
+    "mtime": 1790951323.6905503,
+    "ast_hash": "d5488ac76da0790faac1705cd71c3f87",
     "semantic_hash": ""
   },
   "src/components/DoubleBezelCard.tsx": {
-    "mtime": 1790948231.0226846,
-    "ast_hash": "a8f16948c0a73cfe51081b778a382d08",
+    "mtime": 1790951245.392831,
+    "ast_hash": "d348371c92b944996631a81bb9c19647",
     "semantic_hash": ""
   },
   "src/components/TactileButton.tsx": {
-    "mtime": 1790948259.6340194,
+    "mtime": 1790951245.395342,
     "ast_hash": "d892b3d0a3cc287a40570076c9a13c90",
     "semantic_hash": ""
   },
@@ -305,13 +305,13 @@
     "semantic_hash": ""
   },
   "src/components/CosmicBackground.tsx": {
-    "mtime": 1790948284.02185,
-    "ast_hash": "3e9faa32da2039906f464229f503bb4f",
+    "mtime": 1790951245.392831,
+    "ast_hash": "5806831bde41cb3ac9388261acbbb7d3",
     "semantic_hash": ""
   },
   "src/components/SpaceTelemetryHUD.tsx": {
-    "mtime": 1790948303.3176248,
-    "ast_hash": "e3a58bebbc060215927823f064b55a6c",
+    "mtime": 1790951245.3938334,
+    "ast_hash": "0d9e23d90980b61d50fe42d3121af0c6",
     "semantic_hash": ""
   },
   ".agents/skills/brand/scripts/tests/test_sync_brand_to_tokens.py": {
@@ -855,13 +855,13 @@
     "semantic_hash": ""
   },
   "app/onboarding.tsx": {
-    "mtime": 1790948507.1630437,
-    "ast_hash": "027ddb52a3d1b00b53889433e7494e41",
+    "mtime": 1790951245.366202,
+    "ast_hash": "a294f0ccb6cc5c958eb9f67bc7ea358f",
     "semantic_hash": ""
   },
   "app/splash.tsx": {
-    "mtime": 1790948466.233105,
-    "ast_hash": "66d8f9911cc3ea9c5b59bcb1fff06a06",
+    "mtime": 1790951245.3667297,
+    "ast_hash": "b83ece16e136e8634debd101efe365e9",
     "semantic_hash": ""
   },
   "src/components/AnimatedMascot.tsx": {
@@ -915,7 +915,7 @@
     "semantic_hash": ""
   },
   "app/tutor.tsx": {
-    "mtime": 1790948626.3612952,
+    "mtime": 1790951245.367272,
     "ast_hash": "e3e5e724ff816a65448df07520cefec7",
     "semantic_hash": ""
   },
@@ -1015,28 +1015,28 @@
     "semantic_hash": ""
   },
   "src/components/GentleButton.tsx": {
-    "mtime": 1790948238.2565534,
-    "ast_hash": "ffedb86b3bb1630d8006b48e8744d13c",
+    "mtime": 1790951245.3938334,
+    "ast_hash": "5742db8d8461b90d6ba339cdce7cdb84",
     "semantic_hash": ""
   },
   "src/components/IllustrationHeader.tsx": {
-    "mtime": 1790948312.9316275,
-    "ast_hash": "af62821fc04dcd2c44e1070c64facf96",
+    "mtime": 1790951245.3938334,
+    "ast_hash": "3c2f0f9930c0cb198debec47e5e74b7c",
     "semantic_hash": ""
   },
   "src/components/NightSkyCanvas.tsx": {
-    "mtime": 1790948279.9399223,
-    "ast_hash": "df4d687d8462c8b6d14f28e646de925e",
+    "mtime": 1790951245.3938334,
+    "ast_hash": "bfcb8eecd0ecb5c3fd9dd39ce0816175",
     "semantic_hash": ""
   },
   "src/components/StoryCard.tsx": {
-    "mtime": 1790948225.6200142,
-    "ast_hash": "a108d532469579bf1ed069b386f90851",
+    "mtime": 1790951245.395342,
+    "ast_hash": "72f69cf80fbf09012bacfcad90b7a965",
     "semantic_hash": ""
   },
   "src/components/WonderBox.tsx": {
-    "mtime": 1790948266.9528832,
-    "ast_hash": "d0c8c2f651a0a4c0fbefb56eb20f82bf",
+    "mtime": 1790951245.396352,
+    "ast_hash": "92d536d4289c79f167a34f2f13126762",
     "semantic_hash": ""
   }
 }
