@@ -1,27 +1,27 @@
-# HANDOFF — 2026-10-02 11:42
+# HANDOFF — 2026-10-02 11:45
 
 ## Current task status
-Audited all feature branches and confirmed 100% convergence with `dev`. All branches (`feature/shahi-app-shell`, `feature/mahim-mission-flow`, `feature/humaira-content-pipeline`, `feature/assets-tutor-ui`) are merged into `dev`. Local `dev` is fast-forwarded and in sync with `origin/dev`.
+Confirmed all feature branches (`feature/shahi-app-shell`, `feature/mahim-mission-flow`, `feature/humaira-content-pipeline`, `feature/assets-tutor-ui`) are merged into `dev`. Cleanly merged `dev` into local `main` via fast-forward. Both `dev` and `main` now share commit `c3b5d69` and are verified clean.
 
 ## Just completed
 - **Feature Branch Audit & Verification**:
   - Fetched all remote branches (`git fetch --all --prune`).
-  - Ran `--no-merged dev` checks for local and remote branches — confirmed zero outstanding commits across:
-    1. `origin/feature/shahi-app-shell` / `feature/shahi-app-shell`
-    2. `origin/feature/mahim-mission-flow`
-    3. `origin/feature/humaira-content-pipeline`
-    4. `origin/feature/assets-tutor-ui`
-  - Fast-forwarded local `dev` to `origin/dev` (`0bd77ce`).
-- **Graphify AST Update**:
-  - Re-extracted and updated knowledge graph via `graphify update .` (2,554 nodes, 3,454 edges, 186 communities).
-- **Test Suite & Type Checking**:
-  - `npm test`: 27/27 unit tests passing (0 failures).
-  - `npm run lint` (`tsc --noEmit`): 0 TypeScript errors.
-- **Documentation**:
-  - Updated `AGENT.md` and `AGENTS.md` activity logs.
+  - Confirmed 0 unmerged commits across all feature branches into `dev`.
+- **Main Branch Merged with Dev**:
+  - Checked out `main` and executed `git merge --ff-only dev`.
+  - Local `main` now contains all features, tests, and documentation.
+- **Verification on Main & Dev**:
+  - `npm test`: 27/27 unit tests pass (0 failures) on both branches.
+  - `npm run lint` (`tsc --noEmit`): 0 TypeScript errors on both branches.
+- **Graphify Knowledge Graph**:
+  - Re-extracted and verified AST graph.
+- **Git State**:
+  - Local `dev` is at `c3b5d69` (ahead of `origin/dev` by 1 documentation commit).
+  - Local `main` is at `c3b5d69` (ahead of `origin/main` by 13 commits).
+  - Switched active working branch back to `dev`.
 
 ## Active blockers
 - None.
 
 ## Immediate next steps
-1. Ready for any new feature development on dedicated feature branches.
+- Await user instructions for pushing or continuing development on new feature branches.
