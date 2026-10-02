@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Animated, Dimensions, Easing } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Animated, Dimensions, Easing, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
-import Svg, { Circle, Rect, Path, Polygon, Defs, LinearGradient, Stop, Ellipse, G } from 'react-native-svg';
+import Svg, { Circle, Rect, Path, Polygon, Defs, LinearGradient, Stop, G } from 'react-native-svg';
 import { Colors } from '../src/theme/colors';
 import { Typography } from '../src/theme/typography';
-import { TactileButton } from '../src/components/TactileButton';
+import { GentleButton } from '../src/components/GentleButton';
 import { useAppStore } from '../src/state/useAppStore';
-import { Rocket, Sparkles, Compass, MapPin } from 'lucide-react-native';
+import { Rocket, Sparkles } from 'lucide-react-native';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -17,7 +17,6 @@ export default function SplashScreen() {
   // Animations
   const shipProgress = useRef(new Animated.Value(0)).current;
   const flamePulse = useRef(new Animated.Value(1)).current;
-  const marsPulse = useRef(new Animated.Value(1)).current;
   const titleFade = useRef(new Animated.Value(0)).current;
   const buttonFade = useRef(new Animated.Value(0)).current;
 
@@ -27,7 +26,7 @@ export default function SplashScreen() {
       Animated.sequence([
         Animated.timing(shipProgress, {
           toValue: 1,
-          duration: 3800,
+          duration: 4200,
           easing: Easing.inOut(Easing.quad),
           useNativeDriver: true,
         }),
@@ -43,39 +42,21 @@ export default function SplashScreen() {
     Animated.loop(
       Animated.sequence([
         Animated.timing(flamePulse, {
-          toValue: 1.35,
-          duration: 200,
+          toValue: 1.25,
+          duration: 220,
           easing: Easing.linear,
           useNativeDriver: true,
         }),
         Animated.timing(flamePulse, {
-          toValue: 0.8,
-          duration: 200,
+          toValue: 0.85,
+          duration: 220,
           easing: Easing.linear,
           useNativeDriver: true,
         }),
       ])
     ).start();
 
-    // 3. Mars Atmospheric Glow Breathing
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(marsPulse, {
-          toValue: 1.08,
-          duration: 2200,
-          easing: Easing.inOut(Easing.sin),
-          useNativeDriver: true,
-        }),
-        Animated.timing(marsPulse, {
-          toValue: 1.0,
-          duration: 2200,
-          easing: Easing.inOut(Easing.sin),
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-
-    // 4. Staggered Text & Button Fade
+    // 3. Staggered Text & Button Fade
     Animated.sequence([
       Animated.timing(titleFade, {
         toValue: 1,
@@ -100,7 +81,6 @@ export default function SplashScreen() {
     }
   };
 
-  // Spaceship trajectory coordinates from Earth (bottom-left) to Mars (top-right)
   const shipTranslateX = shipProgress.interpolate({
     inputRange: [0, 0.4, 0.8, 1],
     outputRange: [-30, SCREEN_WIDTH * 0.35, SCREEN_WIDTH * 0.65, SCREEN_WIDTH * 0.78],
@@ -118,81 +98,70 @@ export default function SplashScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Interplanetary Travel Arena */}
+      <StatusBar barStyle="light-content" />
+
+      {/* Interplanetary Travel Scene */}
       <View style={styles.spaceArena}>
         <Svg width={SCREEN_WIDTH} height={320} viewBox={`0 0 ${SCREEN_WIDTH} 320`}>
           <Defs>
             {/* Earth Blue Gradient */}
             <LinearGradient id="earthGrad" x1="0" y1="0" x2="1" y2="1">
-              <Stop offset="0%" stopColor="#38BDF8" />
-              <Stop offset="50%" stopColor="#0284C7" />
-              <Stop offset="100%" stopColor="#0369A1" />
+              <Stop offset="0%" stopColor="#6B8AFF" />
+              <Stop offset="50%" stopColor="#4A6AE0" />
+              <Stop offset="100%" stopColor="#1E2A78" />
             </LinearGradient>
 
-            {/* Mars Red/Rust Gradient */}
+            {/* Mars Soft Rust Gradient */}
             <LinearGradient id="marsGrad" x1="0" y1="0" x2="1" y2="1">
               <Stop offset="0%" stopColor="#FFAA80" />
-              <Stop offset="40%" stopColor="#FF5733" />
-              <Stop offset="80%" stopColor="#C0392B" />
+              <Stop offset="50%" stopColor="#E06860" />
               <Stop offset="100%" stopColor="#78281F" />
             </LinearGradient>
 
-            {/* Mars Glow Atmosphere */}
+            {/* Mars Glow Aura */}
             <LinearGradient id="marsAura" x1="0" y1="0" x2="1" y2="1">
-              <Stop offset="0%" stopColor="#FF7675" stopOpacity="0.45" />
+              <Stop offset="0%" stopColor="#FFA498" stopOpacity="0.35" />
               <Stop offset="100%" stopColor="#C0392B" stopOpacity="0" />
             </LinearGradient>
           </Defs>
 
-          {/* Earth at Departure (Bottom-Left) */}
+          {/* Earth Departure (Bottom-Left) */}
           <G transform="translate(40, 240)">
-            <Circle cx="0" cy="0" r="50" fill="url(#earthGrad)" />
-            {/* Earth Continents (Green swirls) */}
-            <Path d="M -25 -20 Q -10 -35 15 -20 Q 25 5 10 25 Q -15 35 -35 10 Z" fill="#2ED573" opacity={0.7} />
-            <Path d="M 0 10 Q 15 25 35 15 Q 40 30 20 40 Z" fill="#2ED573" opacity={0.7} />
+            <Circle cx="0" cy="0" r="48" fill="url(#earthGrad)" />
+            {/* Continents */}
+            <Path d="M -25 -20 Q -10 -35 15 -20 Q 25 5 10 25 Q -15 35 -35 10 Z" fill="#5ED6C0" opacity={0.6} />
+            <Path d="M 0 10 Q 15 25 35 15 Q 40 30 20 40 Z" fill="#5ED6C0" opacity={0.6} />
             {/* Cloud swirls */}
-            <Path d="M -35 -10 Q 0 -25 30 -5" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" opacity={0.5} />
-            {/* Label */}
-            <Circle cx="0" cy="0" r="54" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="4 4" fill="none" opacity={0.6} />
+            <Path d="M -30 -10 Q 0 -22 25 -5" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" opacity={0.4} />
           </G>
-
-          {/* Earth Label Tag */}
-          <Path d="M 95 240 L 115 240" stroke="#38BDF8" strokeWidth="1.5" />
 
           {/* Moon En Route */}
           <G transform="translate(130, 160)">
-            <Circle cx="0" cy="0" r="14" fill="#E2E8F0" />
-            <Circle cx="-3" cy="-3" r="3" fill="#CBD5E1" />
-            <Circle cx="4" cy="4" r="2.5" fill="#CBD5E1" />
-            <Circle cx="-2" cy="5" r="2" fill="#CBD5E1" />
+            <Circle cx="0" cy="0" r="13" fill="#E2E8F0" />
+            <Circle cx="-3" cy="-3" r="2.5" fill="#CBD5E1" />
+            <Circle cx="4" cy="4" r="2" fill="#CBD5E1" />
           </G>
 
-          {/* Orbital Transfer Path Arc (Dashed Trajectory Line) */}
+          {/* Gentle Trajectory Line */}
           <Path
             d={`M 50 210 Q ${SCREEN_WIDTH * 0.45} 80 ${SCREEN_WIDTH - 65} 90`}
-            stroke="rgba(0, 240, 255, 0.45)"
-            strokeWidth="2.5"
+            stroke="rgba(107, 138, 255, 0.35)"
+            strokeWidth="2"
             strokeDasharray="6 6"
             fill="none"
           />
 
-          {/* Mars at Arrival (Top-Right) */}
+          {/* Mars Arrival (Top-Right) */}
           <G transform={`translate(${SCREEN_WIDTH - 60}, 90)`}>
-            {/* Glowing Atmosphere */}
-            <Circle cx="0" cy="0" r="58" fill="url(#marsAura)" />
-            {/* Mars Red Planet Body */}
-            <Circle cx="0" cy="0" r="44" fill="url(#marsGrad)" />
-            {/* Mars Craters & Dunes */}
-            <Circle cx="-12" cy="-14" r="8" fill="#922B21" opacity={0.6} />
-            <Circle cx="16" cy="12" r="10" fill="#922B21" opacity={0.5} />
-            <Circle cx="-8" cy="18" r="5" fill="#78281F" opacity={0.6} />
-            <Path d="M -25 5 Q 0 15 28 0" stroke="#78281F" strokeWidth="3" opacity={0.4} fill="none" />
-            {/* Mars Polar Ice Cap (North) */}
-            <Path d="M -22 -36 Q 0 -44 22 -36 Z" fill="#FFFFFF" opacity={0.85} />
+            <Circle cx="0" cy="0" r="54" fill="url(#marsAura)" />
+            <Circle cx="0" cy="0" r="42" fill="url(#marsGrad)" />
+            <Circle cx="-12" cy="-14" r="7" fill="#78281F" opacity={0.5} />
+            <Circle cx="16" cy="12" r="9" fill="#78281F" opacity={0.4} />
+            <Path d="M -20 -34 Q 0 -42 20 -34 Z" fill="#FFFFFF" opacity={0.8} />
           </G>
         </Svg>
 
-        {/* Animated Spaceship Cruising Towards Mars */}
+        {/* Animated Spaceship */}
         <Animated.View
           style={[
             styles.cruisingShip,
@@ -205,7 +174,7 @@ export default function SplashScreen() {
             },
           ]}
         >
-          <Svg width="72" height="44" viewBox="0 0 72 44">
+          <Svg width="68" height="42" viewBox="0 0 68 42">
             <Defs>
               <LinearGradient id="shipBodyGrad" x1="0" y1="0" x2="1" y2="0">
                 <Stop offset="0%" stopColor="#CBD5E1" />
@@ -213,77 +182,73 @@ export default function SplashScreen() {
                 <Stop offset="100%" stopColor="#E2E8F0" />
               </LinearGradient>
               <LinearGradient id="shipFlame" x1="1" y1="0" x2="0" y2="0">
-                <Stop offset="0%" stopColor="#00F0FF" />
-                <Stop offset="60%" stopColor="#3B82F6" />
-                <Stop offset="100%" stopColor="#8B5CF6" stopOpacity="0" />
+                <Stop offset="0%" stopColor="#FFC86B" />
+                <Stop offset="60%" stopColor="#6B8AFF" />
+                <Stop offset="100%" stopColor="#B48EFF" stopOpacity="0" />
               </LinearGradient>
             </Defs>
 
             {/* Thruster Jet Flame */}
             <Animated.View style={{ transform: [{ scaleX: flamePulse }] }}>
-              <Path d="M 12 22 Q 0 16 0 22 Q 0 28 12 22 Z" fill="url(#shipFlame)" />
+              <Path d="M 12 21 Q 0 16 0 21 Q 0 26 12 21 Z" fill="url(#shipFlame)" />
             </Animated.View>
 
-            {/* Rocket Tail Wings */}
-            <Polygon points="16,10 26,18 16,18" fill={Colors.coral} />
-            <Polygon points="16,34 26,26 16,26" fill={Colors.coral} />
+            {/* Fins */}
+            <Polygon points="15,10 24,17 15,17" fill={Colors.coral} />
+            <Polygon points="15,32 24,25 15,25" fill={Colors.coral} />
 
-            {/* Rocket Body (Flying Horizontally Rightwards) */}
+            {/* Rocket Body */}
             <Path
-              d="M 16 16 L 46 16 Q 66 18 70 22 Q 66 26 46 28 L 16 28 Z"
+              d="M 15 15 L 44 15 Q 62 17 66 21 Q 62 25 44 27 L 15 27 Z"
               fill="url(#shipBodyGrad)"
               stroke="#94A3B8"
-              strokeWidth="2"
+              strokeWidth="1.5"
             />
 
-            {/* Red Nose Cone */}
-            <Path d="M 52 16 Q 70 22 52 28 Z" fill={Colors.coral} />
+            {/* Nose Cone */}
+            <Path d="M 50 15 Q 66 21 50 27 Z" fill={Colors.coral} />
 
-            {/* Porthole Window */}
-            <Circle cx="44" cy="22" r="5" fill={Colors.cyan} stroke="#0284C7" strokeWidth="1.5" />
-            <Circle cx="43" cy="21" r="1.5" fill="#FFFFFF" />
+            {/* Porthole */}
+            <Circle cx="42" cy="21" r="4.5" fill="#6B8AFF" stroke="#4A6AE0" strokeWidth="1.5" />
+            <Circle cx="41" cy="20" r="1.5" fill="#FFFFFF" />
 
-            {/* Solar Panels on Side */}
-            <Rect x="26" y="8" width="12" height="6" rx="1.5" fill="#38BDF8" stroke="#0284C7" strokeWidth="1" />
-            <Rect x="26" y="30" width="12" height="6" rx="1.5" fill="#38BDF8" stroke="#0284C7" strokeWidth="1" />
+            {/* Solar Panels */}
+            <Rect x="24" y="8" width="11" height="5" rx="1" fill="#6B8AFF" />
+            <Rect x="24" y="29" width="11" height="5" rx="1" fill="#6B8AFF" />
           </Svg>
         </Animated.View>
       </View>
 
-      {/* Planetary Route Telemetry Badge */}
+      {/* Route Badge */}
       <View style={styles.routeBadge}>
-        <View style={styles.routeItem}>
-          <Text style={styles.routeLabel}>উৎক্ষেপণ: পৃথিবী 🌍</Text>
-        </View>
-        <Text style={styles.routeArrow}>➔➔</Text>
-        <View style={styles.routeItem}>
-          <Text style={[styles.routeLabel, { color: '#FF7675' }]}>গন্তব্য: মঙ্গল গ্রহ 🔴</Text>
-        </View>
+        <Text style={styles.routeLabel}>উৎক্ষেপণ: পৃথিবী 🌍</Text>
+        <Text style={styles.routeArrow}>➔</Text>
+        <Text style={[styles.routeLabel, { color: Colors.coralLight }]}>গন্তব্য: মঙ্গল গ্রহ 🔴</Text>
       </View>
 
       {/* Title & Branding */}
       <Animated.View style={[styles.brandingContainer, { opacity: titleFade }]}>
         <View style={styles.missionTagRow}>
-          <Sparkles size={14} color={Colors.gold} />
+          <Sparkles size={13} color={Colors.gold} />
           <Text style={styles.missionTagText}>মঙ্গল অভিযান ১ • ইন্টারপ্ল্যানেটারি ফ্লাইট</Text>
-          <Sparkles size={14} color={Colors.gold} />
+          <Sparkles size={13} color={Colors.gold} />
         </View>
 
-        <Text style={styles.mainTitle}>মহাকাশ জুনিয়র 🚀</Text>
+        <Text style={styles.mainTitle}>মহাকাশ জুনিয়র</Text>
         <Text style={styles.subtitleText}>
-          লাল গ্রহ মঙ্গলে তোমার স্পেস একাডেমি প্রশিক্ষণ মিশন শুরু হতে যাচ্ছে!
+          লাল গ্রহ মঙ্গলে তোমার স্পেস একাডেমি অন্বেষণ শুরু হতে যাচ্ছে!
         </Text>
       </Animated.View>
 
       {/* Action CTA */}
       <Animated.View style={[styles.ctaContainer, { opacity: buttonFade }]}>
-        <TactileButton
-          title="ক্যাডেট ওরিয়েন্টেশনে চলো ➔"
+        <GentleButton
+          title="ক্যাডেট ওরিয়েন্টেশনে চলো ➔"
           onPress={handleProceed}
           variant="gold"
           size="large"
+          fullWidth
           icon={<Rocket size={20} color={Colors.textDark} />}
-          style={styles.launchButton}
         />
       </Animated.View>
     </View>
@@ -293,11 +258,12 @@ export default function SplashScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.background,
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 30,
-    paddingBottom: 40,
+    paddingBottom: 48,
   },
   spaceArena: {
     width: '100%',
@@ -315,29 +281,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(15, 23, 42, 0.75)',
+    backgroundColor: Colors.surface,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: 'rgba(0, 240, 255, 0.35)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
     gap: 10,
     marginTop: -20,
     marginBottom: 10,
   },
-  routeItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   routeLabel: {
-    color: Colors.cyan,
+    color: Colors.primaryLight,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindSemiBold,
   },
   routeArrow: {
     color: Colors.gold,
     fontSize: 12,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
   },
   brandingContainer: {
     alignItems: 'center',
@@ -347,41 +309,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(255, 184, 0, 0.15)',
+    backgroundColor: 'rgba(255, 200, 107, 0.12)',
     paddingHorizontal: 12,
-    paddingVertical: 4,
+    paddingVertical: 5,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 184, 0, 0.3)',
+    borderColor: 'rgba(255, 200, 107, 0.25)',
     marginBottom: 10,
   },
   missionTagText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   mainTitle: {
     color: Colors.text,
     fontSize: 34,
-    fontWeight: Typography.weight.black,
+    fontFamily: Typography.family.hindBold,
     textAlign: 'center',
     marginBottom: 6,
-    textShadowColor: 'rgba(0, 240, 255, 0.5)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
+    letterSpacing: -0.5,
   },
   subtitleText: {
     color: Colors.textSecondary,
     fontSize: Typography.size.bodySmall,
     lineHeight: Typography.lineHeight.bodySmall,
+    fontFamily: Typography.family.notoRegular,
     textAlign: 'center',
     maxWidth: 320,
   },
   ctaContainer: {
     width: '100%',
-    maxWidth: 340,
-  },
-  launchButton: {
-    width: '100%',
+    maxWidth: 360,
   },
 });

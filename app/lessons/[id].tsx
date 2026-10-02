@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
-import { DoubleBezelCard } from '../../src/components/DoubleBezelCard';
-import { TactileButton } from '../../src/components/TactileButton';
+import { WonderBox } from '../../src/components/WonderBox';
+import { GentleButton } from '../../src/components/GentleButton';
+import { IllustrationHeader, IllustrationTopic } from '../../src/components/IllustrationHeader';
 import { Lesson } from '../../src/content/schema';
 import { getLessonById } from '../../src/services/lessonService';
 import { useAppStore } from '../../src/state/useAppStore';
 import {
   Clock,
   Sparkles,
-  HelpCircle,
-  Lightbulb,
   ExternalLink,
-  Zap,
+  ChevronLeft,
+  BookOpen,
 } from 'lucide-react-native';
 
 export default function LessonReaderScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { completeLesson, completedLessonIds } = useAppStore();
+  const { completeLesson } = useAppStore();
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +37,7 @@ export default function LessonReaderScreen() {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color={Colors.primary} />
-        <Text style={styles.loadingText}>মহাকাশ পাঠ লোড হচ্ছে...</Text>
+        <Text style={styles.loadingText}>মহাকাশ পাঠের পৃষ্ঠা খোলা হচ্ছে...</Text>
       </View>
     );
   }
@@ -45,7 +45,7 @@ export default function LessonReaderScreen() {
   if (!lesson) {
     return (
       <View style={styles.centerContainer}>
-        <Text style={styles.errorText}>দুঃখিত! পাঠটি খুঁজে পাওয়া যায়নি।</Text>
+        <Text style={styles.errorText}>দুঃখিত! পাঠটি খুঁজে পাওয়া যায়নি।</Text>
       </View>
     );
   }
@@ -55,107 +55,137 @@ export default function LessonReaderScreen() {
     router.push(`/quiz/${lesson.id}`);
   };
 
+  const getIllustrationTopic = (lessonId: string): IllustrationTopic => {
+    if (lessonId.includes('1') || lessonId.includes('moon')) return 'moon';
+    if (lessonId.includes('2') || lessonId.includes('mars')) return 'mars';
+    if (lessonId.includes('3') || lessonId.includes('iss')) return 'iss';
+    if (lessonId.includes('4') || lessonId.includes('jwst')) return 'jwst';
+    if (lessonId.includes('5')) return 'earth';
+    if (lessonId.includes('6')) return 'sun';
+    if (lessonId.includes('7')) return 'stars';
+    return 'rocket';
+  };
+
+  const topic = getIllustrationTopic(lesson.id);
+
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
+
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Header Badge Row */}
-        <View style={styles.badgeRow}>
-          <View style={styles.levelBadge}>
-            <Text style={styles.levelBadgeText}>
-              {lesson.level === 'Cadet' ? 'ক্যাডেট পাঠ' : 'মহাকাশচারী পাঠ'}
-            </Text>
+        {/* Full-width Storybook Illustration Header */}
+        <IllustrationHeader topic={topic} height={190} />
+
+        {/* Content Body with Generous Book Margins */}
+        <View style={styles.bookPage}>
+          {/* Metadata Badges */}
+          <View style={styles.badgeRow}>
+            <View style={styles.levelBadge}>
+              <Text style={styles.levelBadgeText}>
+                {lesson.level === 'Cadet' ? 'ক্যাডেট অভিযাত্রা' : 'মহাকাশচারী অভিযাত্রা'}
+              </Text>
+            </View>
+            <View style={styles.metaBadge}>
+              <Clock size={13} color={Colors.textSecondary} />
+              <Text style={styles.metaBadgeText}>{lesson.read_time_minutes} মিনিট পাঠ</Text>
+            </View>
+            <View style={styles.xpBadge}>
+              <Sparkles size={13} color={Colors.gold} />
+              <Text style={styles.xpBadgeText}>+{lesson.xp_reward} XP</Text>
+            </View>
           </View>
-          <View style={styles.metaBadge}>
-            <Clock size={12} color={Colors.textSecondary} />
-            <Text style={styles.metaBadgeText}>{lesson.read_time_minutes} মিনিট পাঠ</Text>
-          </View>
-          <View style={styles.xpBadge}>
-            <Zap size={12} color={Colors.gold} fill={Colors.gold} />
-            <Text style={styles.xpBadgeText}>+{lesson.xp_reward} XP বোনাস</Text>
-          </View>
+
+          {/* Chapter Heading */}
+          <Text style={styles.title}>{lesson.title_bn}</Text>
+          <Text style={styles.summary}>{lesson.summary_bn}</Text>
+
+          <View style={styles.softDivider} />
+
+          {/* Content Story Blocks */}
+          {lesson.blocks.map((block, idx) => {
+            if (block.type === 'nasa_fact') {
+              return (
+                <WonderBox
+                  key={idx}
+                  type="fact"
+                  title={block.heading_bn || 'নাসার মজার বিজ্ঞান তথ্য'}
+                >
+                  {block.text_bn}
+                </WonderBox>
+              );
+            }
+
+            if (block.type === 'analogy') {
+              return (
+                <WonderBox
+                  key={idx}
+                  type="analogy"
+                  title={block.heading_bn || 'সহজ কথায় বুঝে নাও'}
+                >
+                  {block.text_bn}
+                </WonderBox>
+              );
+            }
+
+            if (block.type === 'did_you_know') {
+              return (
+                <WonderBox
+                  key={idx}
+                  type="curiosity"
+                  title={block.heading_bn || 'তুমি কি জানো?'}
+                >
+                  {block.text_bn}
+                </WonderBox>
+              );
+            }
+
+            return (
+              <View key={idx} style={styles.paragraphBlock}>
+                {block.heading_bn && (
+                  <View style={styles.headingRow}>
+                    <View style={styles.headingAccentBar} />
+                    <Text style={styles.paragraphHeading}>{block.heading_bn}</Text>
+                  </View>
+                )}
+                <Text style={styles.paragraphText}>{block.text_bn}</Text>
+              </View>
+            );
+          })}
+
+          {/* Wonder Reflection Box */}
+          <WonderBox type="wonder" title="একটু ভাবো ও আলোচনা করো">
+            মহাকাশের এই অবিশ্বাস্য তথ্যটি তোমার মনের ভেতরে কেমন অনুভূতি জাগায়? তোমার বন্ধুদের সাথে কি এটি আলোচনা করেছো?
+          </WonderBox>
+
+          {/* Official NASA Science Source */}
+          {lesson.nasa_source && (
+            <View style={styles.sourceFooter}>
+              <View style={styles.sourceHeaderRow}>
+                <ExternalLink size={13} color={Colors.primaryLight} />
+                <Text style={styles.sourceLabel}>তথ্যসূত্র: নাসা বিজ্ঞান ডাটাবেস (NASA Science)</Text>
+              </View>
+              <Text style={styles.sourceUrl}>{lesson.nasa_source}</Text>
+            </View>
+          )}
         </View>
-
-        {/* Hero Title & Mission Brief */}
-        <Text style={styles.title}>{lesson.title_bn}</Text>
-        <Text style={styles.summary}>{lesson.summary_bn}</Text>
-
-        <View style={styles.divider} />
-
-        {/* Chunked Story Content Blocks */}
-        {lesson.blocks.map((block, idx) => {
-          if (block.type === 'nasa_fact') {
-            return (
-              <DoubleBezelCard key={idx} glow="gold" style={styles.blockMargin}>
-                <View style={styles.calloutHeader}>
-                  <Sparkles size={18} color={Colors.gold} />
-                  <Text style={styles.nasaFactTitle}>{block.heading_bn || 'নাসার মজার বিজ্ঞান তথ্য'}</Text>
-                </View>
-                <Text style={styles.calloutText}>{block.text_bn}</Text>
-              </DoubleBezelCard>
-            );
-          }
-
-          if (block.type === 'analogy') {
-            return (
-              <DoubleBezelCard key={idx} glow="blue" style={styles.blockMargin}>
-                <View style={styles.calloutHeader}>
-                  <Lightbulb size={18} color={Colors.primary} />
-                  <Text style={styles.analogyTitle}>{block.heading_bn || 'দৈনন্দিন জীবনের সাথে তুলনা'}</Text>
-                </View>
-                <Text style={styles.calloutText}>{block.text_bn}</Text>
-              </DoubleBezelCard>
-            );
-          }
-
-          if (block.type === 'did_you_know') {
-            return (
-              <DoubleBezelCard key={idx} glow="purple" style={styles.blockMargin}>
-                <View style={styles.calloutHeader}>
-                  <HelpCircle size={18} color={Colors.purple} />
-                  <Text style={styles.didYouKnowTitle}>{block.heading_bn || 'তুমি কি জানো?'}</Text>
-                </View>
-                <Text style={styles.calloutText}>{block.text_bn}</Text>
-              </DoubleBezelCard>
-            );
-          }
-
-          return (
-            <View key={idx} style={styles.paragraphBlock}>
-              {block.heading_bn && (
-                <View style={styles.headingRow}>
-                  <View style={styles.headingAccentBar} />
-                  <Text style={styles.paragraphHeading}>{block.heading_bn}</Text>
-                </View>
-              )}
-              <Text style={styles.paragraphText}>{block.text_bn}</Text>
-            </View>
-          );
-        })}
-
-        {/* Official NASA Reference Footnote */}
-        {lesson.nasa_source && (
-          <View style={styles.sourceFooter}>
-            <View style={styles.sourceHeaderRow}>
-              <ExternalLink size={13} color={Colors.primary} />
-              <Text style={styles.sourceLabel}>তথ্যসূত্র: নাসা বিজ্ঞান ডাটাবেস (NASA Science)</Text>
-            </View>
-            <Text style={styles.sourceUrl}>{lesson.nasa_source}</Text>
-          </View>
-        )}
       </ScrollView>
 
-      {/* Floating Bottom Action Bar */}
+      {/* Floating Bottom Navigation Bar */}
       <View style={styles.floatingBottomBar}>
-        <View style={styles.bottomBarLeft}>
-          <Text style={styles.bottomBarTitle}>পাঠের জ্ঞান যাচাই কুইজ</Text>
-          <Text style={styles.bottomBarSubtitle}>সঠিক উত্তরে অতিরিক্ত XP অর্জন করো!</Text>
-        </View>
+        <GentleButton
+          title="ফিরে যাও"
+          onPress={() => router.back()}
+          variant="ghost"
+          size="normal"
+          icon={<ChevronLeft size={18} color={Colors.textSecondary} />}
+        />
 
-        <TactileButton
-          title="কুইজে অংশ নাও ➔"
+        <GentleButton
+          title="কৌতূহল যাচাই কুইজ ➔"
           onPress={handleStartQuiz}
           variant="gold"
           size="normal"
+          icon={<BookOpen size={17} color={Colors.textDark} />}
         />
       </View>
     </View>
@@ -165,11 +195,11 @@ export default function LessonReaderScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.background,
   },
   centerContainer: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.background,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
@@ -177,138 +207,122 @@ const styles = StyleSheet.create({
   loadingText: {
     color: Colors.textSecondary,
     fontSize: Typography.size.body,
+    fontFamily: Typography.family.notoRegular,
     marginTop: 12,
   },
   errorText: {
     color: Colors.coral,
     fontSize: Typography.size.body,
+    fontFamily: Typography.family.notoRegular,
   },
   content: {
-    padding: 18,
-    paddingBottom: 120,
+    paddingBottom: 110,
+  },
+  bookPage: {
+    paddingHorizontal: 22,
+    paddingTop: 20,
+    maxWidth: 620,
+    alignSelf: 'center',
+    width: '100%',
   },
   badgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 12,
+    marginBottom: 14,
   },
   levelBadge: {
-    backgroundColor: Colors.primaryBg,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
+    backgroundColor: 'rgba(107, 138, 255, 0.15)',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 12,
   },
   levelBadgeText: {
-    color: Colors.primary,
+    color: Colors.primaryLight,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindSemiBold,
   },
   metaBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.surface,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
     gap: 5,
   },
   metaBadgeText: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
+    fontFamily: Typography.family.notoRegular,
   },
   xpBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.goldBg,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
+    backgroundColor: 'rgba(255, 200, 107, 0.15)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
     gap: 4,
   },
   xpBadgeText: {
     color: Colors.gold,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
   },
   title: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
     lineHeight: Typography.lineHeight.hero,
-    marginBottom: 8,
+    marginBottom: 10,
+    letterSpacing: -0.2,
   },
   summary: {
     color: Colors.textSecondary,
     fontSize: Typography.size.body,
     lineHeight: Typography.lineHeight.body,
+    fontFamily: Typography.family.notoRegular,
   },
-  divider: {
+  softDivider: {
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    marginVertical: 18,
-  },
-  blockMargin: {
-    marginBottom: 16,
-  },
-  calloutHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
-  },
-  nasaFactTitle: {
-    color: Colors.gold,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
-  },
-  analogyTitle: {
-    color: Colors.primary,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
-  },
-  didYouKnowTitle: {
-    color: Colors.purple,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
-  },
-  calloutText: {
-    color: Colors.text,
-    fontSize: Typography.size.body,
-    lineHeight: Typography.lineHeight.body,
+    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    marginVertical: 22,
   },
   paragraphBlock: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   headingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
     gap: 8,
   },
   headingAccentBar: {
-    width: 3,
-    height: 18,
-    backgroundColor: Colors.primary,
+    width: 3.5,
+    height: 20,
+    backgroundColor: Colors.primaryLight,
     borderRadius: 2,
   },
   paragraphHeading: {
     color: Colors.text,
     fontSize: Typography.size.h2,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   paragraphText: {
     color: Colors.text,
     fontSize: Typography.size.body,
     lineHeight: Typography.lineHeight.body,
+    fontFamily: Typography.family.notoRegular,
+    opacity: 0.94,
   },
   sourceFooter: {
-    marginTop: 10,
-    padding: 14,
+    marginTop: 16,
+    padding: 16,
     backgroundColor: Colors.surface,
-    borderRadius: 16,
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.06)',
   },
   sourceHeaderRow: {
     flexDirection: 'row',
@@ -319,10 +333,10 @@ const styles = StyleSheet.create({
   sourceLabel: {
     color: Colors.textMuted,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.semiBold,
+    fontFamily: Typography.family.hindSemiBold,
   },
   sourceUrl: {
-    color: Colors.primary,
+    color: Colors.primaryLight,
     fontSize: Typography.size.micro,
   },
   floatingBottomBar: {
@@ -330,26 +344,13 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#12173E',
+    backgroundColor: 'rgba(15, 17, 40, 0.95)',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.1)',
-    paddingHorizontal: 16,
+    borderTopColor: 'rgba(255, 255, 255, 0.08)',
+    paddingHorizontal: 20,
     paddingVertical: 14,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  bottomBarLeft: {
-    flex: 1,
-    marginRight: 10,
-  },
-  bottomBarTitle: {
-    color: Colors.text,
-    fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
-  },
-  bottomBarSubtitle: {
-    color: Colors.gold,
-    fontSize: Typography.size.micro,
   },
 });

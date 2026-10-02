@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
-import { DoubleBezelCard } from '../../src/components/DoubleBezelCard';
-import { TactileButton } from '../../src/components/TactileButton';
+import { StoryCard } from '../../src/components/StoryCard';
+import { GentleButton } from '../../src/components/GentleButton';
 import { MascotReaction } from '../../src/components/MascotReaction';
 import { MoonLandingMission } from '../../src/components/mission';
 import {
@@ -11,11 +11,7 @@ import {
   MapPin,
   PackageCheck,
   Award,
-  Sparkles,
-  Compass,
-  Radio,
   Play,
-  ShieldAlert,
 } from 'lucide-react-native';
 
 export default function MissionScreen() {
@@ -34,14 +30,10 @@ export default function MissionScreen() {
       showsVerticalScrollIndicator={false}
     >
       {/* Hero Mission Control Briefing Card */}
-      <DoubleBezelCard
-        glow="cyan"
-        tag="চন্দ্রাভিযান কন্ট্রোল 🚀"
-        style={styles.heroMargin}
-      >
+      <StoryCard accent="primary" style={styles.heroCard}>
         <View style={styles.tagRow}>
           <View style={styles.missionTag}>
-            <Rocket size={13} color={Colors.hudCyan} />
+            <Rocket size={13} color={Colors.primaryLight} />
             <Text style={styles.missionTagText}>আর্টেমিস অভিযান ১</Text>
           </View>
           <View style={styles.statusLiveBadge}>
@@ -52,14 +44,14 @@ export default function MissionScreen() {
 
         <Text style={styles.heroTitle}>চন্দ্রপৃষ্ঠে অবতরণ মিশন 🌕</Text>
         <Text style={styles.heroDescription}>
-          একজন জুনিয়র মিশন কমান্ডার হিসেবে তোমার মহাকাশযান নিরাপদে চাঁদের মাটিতে অবতরণ করানো এবং সীমিত ওজনের মধ্যে বৈজ্ঞানিক সরঞ্জাম সাজিয়ে চাঁদের ঘাঁটিতে টিকে থাকাই তোমার মূল অভিযান!
+          একজন জুনিয়র মিশন কমান্ডার হিসেবে তোমার মহাকাশযান নিরাপদে চাঁদের মাটিতে অবতরণ করানো এবং সীমিত ওজনের মধ্যে বৈজ্ঞানিক সরঞ্জাম সাজিয়ে চাঁদের ঘাঁটিতে টিকে থাকাই তোমার মূল অভিযান!
         </Text>
 
         {/* Astro-Buddy Encouragement Slot */}
         <View style={styles.mascotSlot}>
           <MascotReaction
             state="thinking"
-            size={90}
+            size={84}
             showSpeechBubble
             bubbleText="কমান্ডার, ল্যান্ডার প্রস্তুত! তুমি কি লুনার চ্যালেঞ্জের জন্য তৈরি?"
           />
@@ -67,54 +59,47 @@ export default function MissionScreen() {
 
         {/* Primary Launch Action Button */}
         <View style={styles.primaryLaunchBtnWrapper}>
-          <TactileButton
+          <GentleButton
             title="চন্দ্রাভিযান শুরু করো 🚀"
             onPress={() => setIsMissionActive(true)}
             variant="gold"
             size="large"
-            icon={<Play size={18} color="#0B0F19" fill="#0B0F19" />}
+            fullWidth
+            icon={<Play size={18} color={Colors.textDark} fill={Colors.textDark} />}
           />
         </View>
-      </DoubleBezelCard>
+      </StoryCard>
 
       {/* 3-Stage Mission Roadmap */}
       <View style={styles.sectionHeaderRow}>
-        <Text style={styles.sectionHeading}>মিশনের কার্যনির্বাহী ধাপসমূহ</Text>
-        <Text style={styles.sectionCode}>৩টি ইন্টারঅ্যাক্টিভ ধাপ</Text>
+        <Text style={styles.sectionHeading}>মিশনের প্রধান ৩টি ধাপ</Text>
+        <Text style={styles.sectionCode}>ইন্টারঅ্যাক্টিভ সিমুলেশন</Text>
       </View>
 
       {/* Stage 1 */}
-      <DoubleBezelCard
-        glow="gold"
-        tag="ধাপ ১: অবতরণ স্থান 📍"
-        style={styles.stageMargin}
-      >
+      <StoryCard accent="gold" style={styles.stageCard}>
         <View style={styles.stageContentRow}>
-          <View style={[styles.stageIconBox, { backgroundColor: Colors.thermalGoldBg }]}>
-            <MapPin size={22} color={Colors.thermalGold} />
+          <View style={[styles.stageIconBox, { backgroundColor: 'rgba(255, 200, 107, 0.15)' }]}>
+            <MapPin size={22} color={Colors.gold} />
           </View>
           <View style={styles.stageDetails}>
             <View style={styles.stageNumberRow}>
               <Text style={styles.stageNumber}>ধাপ ০১</Text>
-              <Text style={styles.telemetryTag}>টেলিমেট্রি স্ক্যান</Text>
+              <Text style={styles.telemetryTag}>অবতরণ অঞ্চল নির্বাচন</Text>
             </View>
             <Text style={styles.stageTitle}>অবতরণ অঞ্চল নির্বাচন (Site Selection)</Text>
             <Text style={styles.stageDesc}>
-              দক্ষিণ মেরুর শ্যাকলটন গহ্বর (প্রচুর বরফ কিন্তু অন্ধকার), শান্ত সাগর (মসৃণ ও নিরাপদ) কিংবা ঝড়ো মহাসাগর—ঝুঁকি ও পুরষ্কার বিবেচনা করে অঞ্চল বেছে নাও।
+              দক্ষিণ মেরুর শ্যাকলটন গহ্বর (প্রচুর বরফ কিন্তু অন্ধকার), শান্ত সাগর (মসৃণ ও নিরাপদ) কিংবা ঝড়ো মহাসাগর—ঝুঁকি বিবেচনা করে অঞ্চল বেছে নাও।
             </Text>
           </View>
         </View>
-      </DoubleBezelCard>
+      </StoryCard>
 
       {/* Stage 2 */}
-      <DoubleBezelCard
-        glow="cyan"
-        tag="ধাপ ২: সরঞ্জাম ব্যালেন্স 📦"
-        style={styles.stageMargin}
-      >
+      <StoryCard accent="primary" style={styles.stageCard}>
         <View style={styles.stageContentRow}>
-          <View style={[styles.stageIconBox, { backgroundColor: Colors.hudCyanBg }]}>
-            <PackageCheck size={22} color={Colors.hudCyan} />
+          <View style={[styles.stageIconBox, { backgroundColor: 'rgba(107, 138, 255, 0.15)' }]}>
+            <PackageCheck size={22} color={Colors.primaryLight} />
           </View>
           <View style={styles.stageDetails}>
             <View style={styles.stageNumberRow}>
@@ -127,17 +112,13 @@ export default function MissionScreen() {
             </Text>
           </View>
         </View>
-      </DoubleBezelCard>
+      </StoryCard>
 
       {/* Stage 3 */}
-      <DoubleBezelCard
-        glow="emerald"
-        tag="ধাপ ৩: মিশন ডিব্রিফ 🏆"
-        style={styles.stageMargin}
-      >
+      <StoryCard accent="emerald" style={styles.stageCard}>
         <View style={styles.stageContentRow}>
-          <View style={[styles.stageIconBox, { backgroundColor: Colors.telemetryGreenBg }]}>
-            <Award size={22} color={Colors.telemetryGreen} />
+          <View style={[styles.stageIconBox, { backgroundColor: 'rgba(94, 214, 192, 0.15)' }]}>
+            <Award size={22} color={Colors.emerald} />
           </View>
           <View style={styles.stageDetails}>
             <View style={styles.stageNumberRow}>
@@ -150,15 +131,16 @@ export default function MissionScreen() {
             </Text>
           </View>
         </View>
-      </DoubleBezelCard>
+      </StoryCard>
 
       {/* Secondary Bottom Launch Action */}
       <View style={styles.bottomLaunchSection}>
-        <TactileButton
+        <GentleButton
           title="মিশন সিমুলেটরে প্রবেশ করো 🚀"
           onPress={() => setIsMissionActive(true)}
           variant="emerald"
           size="large"
+          fullWidth
         />
       </View>
     </ScrollView>
@@ -168,68 +150,70 @@ export default function MissionScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.background,
   },
   content: {
-    padding: 16,
-    paddingBottom: 40,
+    padding: 18,
+    paddingBottom: 48,
+    maxWidth: 620,
+    alignSelf: 'center',
+    width: '100%',
   },
-  heroMargin: {
+  heroCard: {
     marginBottom: 16,
   },
   tagRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   missionTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.hudCyanBg,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
     gap: 6,
+    backgroundColor: 'rgba(107, 138, 255, 0.15)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
   },
   missionTagText: {
-    color: Colors.hudCyan,
+    color: Colors.primaryLight,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.fontSans,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   statusLiveBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.telemetryGreenBg,
+    gap: 6,
+    backgroundColor: 'rgba(94, 214, 192, 0.12)',
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 6,
-    gap: 5,
+    borderRadius: 8,
   },
   liveDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
-    backgroundColor: Colors.telemetryGreen,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: Colors.emerald,
   },
   statusLiveText: {
-    color: Colors.telemetryGreen,
+    color: Colors.emerald,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.fontSans,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindSemiBold,
   },
   heroTitle: {
     color: Colors.text,
-    fontSize: Typography.size.h1,
-    fontWeight: Typography.weight.heavy,
+    fontSize: Typography.size.hero,
+    fontFamily: Typography.family.hindBold,
     marginBottom: 8,
   },
   heroDescription: {
     color: Colors.textSecondary,
     fontSize: Typography.size.bodySmall,
     lineHeight: Typography.lineHeight.bodySmall,
-    marginBottom: 12,
+    fontFamily: Typography.family.notoRegular,
+    marginBottom: 14,
   },
   mascotSlot: {
     marginVertical: 12,
@@ -242,20 +226,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginHorizontal: 4,
+    marginTop: 8,
     marginBottom: 12,
   },
   sectionHeading: {
     color: Colors.text,
     fontSize: Typography.size.h3,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   sectionCode: {
-    color: Colors.hudCyan,
-    fontSize: 11,
-    fontFamily: Typography.fontSans,
-    letterSpacing: 0.5,
+    color: Colors.textMuted,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.notoRegular,
   },
-  stageMargin: {
+  stageCard: {
     marginBottom: 12,
   },
   stageContentRow: {
@@ -265,46 +250,43 @@ const styles = StyleSheet.create({
   stageIconBox: {
     width: 44,
     height: 44,
-    borderRadius: 12,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   stageDetails: {
     flex: 1,
   },
   stageNumberRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 8,
     marginBottom: 2,
   },
   stageNumber: {
-    color: Colors.hudCyan,
-    fontSize: Typography.size.caption,
-    fontFamily: Typography.fontSans,
-    fontWeight: Typography.weight.heavy,
+    color: Colors.gold,
+    fontSize: Typography.size.micro,
+    fontFamily: Typography.family.hindBold,
   },
   telemetryTag: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.fontSans,
-    fontWeight: Typography.weight.semiBold,
+    fontFamily: Typography.family.notoRegular,
   },
   stageTitle: {
     color: Colors.text,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.family.hindBold,
     marginBottom: 4,
   },
   stageDesc: {
     color: Colors.textSecondary,
-    fontSize: Typography.size.bodySmall,
-    lineHeight: Typography.lineHeight.bodySmall,
+    fontSize: Typography.size.caption,
+    lineHeight: Typography.lineHeight.caption,
+    fontFamily: Typography.family.notoRegular,
   },
   bottomLaunchSection: {
-    marginTop: 8,
-    marginBottom: 16,
+    marginTop: 10,
+    marginBottom: 20,
   },
 });

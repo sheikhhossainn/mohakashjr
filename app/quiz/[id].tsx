@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
-import { DoubleBezelCard } from '../../src/components/DoubleBezelCard';
-import { TactileButton } from '../../src/components/TactileButton';
+import { StoryCard } from '../../src/components/StoryCard';
+import { GentleButton } from '../../src/components/GentleButton';
 import { MascotFeedbackSlot } from '../../src/components/MascotFeedbackSlot';
 import { AstronautAvatar } from '../../src/components/AstronautAvatar';
 import { ConfettiEffect } from '../../src/components/ConfettiEffect';
@@ -13,12 +13,13 @@ import { getQuizQuestionsByLessonId, saveQuizAttempt } from '../../src/services/
 import { useAppStore } from '../../src/state/useAppStore';
 import {
   RotateCcw,
-  Home,
-  Star,
+  Sparkles,
   Zap,
   CheckCircle2,
   AlertCircle,
   HelpCircle,
+  ArrowRight,
+  BookOpen,
 } from 'lucide-react-native';
 
 const BENGALI_DIGITS = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
@@ -58,8 +59,8 @@ export default function QuizScreen() {
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-        <Text style={styles.loadingText}>কুইজ লোড হচ্ছে...</Text>
+        <ActivityIndicator size="large" color={Colors.primaryLight} />
+        <Text style={styles.loadingText}>মহাকাশ কুইজ সাজানো হচ্ছে...</Text>
       </View>
     );
   }
@@ -67,12 +68,12 @@ export default function QuizScreen() {
   if (questions.length === 0) {
     return (
       <View style={styles.centerContainer}>
-        <Text style={styles.emptyTitle}>এই পাঠের জন্য কোনো কুইজ পাওয়া যায়নি।</Text>
-        <TactileButton
-          title="পাঠশালায় ফিরে যাও"
+        <Text style={styles.emptyTitle}>এই পাঠের জন্য কোনো প্রশ্ন পাওয়া যায়নি।</Text>
+        <GentleButton
+          title="পাঠশালায় ফিরে যাও"
           onPress={() => router.back()}
           variant="primary"
-          icon={<Home size={16} color="#FFFFFF" />}
+          icon={<BookOpen size={17} color="#FFFFFF" />}
         />
       </View>
     );
@@ -135,7 +136,7 @@ export default function QuizScreen() {
     setIsQuizComplete(false);
   };
 
-  // Completion Victory Screen (3-Star Celebration)
+  // Completion Victory Screen
   if (isQuizComplete) {
     const finalScore = score;
     const isPerfect = finalScore === questions.length;
@@ -143,26 +144,27 @@ export default function QuizScreen() {
 
     return (
       <ScrollView contentContainerStyle={styles.summaryContainer} showsVerticalScrollIndicator={false}>
+        <StatusBar barStyle="light-content" />
         {finalScore > 0 && <ConfettiEffect active />}
-        <DoubleBezelCard glow={isPerfect ? 'gold' : 'blue'} style={styles.summaryCardWrapper}>
+
+        <StoryCard accent={isPerfect ? 'gold' : 'primary'} style={styles.summaryCardWrapper}>
           {/* Avatar Celebration */}
           <View style={styles.avatarWrapper}>
-            <AstronautAvatar size={78} rank={rank} showHalo />
+            <AstronautAvatar size={82} rank={rank} showHalo />
           </View>
 
-          <Text style={styles.summaryTitle}>অভিনন্দন! মিশন সফল 🎉</Text>
+          <Text style={styles.summaryTitle}>দারুণ অন্বেষণ! 🎉</Text>
           <Text style={styles.summarySubtitle}>
-            তুমি {toBengaliNumber(questions.length)}টি প্রশ্নের মধ্যে {toBengaliNumber(finalScore)}টি সঠিক উত্তর দিয়েছো!
+            তুমি {toBengaliNumber(questions.length)}টি অনুসন্ধানের মধ্যে {toBengaliNumber(finalScore)}টির রহস্য উন্মোচন করেছো!
           </Text>
 
           {/* Star Rating Display */}
           <View style={styles.starsRow}>
             {[...Array(questions.length)].map((_, i) => (
-              <Star
+              <Sparkles
                 key={i}
-                size={30}
+                size={28}
                 color={i < finalScore ? Colors.gold : 'rgba(255, 255, 255, 0.15)'}
-                fill={i < finalScore ? Colors.gold : 'transparent'}
               />
             ))}
           </View>
@@ -171,8 +173,8 @@ export default function QuizScreen() {
           <View style={styles.xpRewardBox}>
             <Zap size={22} color={Colors.gold} fill={Colors.gold} />
             <View>
-              <Text style={styles.xpRewardTitle}>+{earnedXP} XP অর্জিত হয়েছে!</Text>
-              <Text style={styles.xpRewardDesc}>তোমার মহাকাশচারী প্রোফাইলে যোগ করা হয়েছে</Text>
+              <Text style={styles.xpRewardTitle}>+{earnedXP} XP অর্জিত হয়েছে!</Text>
+              <Text style={styles.xpRewardDesc}>তোমার মহাকাশ গবেষণার ঝুলিতে জমা হয়েছে</Text>
             </View>
           </View>
 
@@ -182,28 +184,28 @@ export default function QuizScreen() {
             title={isPerfect ? 'অনবদ্য নৈপুণ্য! 🌟' : 'দারুণ প্রচেষ্টা! 🚀'}
             message={
               isPerfect
-                ? 'চমৎকার! মহাকাশ বিজ্ঞানের প্রতিটি জটিল প্রশ্নের সঠিক উত্তর দিয়েছো তুমি।'
-                : 'খুব ভালো চেষ্টা করেছো! নিয়মিত অনুশীলনে তুমি আরও বড় বিজ্ঞানী হয়ে উঠবে।'
+                ? 'চমৎকার! মহাকাশ বিজ্ঞানের প্রতিটি জটিল প্রশ্নের বিজ্ঞানসম্মত রহস্য বুঝে নিয়েছো।'
+                : 'খুব ভালো চেষ্টা করেছো! মহাকাশের রহস্য ধীরে ধীরে আরও পরিষ্কার হয়ে উঠবে।'
             }
           />
 
           {/* Action CTAs */}
           <View style={styles.summaryActions}>
-            <TactileButton
-              title="আবার চেষ্টা করো"
+            <GentleButton
+              title="আবার বোঝার চেষ্টা করো"
               onPress={handleRetry}
               variant="outline"
               size="normal"
-              icon={<RotateCcw size={16} color="#FFFFFF" />}
+              icon={<RotateCcw size={16} color={Colors.text} />}
             />
-            <TactileButton
-              title="পাঠশালায় ফিরে যাও ➔"
+            <GentleButton
+              title="পরবর্তী পাঠশালায় চলো ➔"
               onPress={() => router.push('/(tabs)/lessons')}
               variant="gold"
               size="normal"
             />
           </View>
-        </DoubleBezelCard>
+        </StoryCard>
       </ScrollView>
     );
   }
@@ -211,13 +213,15 @@ export default function QuizScreen() {
   // Active Quiz Deck
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-      {/* Friendly Stepper Header */}
+      <StatusBar barStyle="light-content" />
+
+      {/* Calm Stepper Header */}
       <View style={styles.stepperContainer}>
         <View style={styles.stepperTopRow}>
           <View style={styles.stepperBadge}>
-            <Star size={13} color={Colors.gold} fill={Colors.gold} />
+            <HelpCircle size={14} color={Colors.gold} />
             <Text style={styles.stepperTag}>
-              {id === 'placement' ? 'প্লেসমেন্ট চ্যালেঞ্জ' : 'মহাকাশ কুইজ'}
+              {id === 'placement' ? 'অভিযাত্রা সূচনা' : 'কৌতূহল যাচাই'}
             </Text>
           </View>
           <Text style={styles.stepperCounter}>
@@ -235,10 +239,11 @@ export default function QuizScreen() {
         </View>
       </View>
 
-      {/* Question Prompt Card */}
-      <DoubleBezelCard glow="blue" style={styles.questionCardMargin}>
+      {/* Question Prompt in Single-Surface StoryCard */}
+      <StoryCard accent="primary" style={styles.questionCardMargin}>
+        <Text style={styles.promptLabel}>একটু ভাবো তো...</Text>
         <Text style={styles.promptText}>{currentQ.prompt_bn}</Text>
-      </DoubleBezelCard>
+      </StoryCard>
 
       {/* 4 Interactive Option Cards */}
       <View style={styles.optionsList}>
@@ -254,7 +259,7 @@ export default function QuizScreen() {
             if (isCorrectAnswer) {
               cardStyle = { ...cardStyle, ...styles.optionCardCorrect };
               badgeStyle = { ...badgeStyle, ...styles.optionBadgeCorrect };
-              badgeTextStyle = { ...badgeTextStyle, color: '#FFFFFF' };
+              badgeTextStyle = { ...badgeTextStyle, color: '#0F1128' };
             } else if (isSelected) {
               cardStyle = { ...cardStyle, ...styles.optionCardIncorrect };
               badgeStyle = { ...badgeStyle, ...styles.optionBadgeIncorrect };
@@ -288,7 +293,7 @@ export default function QuizScreen() {
         })}
       </View>
 
-      {/* Immediate Pedagogical Feedback & Mascot Slot */}
+      {/* Immediate Natural Explanation & Mascot Slot */}
       {isAnswerSubmitted && (
         <View style={styles.feedbackContainer}>
           <MascotFeedbackSlot
@@ -297,12 +302,16 @@ export default function QuizScreen() {
             hint={currentQ.hint_bn}
           />
 
-          <TactileButton
-            title={currentIndex + 1 < questions.length ? 'পরবর্তী প্রশ্ন ➔' : 'ফলাফল দেখো ➔'}
-            onPress={handleNextQuestion}
-            variant={isCorrect ? 'emerald' : 'primary'}
-            size="large"
-          />
+          <View style={styles.nextButtonWrap}>
+            <GentleButton
+              title={currentIndex + 1 < questions.length ? 'পরবর্তী প্রশ্ন ➔' : 'ফলাফল দেখো ➔'}
+              onPress={handleNextQuestion}
+              variant={isCorrect ? 'emerald' : 'primary'}
+              size="large"
+              fullWidth
+              icon={<ArrowRight size={18} color={isCorrect ? Colors.textDark : '#FFFFFF'} />}
+            />
+          </View>
         </View>
       )}
     </ScrollView>
@@ -312,15 +321,18 @@ export default function QuizScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.background,
   },
   content: {
-    padding: 18,
-    paddingBottom: 48,
+    padding: 20,
+    paddingBottom: 50,
+    maxWidth: 620,
+    alignSelf: 'center',
+    width: '100%',
   },
   centerContainer: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.background,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
@@ -328,60 +340,68 @@ const styles = StyleSheet.create({
   loadingText: {
     color: Colors.textSecondary,
     fontSize: Typography.size.body,
+    fontFamily: Typography.family.notoRegular,
     marginTop: 12,
   },
   emptyTitle: {
     color: Colors.textSecondary,
     fontSize: Typography.size.body,
+    fontFamily: Typography.family.notoRegular,
     textAlign: 'center',
     marginBottom: 16,
   },
   stepperContainer: {
-    marginBottom: 16,
+    marginBottom: 18,
   },
   stepperTopRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   stepperBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: Colors.goldBg,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
+    backgroundColor: 'rgba(255, 200, 107, 0.12)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
   },
   stepperTag: {
     color: Colors.gold,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   stepperCounter: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindSemiBold,
   },
   stepperTrack: {
-    height: 8,
+    height: 6,
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 4,
+    borderRadius: 3,
     overflow: 'hidden',
   },
   stepperFill: {
     height: '100%',
-    backgroundColor: Colors.primary,
-    borderRadius: 4,
+    backgroundColor: Colors.primaryLight,
+    borderRadius: 3,
   },
   questionCardMargin: {
-    marginBottom: 16,
+    marginBottom: 18,
+  },
+  promptLabel: {
+    color: Colors.primaryLight,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.hindSemiBold,
+    marginBottom: 4,
   },
   promptText: {
     color: Colors.text,
     fontSize: Typography.size.h2,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
     lineHeight: Typography.lineHeight.h2,
   },
   optionsList: {
@@ -390,43 +410,43 @@ const styles = StyleSheet.create({
   optionCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surfaceCard,
-    padding: 14,
-    borderRadius: 20,
-    borderWidth: 1.5,
+    backgroundColor: Colors.surface,
+    padding: 16,
+    borderRadius: 18,
+    borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.08)',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
-    shadowRadius: 4,
+    shadowRadius: 6,
     elevation: 2,
   },
   optionCardSelected: {
-    borderColor: Colors.primary,
-    backgroundColor: Colors.primaryBg,
+    borderColor: Colors.primaryLight,
+    backgroundColor: 'rgba(107, 138, 255, 0.12)',
   },
   optionCardCorrect: {
     borderColor: Colors.emerald,
-    backgroundColor: Colors.emeraldBg,
+    backgroundColor: 'rgba(94, 214, 192, 0.15)',
   },
   optionCardIncorrect: {
     borderColor: Colors.coral,
-    backgroundColor: Colors.coralBg,
+    backgroundColor: 'rgba(255, 138, 128, 0.15)',
   },
   optionBadge: {
     width: 34,
     height: 34,
     borderRadius: 12,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceCard,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 14,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   optionBadgeSelected: {
     backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    borderColor: Colors.primaryLight,
   },
   optionBadgeCorrect: {
     backgroundColor: Colors.emerald,
@@ -439,74 +459,84 @@ const styles = StyleSheet.create({
   badgeLabel: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
   },
   optionText: {
     flex: 1,
     color: Colors.text,
     fontSize: Typography.size.body,
-    lineHeight: Typography.lineHeight.body,
+    lineHeight: Typography.lineHeight.bodySmall,
+    fontFamily: Typography.family.notoRegular,
   },
   indicatorIcon: {
     marginLeft: 8,
   },
   feedbackContainer: {
+    marginTop: 18,
+  },
+  nextButtonWrap: {
     marginTop: 14,
   },
   summaryContainer: {
     flexGrow: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.background,
     justifyContent: 'center',
-    padding: 18,
+    padding: 20,
+    maxWidth: 580,
+    alignSelf: 'center',
+    width: '100%',
   },
   summaryCardWrapper: {
     alignItems: 'center',
   },
   avatarWrapper: {
-    marginBottom: 10,
+    marginBottom: 12,
   },
   summaryTitle: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
     marginBottom: 6,
   },
   summarySubtitle: {
     color: Colors.textSecondary,
     fontSize: Typography.size.body,
+    fontFamily: Typography.family.notoRegular,
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 18,
+    lineHeight: Typography.lineHeight.body,
   },
   starsRow: {
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 16,
+    gap: 12,
+    marginBottom: 18,
   },
   xpRewardBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.goldBg,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 16,
-    borderWidth: 1.5,
+    backgroundColor: 'rgba(255, 200, 107, 0.12)',
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    borderRadius: 18,
+    borderWidth: 1,
     borderColor: Colors.gold,
     gap: 12,
     width: '100%',
-    marginBottom: 12,
+    marginBottom: 14,
   },
   xpRewardTitle: {
     color: Colors.gold,
     fontSize: Typography.size.body,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
   },
   xpRewardDesc: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
+    fontFamily: Typography.family.notoRegular,
   },
   summaryActions: {
     width: '100%',
-    gap: 10,
-    marginTop: 14,
+    gap: 12,
+    marginTop: 16,
   },
 });

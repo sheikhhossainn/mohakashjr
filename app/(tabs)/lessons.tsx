@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
-import { DoubleBezelCard } from '../../src/components/DoubleBezelCard';
+import { StoryCard } from '../../src/components/StoryCard';
 import { Lesson } from '../../src/content/schema';
 import { getLessons } from '../../src/services/lessonService';
 import { useAppStore } from '../../src/state/useAppStore';
@@ -11,7 +11,7 @@ import {
   CheckCircle2,
   Lock,
   Clock,
-  Zap,
+  Sparkles,
   ChevronRight,
   BookOpen,
 } from 'lucide-react-native';
@@ -51,10 +51,9 @@ export default function LessonsScreen() {
         }}
         style={styles.cardTouchWrapper}
       >
-        <DoubleBezelCard
-          glow={isCompleted ? 'emerald' : locked ? 'none' : 'blue'}
-          style={locked ? styles.lockedOuter : undefined}
-          innerStyle={locked ? styles.lockedInner : undefined}
+        <StoryCard
+          accent={isCompleted ? 'emerald' : locked ? 'none' : 'primary'}
+          style={locked ? styles.lockedCard : undefined}
         >
           {/* Card Top Row */}
           <View style={styles.cardTopRow}>
@@ -68,7 +67,7 @@ export default function LessonsScreen() {
                 <Text
                   style={[
                     styles.levelTagText,
-                    { color: item.level === 'Astronaut' ? Colors.emerald : Colors.primary },
+                    { color: item.level === 'Astronaut' ? Colors.emerald : Colors.primaryLight },
                   ]}
                 >
                   {item.level === 'Cadet' ? 'ক্যাডেট স্তর' : 'মহাকাশচারী স্তর'}
@@ -79,17 +78,17 @@ export default function LessonsScreen() {
 
             {isCompleted ? (
               <View style={styles.completedBadge}>
-                <CheckCircle2 size={14} color={Colors.emerald} />
+                <CheckCircle2 size={13} color={Colors.emerald} />
                 <Text style={styles.completedText}>সম্পন্ন</Text>
               </View>
             ) : locked ? (
               <View style={styles.lockedBadge}>
-                <Lock size={13} color={Colors.textMuted} />
+                <Lock size={12} color={Colors.textMuted} />
                 <Text style={styles.lockedText}>লকড</Text>
               </View>
             ) : (
               <View style={styles.xpBadge}>
-                <Zap size={13} color={Colors.gold} fill={Colors.gold} />
+                <Sparkles size={12} color={Colors.gold} />
                 <Text style={styles.xpBadgeText}>+{item.xp_reward} XP</Text>
               </View>
             )}
@@ -110,14 +109,14 @@ export default function LessonsScreen() {
 
             {!locked ? (
               <View style={styles.readActionGroup}>
-                <Text style={styles.readActionText}>পড়া শুরু করো</Text>
-                <ChevronRight size={16} color={Colors.primary} />
+                <Text style={styles.readActionText}>পড়া শুরু করো</Text>
+                <ChevronRight size={15} color={Colors.primaryLight} />
               </View>
             ) : (
               <Text style={styles.lockHintText}>ক্যাডেট স্তর সম্পন্ন করে আনলক করো</Text>
             )}
           </View>
-        </DoubleBezelCard>
+        </StoryCard>
       </Pressable>
     );
   };
@@ -169,57 +168,57 @@ export default function LessonsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.background,
   },
   filterRow: {
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 8,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    gap: 10,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.08)',
-    backgroundColor: 'rgba(9, 13, 36, 0.75)',
+    borderBottomColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: Colors.surface,
   },
   pill: {
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 14,
-    backgroundColor: Colors.surface,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   pillActive: {
-    backgroundColor: Colors.primaryBg,
-    borderColor: Colors.primary,
+    backgroundColor: 'rgba(107, 138, 255, 0.18)',
+    borderColor: Colors.primaryLight,
   },
   pillText: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.semiBold,
+    fontFamily: Typography.family.hindSemiBold,
   },
   pillTextActive: {
-    color: Colors.primary,
-    fontWeight: Typography.weight.bold,
+    color: Colors.primaryLight,
+    fontFamily: Typography.family.hindBold,
   },
   listContent: {
-    padding: 16,
+    padding: 18,
     gap: 14,
-    paddingBottom: 40,
+    paddingBottom: 48,
+    maxWidth: 620,
+    alignSelf: 'center',
+    width: '100%',
   },
   cardTouchWrapper: {
     marginBottom: 2,
   },
-  lockedOuter: {
-    opacity: 0.6,
-  },
-  lockedInner: {
-    backgroundColor: '#0F1433',
+  lockedCard: {
+    opacity: 0.55,
   },
   cardTopRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   levelTagGroup: {
     flexDirection: 'row',
@@ -227,29 +226,29 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   levelBadge: {
-    paddingHorizontal: 8,
+    paddingHorizontal: 9,
     paddingVertical: 3,
     borderRadius: 8,
   },
   cadetTag: {
-    backgroundColor: Colors.primaryBg,
+    backgroundColor: 'rgba(107, 138, 255, 0.15)',
   },
   astronautTag: {
-    backgroundColor: Colors.emeraldBg,
+    backgroundColor: 'rgba(94, 214, 192, 0.15)',
   },
   levelTagText: {
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   orderText: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.semiBold,
+    fontFamily: Typography.family.notoRegular,
   },
   completedBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.emeraldBg,
+    backgroundColor: 'rgba(94, 214, 192, 0.15)',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
@@ -258,12 +257,12 @@ const styles = StyleSheet.create({
   completedText: {
     color: Colors.emerald,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   lockedBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
@@ -272,11 +271,12 @@ const styles = StyleSheet.create({
   lockedText: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
+    fontFamily: Typography.family.hindSemiBold,
   },
   xpBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.goldBg,
+    backgroundColor: 'rgba(255, 200, 107, 0.15)',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
@@ -285,13 +285,12 @@ const styles = StyleSheet.create({
   xpBadgeText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
   },
   lessonTitle: {
     color: Colors.text,
     fontSize: Typography.size.h3,
-    fontWeight: Typography.weight.heavy,
-    lineHeight: Typography.lineHeight.h3,
+    fontFamily: Typography.family.hindBold,
     marginBottom: 6,
   },
   textLocked: {
@@ -301,7 +300,8 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     fontSize: Typography.size.bodySmall,
     lineHeight: Typography.lineHeight.bodySmall,
-    marginBottom: 12,
+    fontFamily: Typography.family.notoRegular,
+    marginBottom: 14,
   },
   cardFooter: {
     flexDirection: 'row',
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderTopWidth: 1,
     borderTopColor: 'rgba(255, 255, 255, 0.06)',
-    paddingTop: 10,
+    paddingTop: 12,
   },
   metaTimeGroup: {
     flexDirection: 'row',
@@ -319,6 +319,7 @@ const styles = StyleSheet.create({
   metaTimeText: {
     color: Colors.textMuted,
     fontSize: Typography.size.caption,
+    fontFamily: Typography.family.notoRegular,
   },
   readActionGroup: {
     flexDirection: 'row',
@@ -326,12 +327,13 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   readActionText: {
-    color: Colors.primary,
+    color: Colors.primaryLight,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindSemiBold,
   },
   lockHintText: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
+    fontFamily: Typography.family.notoRegular,
   },
 });
