@@ -1,16 +1,16 @@
 # Graph Report - mohakashjr  (2026-10-02)
 
 ## Corpus Check
-- 201 files · ~286,548 words
+- 201 files · ~286,967 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2575 nodes · 3487 edges · 186 communities (146 shown, 40 thin omitted)
+- 2575 nodes · 3487 edges · 185 communities (145 shown, 40 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 210 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ef4ad112`
+- Built from commit: `3534de61`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -161,7 +161,6 @@
 - none
 - test_sync_brand_to_tokens.py
 - main
-- destructive
 - destructive-foreground
 - muted
 - primary-foreground
@@ -229,7 +228,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (186 total, 40 thin omitted)
+## Communities (185 total, 40 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -317,7 +316,7 @@ Nodes (21): 1. Quick Start & Git Workflow (For Every Teammate & Agent), 2. Team 
 
 ### Community 33 - "dependencies"
 Cohesion: 0.67
-Nodes (3): $type, $value, 1
+Nodes (4): $type, $value, md, md
 
 ### Community 34 - "expo"
 Cohesion: 0.10
@@ -333,7 +332,7 @@ Nodes (53): $type, $value, $type, $value, $type, $value, $type, $value (+45 more
 
 ### Community 37 - "HANDOFF — 2026-09-22 21:23"
 Cohesion: 0.33
-Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-02 11:49, Immediate next steps, Just completed
+Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-02 20:00, Immediate next steps, Just completed
 
 ### Community 38 - "BM25"
 Cohesion: 0.06
@@ -497,7 +496,7 @@ Nodes (18): 1. Wordmark (Logotype), 2. Lettermark (Monogram), 3. Pictorial Mark 
 
 ### Community 78 - "color"
 Cohesion: 0.11
-Nodes (19): $type, $value, background, foreground, muted-foreground, primary, primary-hover, secondary (+11 more)
+Nodes (19): $type, $value, background, destructive, foreground, muted-foreground, primary-hover, secondary (+11 more)
 
 ### Community 79 - "main"
 Cohesion: 0.11
@@ -637,7 +636,7 @@ Nodes (7): Tests for tailwind_config_gen.py, Reduce a generated TS/JS config to 
 
 ### Community 114 - "TestStyleTaxonomy"
 Cohesion: 0.67
-Nodes (3): $type, $value, 3
+Nodes (3): $type, $value, 0
 
 ### Community 115 - "Brand"
 Cohesion: 0.20
@@ -676,8 +675,8 @@ Cohesion: 0.25
 Nodes (9): _exact_match_diagnostic(), _legacy_successor_guidance(), _normalize(), Apply longest-first synonym substitution at token boundaries., Whether a stack query explicitly targets an older framework generation., Choose one coherent applicability generation for stack retrieval., Prefer the explicit successor row for a brand-new app on legacy-only stacks., _stack_query_requests_legacy() (+1 more)
 
 ### Community 124 - "input"
-Cohesion: 0.29
-Nodes (8): padding-x, input, $type, $value, focus-ring, padding-x, $type, $value
+Cohesion: 0.20
+Nodes (12): padding-x, padding-y, input, $type, $value, focus-ring, padding-x, padding-y (+4 more)
 
 ### Community 125 - "radius"
 Cohesion: 0.19
@@ -729,7 +728,7 @@ Nodes (4): Brand Guidelines Template, Document Structure, Extractable Fields, Us
 
 ### Community 137 - "$type"
 Cohesion: 0.67
-Nodes (4): padding-y, padding-y, $type, $value
+Nodes (3): $type, $value, 6
 
 ### Community 138 - "radius"
 Cohesion: 0.60
@@ -749,15 +748,11 @@ Nodes (26): LessonReaderScreen(), BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(),
 
 ### Community 142 - "md"
 Cohesion: 0.67
-Nodes (4): $type, $value, none, none
+Nodes (3): primary, $type, $value
 
 ### Community 143 - "none"
 Cohesion: 0.13
 Nodes (17): AITutorChatScreen(), ChatMessage, styles, AnimatedMascot(), AnimatedMascotProps, styles, MascotFeedbackSlot(), MascotFeedbackSlotProps (+9 more)
-
-### Community 146 - "destructive"
-Cohesion: 0.67
-Nodes (3): destructive, $type, $value
 
 ### Community 147 - "destructive-foreground"
 Cohesion: 0.60
@@ -816,7 +811,7 @@ Cohesion: 0.09
 Nodes (38): DoubleBezelCard(), DoubleBezelCardProps, styles, MascotFeedbackPopupProps, MascotReaction(), MascotReactionProps, MascotReactionState, styles (+30 more)
 
 ## Knowledge Gaps
-- **1131 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1126 more)
+- **1131 isolated node(s):** `Current task status`, `Just completed`, `Active blockers`, `Immediate next steps`, `$schema` (+1126 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **40 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -824,11 +819,11 @@ Nodes (38): DoubleBezelCard(), DoubleBezelCardProps, styles, MascotFeedbackPopup
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `DesignSystemGenerator` connect `DesignSystemGenerator` to `.generate`, `_filter_anti_patterns_for_mode`, `read_rows`, `search`, `design_system.py`, `_resolve_color_mode`, `_select_palette_for_mode`, `test_core.py`, `BM25`, `detect_domain`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `BM25` connect `test_core.py` to `search`, `BM25`, `DesignSystemGenerator`, `design_system.py`, `BM25`, `detect_domain`?**
+  _High betweenness centrality (0.009) - this node is a cross-community bridge._
 - **Why does `search()` connect `search` to `.generate`, `/graphify`, `TestTextLayoutDataContracts`, `_row_identities`, `design_system.py`, `search_stack`, `core.py`, `_normalize`, `test_core.py`, `BM25`, `detect_domain`?**
   _High betweenness centrality (0.009) - this node is a cross-community bridge._
-- **Why does `BM25` connect `test_core.py` to `search`, `BM25`, `DesignSystemGenerator`, `design_system.py`, `BM25`, `detect_domain`?**
-  _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **Are the 36 inferred relationships involving `TailwindConfigGenerator` (e.g. with `TestGeneratedConfigIsValidJs` and `.test_node_check_parses_generated_config()`) actually correct?**
   _`TailwindConfigGenerator` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 30 inferred relationships involving `DesignSystemGenerator` (e.g. with `TestBm25CoreBehavior` and `TestDiagnosticsContracts`) actually correct?**
