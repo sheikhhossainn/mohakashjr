@@ -5,13 +5,12 @@ import {
   StyleSheet,
   ScrollView,
   Pressable,
-  Animated,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
-import { DoubleBezelCard } from '../../src/components/DoubleBezelCard';
-import { TactileButton } from '../../src/components/TactileButton';
+import { StoryCard } from '../../src/components/StoryCard';
+import { GentleButton } from '../../src/components/GentleButton';
 import { XPProgressBar } from '../../src/components/XPProgressBar';
 import { AstronautAvatar } from '../../src/components/AstronautAvatar';
 import { SpaceChoiceBadge } from '../../src/components/SpaceChoiceBadge';
@@ -37,9 +36,9 @@ import {
   Circle,
   ChevronRight,
   Bot,
+  Compass,
 } from 'lucide-react-native';
 
-// ─── Rotating NASA Facts ────────────────────────────────────────────────────
 const COSMIC_FACTS = [
   'সূর্য এতো বিশাল যে তার ভেতর প্রায় ১৩ লক্ষ পৃথিবী এঁটে যেতে পারে! ☀️',
   'মহাকাশে কোনো শব্দ নেই — শব্দের চলাচলে বাতাস লাগে, যা সেখানে অনুপস্থিত! 🤫',
@@ -118,157 +117,137 @@ export default function DashboardScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* ── Telemetry Strip ─────────────────────────────── */}
+      {/* ── Status HUD ──────────────────────────────────────── */}
       <SpaceTelemetryHUD />
 
-      {/* ── HERO: Cadet Command Center ───────────────────── */}
-      <View style={styles.heroShell}>
+      {/* ── HERO: Cadet Identity Card ───────────────────────── */}
+      <StoryCard accent="primary" style={styles.heroCard}>
         {/* Archetype + Rank badges */}
         <View style={styles.heroBadgeRow}>
-          <View style={[styles.archetypePill, { borderColor: archetypeInfo.accentColor + '60' }]}>
+          <View style={[styles.archetypePill, { borderColor: archetypeInfo.accentColor + '50' }]}>
             <SpaceChoiceBadge type={cadetArchetype} size={22} isSelected />
             <Text style={[styles.archetypePillText, { color: archetypeInfo.accentColor }]}>
               {archetypeInfo.title_bn}
             </Text>
           </View>
           <View style={styles.rankPill}>
-            <Star size={11} color={Colors.gold} fill={Colors.gold} />
+            <Star size={12} color={Colors.gold} fill={Colors.gold} />
             <Text style={styles.rankPillText}>{rankInfo.label_bn}</Text>
           </View>
         </View>
 
-        {/* Avatar + Greeting */}
+        {/* Greeting & Avatar */}
         <View style={styles.heroMain}>
           <View style={styles.heroLeft}>
-            <Text style={styles.heroGreeting}>স্বাগতম, {displayName}! 👨‍🚀</Text>
+            <Text style={styles.heroGreeting}>সালাম, {displayName}! 👨‍🚀</Text>
             <Text style={styles.heroMotto}>"{archetypeInfo.motto_bn}"</Text>
           </View>
-          <AstronautAvatar size={76} rank={rank} showHalo />
+          <AstronautAvatar size={74} rank={rank} showHalo />
         </View>
 
-        {/* Fuel Cell Recharge CTA */}
-        <View style={styles.fuelDivider} />
+        {/* Fuel Cell Energy Recharge */}
+        <View style={styles.softDivider} />
         {!fuelCharged ? (
           <Pressable
-            style={({ pressed }) => [styles.rechargeBtn, pressed && styles.rechargeBtnPressed]}
+            style={({ pressed }) => [styles.rechargeBtn, pressed && styles.pressedState]}
             onPress={handleRecharge}
             hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
           >
             <View style={styles.rechargeIconBox}>
-              <BatteryCharging size={15} color={Colors.gold} />
+              <BatteryCharging size={16} color={Colors.gold} />
             </View>
             <View style={styles.rechargeTextBox}>
-              <Text style={styles.rechargeLabel}>দৈনিক মহাকাশ জ্বালানি রিচার্জ</Text>
+              <Text style={styles.rechargeLabel}>দৈনিক মহাকাশ জ্বালানি সংগ্রহ</Text>
               <Text style={styles.rechargeSub}>থ্রাস্টার চার্জ করে +২৫ XP নাও</Text>
             </View>
             <View style={styles.rechargeXpBadge}>
-              <Zap size={11} color={Colors.gold} fill={Colors.gold} />
+              <Zap size={12} color={Colors.gold} fill={Colors.gold} />
               <Text style={styles.rechargeXpText}>+২৫</Text>
             </View>
           </Pressable>
         ) : (
           <View style={styles.fuelFullRow}>
-            <CheckCircle2 size={15} color={Colors.emerald} />
-            <Text style={styles.fuelFullText}>থ্রাস্টার সর্বোচ্চ ক্ষমতায় চার্জড! 🚀</Text>
+            <CheckCircle2 size={16} color={Colors.emerald} />
+            <Text style={styles.fuelFullText}>মহাকাশ জ্বালানি পূর্ণ হয়েছে! 🚀</Text>
           </View>
         )}
-      </View>
+      </StoryCard>
 
-      {/* ── Astro-Buddy Comms ────────────────────────────── */}
-      <View style={styles.buddyShell}>
+      {/* ── Astro-Buddy Comms ────────────────────────────────── */}
+      <View style={styles.buddyContainer}>
         <Pressable
           onPress={() => setMascotMood(mascotMood === 'waving' ? 'excited' : 'waving')}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          <AnimatedMascot size={66} mood={mascotMood} />
+          <AnimatedMascot size={64} mood={mascotMood} />
         </Pressable>
 
-        <View style={styles.buddyBubble}>
-          <View style={styles.buddyBubbleHeader}>
-            <View style={styles.buddyBubbleTitleRow}>
-              <Sparkles size={12} color={Colors.pink} />
-              <Text style={styles.buddyBubbleTitle}>অ্যাস্ট্রো-বন্ধুর বার্তা</Text>
+        <StoryCard style={styles.buddyBubbleCard}>
+          <View style={styles.buddyHeader}>
+            <View style={styles.buddyTitleRow}>
+              <Sparkles size={13} color={Colors.pink} />
+              <Text style={styles.buddyTitle}>অ্যাস্ট্রো-বন্ধুর বার্তা</Text>
             </View>
             <Pressable
               style={styles.factCycleBtn}
               onPress={() => setFactIndex((i) => (i + 1) % COSMIC_FACTS.length)}
               hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
             >
-              <RefreshCw size={10} color={Colors.cyan} />
-              <Text style={styles.factCycleBtnText}>তথ্য বদলাও</Text>
+              <RefreshCw size={11} color={Colors.primaryLight} />
+              <Text style={styles.factCycleText}>রহস্য বদলাও</Text>
             </Pressable>
           </View>
-          <Text style={styles.buddyBubbleMsg}>{getBuddyMessage()}</Text>
+          <Text style={styles.buddyMsg}>{getBuddyMessage()}</Text>
+
           <Pressable
-            style={({ pressed }) => [styles.buddyChatBtn, pressed && styles.buddyChatBtnPressed]}
+            style={({ pressed }) => [styles.buddyChatBtn, pressed && styles.pressedState]}
             onPress={() => router.push('/tutor' as any)}
           >
-            <Bot size={13} color={Colors.cyan} />
-            <Text style={styles.buddyChatBtnText}>ক্যাপ্টেন রোভারের সাথে কথা বলো 💬</Text>
-            <ChevronRight size={11} color={Colors.cyan} />
+            <Bot size={14} color={Colors.primaryLight} />
+            <Text style={styles.buddyChatText}>ক্যাপ্টেন রোভারের সাথে কথা বলো</Text>
+            <ChevronRight size={13} color={Colors.primaryLight} />
           </Pressable>
-        </View>
+        </StoryCard>
       </View>
 
-      {/* ── XP Rank Progress ─────────────────────────────── */}
-      <View style={styles.xpShell}>
-        <View style={styles.xpShellHeader}>
-          <Star size={14} color={Colors.gold} fill={Colors.gold} />
-          <Text style={styles.xpShellTitle}>নভোচারী র‍্যাঙ্ক ও অভিজ্ঞতা</Text>
+      {/* ── XP Rank Progress ─────────────────────────────────── */}
+      <StoryCard style={styles.xpCard}>
+        <View style={styles.xpCardHeader}>
+          <Compass size={15} color={Colors.gold} />
+          <Text style={styles.xpCardTitle}>মহাকাশচারী অগ্রগতি ও অভিজ্ঞতা</Text>
         </View>
         <XPProgressBar compact={false} />
-      </View>
+      </StoryCard>
 
-      {/* ── Smart Mission Dispatch ───────────────────────── */}
-      <View style={[
-        styles.missionShell,
-        allDone && styles.missionShellEmerald,
-        isAffinityLesson && !allDone && styles.missionShellGold,
-        !isAffinityLesson && !allDone && styles.missionShellCyan,
-      ]}>
-        {/* Header badges */}
-        <View style={styles.missionHeader}>
-          <View style={styles.missionBadgeRow}>
-            <View style={[
-              styles.missionTypeBadge,
-              { backgroundColor: allDone ? Colors.emeraldBg : isAffinityLesson ? Colors.goldBg : Colors.cyanBg }
-            ]}>
-              <Flame size={12} color={allDone ? Colors.emerald : isAffinityLesson ? Colors.gold : Colors.cyan} />
-              <Text style={[
-                styles.missionTypeBadgeText,
-                { color: allDone ? Colors.emerald : isAffinityLesson ? Colors.gold : Colors.cyan }
-              ]}>
-                {allDone ? 'সব পাঠ সমাপ্ত! 🏆' : 'আজকের প্রধান অভিযান'}
-              </Text>
-            </View>
-            {isAffinityLesson && !allDone && (
-              <View style={styles.affinityChip}>
-                <Sparkles size={10} color={Colors.emerald} />
-                <Text style={styles.affinityChipText}>তোমার পছন্দের বিষয়</Text>
-              </View>
-            )}
+      {/* ── Smart Mission Dispatch (Next Lesson) ─────────────── */}
+      <StoryCard accent={allDone ? 'emerald' : isAffinityLesson ? 'gold' : 'primary'} style={styles.dispatchCard}>
+        <View style={styles.dispatchHeader}>
+          <View style={styles.dispatchBadge}>
+            <Flame size={13} color={allDone ? Colors.emerald : Colors.gold} />
+            <Text style={[styles.dispatchBadgeText, { color: allDone ? Colors.emerald : Colors.gold }]}>
+              {allDone ? 'সকল পাঠ সম্পন্ন! 🏆' : 'আজকের প্রধান অভিযান'}
+            </Text>
           </View>
           {!allDone && nextLesson && (
-            <View style={styles.xpRewardBadge}>
-              <Zap size={11} color={Colors.gold} fill={Colors.gold} />
-              <Text style={styles.xpRewardText}>+{nextLesson.xp_reward} XP</Text>
+            <View style={styles.dispatchXP}>
+              <Zap size={12} color={Colors.gold} fill={Colors.gold} />
+              <Text style={styles.dispatchXPText}>+{nextLesson.xp_reward} XP</Text>
             </View>
           )}
         </View>
 
-        {/* Lesson content */}
         {!allDone && nextLesson ? (
           <>
-            <Text style={styles.missionTitle}>{nextLesson.title_bn} 🌕</Text>
-            <Text style={styles.missionDesc}>{nextLesson.summary_bn}</Text>
-            <View style={styles.missionMeta}>
-              <Clock size={12} color={Colors.textMuted} />
-              <Text style={styles.missionMetaText}>{nextLesson.read_time_minutes} মিনিট</Text>
-              <Text style={styles.missionMetaDot}>·</Text>
-              <Text style={styles.missionMetaText}>পাঠ #{nextLesson.order_index}</Text>
+            <Text style={styles.dispatchTitle}>{nextLesson.title_bn}</Text>
+            <Text style={styles.dispatchDesc}>{nextLesson.summary_bn}</Text>
+            <View style={styles.dispatchMeta}>
+              <Clock size={13} color={Colors.textMuted} />
+              <Text style={styles.dispatchMetaText}>{nextLesson.read_time_minutes} মিনিট পাঠ</Text>
+              <Text style={styles.dispatchMetaDot}>·</Text>
+              <Text style={styles.dispatchMetaText}>পাঠ #{nextLesson.order_index}</Text>
             </View>
-            <TactileButton
-              title="অভিযানে চলো ➔"
+            <GentleButton
+              title="পাঠ শুরু করো ➔"
               onPress={() => router.push(`/lessons/${nextLesson.id}`)}
               variant="gold"
               size="normal"
@@ -276,11 +255,11 @@ export default function DashboardScreen() {
           </>
         ) : (
           <>
-            <Text style={styles.missionTitle}>মিশন পাঠশালা বিজয়ী! 🏆</Text>
-            <Text style={styles.missionDesc}>
-              সমস্ত পাঠ সফলভাবে জয় করেছ! এবার চন্দ্রপৃষ্ঠে ল্যান্ডার অবতরণ করিয়ে বাস্তব অভিযান শুরু করো।
+            <Text style={styles.dispatchTitle}>মহাকাশ পাঠশালা বিজয়ী! 🏆</Text>
+            <Text style={styles.dispatchDesc}>
+              তুমি সফলভাবে সব পাঠ সম্পন্ন করেছ। এবার চাঁদের পৃষ্ঠে ল্যান্ডার নামানোর অভিযানে অংশ নাও!
             </Text>
-            <TactileButton
+            <GentleButton
               title="চন্দ্রাভিযান শুরু করো ➔"
               onPress={() => router.push('/(tabs)/mission')}
               variant="emerald"
@@ -288,14 +267,14 @@ export default function DashboardScreen() {
             />
           </>
         )}
-      </View>
+      </StoryCard>
 
-      {/* ── Daily Cadet Quests ───────────────────────────── */}
-      <View style={styles.questShell}>
-        <View style={styles.questShellHeader}>
-          <View style={styles.questShellTitleRow}>
-            <Target size={14} color={Colors.cyan} />
-            <Text style={styles.questShellTitle}>আজকের ক্যাডেট মিশন</Text>
+      {/* ── Daily Cadet Quests ───────────────────────────────── */}
+      <StoryCard style={styles.questCard}>
+        <View style={styles.questHeader}>
+          <View style={styles.questTitleRow}>
+            <Target size={15} color={Colors.primaryLight} />
+            <Text style={styles.questTitle}>আজকের অভিযাত্রা লক্ষ্য</Text>
           </View>
           <View style={styles.questCounter}>
             <Text style={styles.questCounterText}>{doneCount} / ৩</Text>
@@ -308,22 +287,20 @@ export default function DashboardScreen() {
           onPress={() => router.push('/(tabs)/lessons')}
         >
           {q1Done
-            ? <CheckCircle2 size={17} color={Colors.emerald} />
-            : <Circle size={17} color="rgba(255,255,255,0.22)" />}
+            ? <CheckCircle2 size={18} color={Colors.emerald} />
+            : <Circle size={18} color="rgba(255,255,255,0.2)" />}
           <View style={styles.questInfo}>
-            <Text style={[styles.questTitle, q1Done && styles.questTitleDone]}>
-              ১টি মহাকাশ পাঠ সম্পন্ন করো
+            <Text style={[styles.questItemTitle, q1Done && styles.questItemTitleDone]}>
+              ১টি মহাকাশ পাঠ সমাপ্ত করো
             </Text>
-            <Text style={styles.questSub}>
-              {q1Done ? '✓ সম্পন্ন!' : `${completedLessonIds.length} / ১ পাঠ পড়া হয়েছে`}
+            <Text style={styles.questItemSub}>
+              {q1Done ? '✓ সম্পন্ন হয়েছে!' : `${completedLessonIds.length} / ১ পাঠ সম্পন্ন`}
             </Text>
           </View>
-          <View style={styles.questXP}>
-            <Text style={styles.questXPText}>+২০ XP</Text>
-          </View>
+          <Text style={styles.questItemXP}>+২০ XP</Text>
         </Pressable>
 
-        <View style={styles.questDivider} />
+        <View style={styles.thinDivider} />
 
         {/* Quest 2 */}
         <Pressable
@@ -331,122 +308,118 @@ export default function DashboardScreen() {
           onPress={() => router.push('/quiz')}
         >
           {q2Done
-            ? <CheckCircle2 size={17} color={Colors.emerald} />
-            : <Circle size={17} color="rgba(255,255,255,0.22)" />}
+            ? <CheckCircle2 size={18} color={Colors.emerald} />
+            : <Circle size={18} color="rgba(255,255,255,0.2)" />}
           <View style={styles.questInfo}>
-            <Text style={[styles.questTitle, q2Done && styles.questTitleDone]}>
+            <Text style={[styles.questItemTitle, q2Done && styles.questItemTitleDone]}>
               ১টি কুইজ ডেক পরীক্ষা দাও
             </Text>
-            <Text style={styles.questSub}>
-              {q2Done ? '✓ সম্পন্ন!' : 'জ্ঞান যাচাই করে পয়েন্ট নাও'}
+            <Text style={styles.questItemSub}>
+              {q2Done ? '✓ সম্পন্ন হয়েছে!' : 'কৌতূহল যাচাই করে পয়েন্ট নাও'}
             </Text>
           </View>
-          <View style={styles.questXP}>
-            <Text style={styles.questXPText}>+১৫ XP</Text>
-          </View>
+          <Text style={styles.questItemXP}>+১৫ XP</Text>
         </Pressable>
 
-        <View style={styles.questDivider} />
+        <View style={styles.thinDivider} />
 
         {/* Quest 3 */}
         <View style={styles.questRow}>
           {q3Done
-            ? <CheckCircle2 size={17} color={Colors.emerald} />
-            : <Circle size={17} color="rgba(255,255,255,0.22)" />}
+            ? <CheckCircle2 size={18} color={Colors.emerald} />
+            : <Circle size={18} color="rgba(255,255,255,0.2)" />}
           <View style={styles.questInfo}>
-            <Text style={[styles.questTitle, q3Done && styles.questTitleDone]}>
+            <Text style={[styles.questItemTitle, q3Done && styles.questItemTitleDone]}>
               ৫০+ XP শক্তি অর্জন করো
             </Text>
-            <Text style={styles.questSub}>
+            <Text style={styles.questItemSub}>
               {Math.min(xp, 50)} / ৫০ XP সংগ্রহ হয়েছে
             </Text>
           </View>
-          <View style={styles.questXP}>
-            <Text style={styles.questXPText}>+৫০ XP</Text>
-          </View>
+          <Text style={styles.questItemXP}>+৫০ XP</Text>
         </View>
-      </View>
+      </StoryCard>
 
-      {/* ── 2×2 Mission Control Bento Grid ──────────────── */}
-      <View style={styles.sectionRow}>
-        <Text style={styles.sectionTitle}>স্পেস স্টেশন মডিউল</Text>
-        <Text style={styles.sectionTag}>নেভিগেশন হাব</Text>
+      {/* ── 2×2 Navigation Modules Grid ──────────────────────── */}
+      <View style={styles.sectionHeaderRow}>
+        <Text style={styles.sectionTitle}>মহাকাশ মডিউল</Text>
+        <Text style={styles.sectionSubtitle}>অন্বেষণ হাব</Text>
       </View>
 
       <View style={styles.bentoGrid}>
         {/* Lessons */}
         <Pressable
-          style={({ pressed }) => [styles.bentoTile, styles.bentoTileCyan, pressed && styles.bentoTilePressed]}
+          style={({ pressed }) => [styles.bentoTile, pressed && styles.pressedState]}
           onPress={() => router.push('/(tabs)/lessons')}
         >
-          <View style={[styles.bentoIcon, { backgroundColor: Colors.cyanBg }]}>
-            <BookOpen size={20} color={Colors.cyan} />
+          <View style={[styles.bentoIcon, { backgroundColor: 'rgba(107, 138, 255, 0.15)' }]}>
+            <BookOpen size={20} color={Colors.primaryLight} />
           </View>
           <Text style={styles.bentoTileTitle}>পাঠাগার 📖</Text>
-          <Text style={styles.bentoTileSub}>{completedLessonIds.length}/{lessons.length || 6}টি সমাপ্ত</Text>
+          <Text style={styles.bentoTileSub}>{completedLessonIds.length}/{lessons.length || 8}টি সমাপ্ত</Text>
           <View style={styles.bentoFooter}>
-            <Text style={[styles.bentoAction, { color: Colors.cyan }]}>পাঠ শুরু</Text>
-            <ChevronRight size={12} color={Colors.cyan} />
+            <Text style={[styles.bentoAction, { color: Colors.primaryLight }]}>পাঠ শুরু</Text>
+            <ChevronRight size={13} color={Colors.primaryLight} />
           </View>
         </Pressable>
 
         {/* Quiz */}
         <Pressable
-          style={({ pressed }) => [styles.bentoTile, styles.bentoTileEmerald, pressed && styles.bentoTilePressed]}
+          style={({ pressed }) => [styles.bentoTile, pressed && styles.pressedState]}
           onPress={() => router.push('/quiz')}
         >
-          <View style={[styles.bentoIcon, { backgroundColor: Colors.emeraldBg }]}>
+          <View style={[styles.bentoIcon, { backgroundColor: 'rgba(94, 214, 192, 0.15)' }]}>
             <HelpCircle size={20} color={Colors.emerald} />
           </View>
           <Text style={styles.bentoTileTitle}>কুইজ ডেক 🎮</Text>
-          <Text style={styles.bentoTileSub}>{totalQuizzes}টি পরীক্ষা সম্পন্ন</Text>
+          <Text style={styles.bentoTileSub}>{totalQuizzes}টি কুইজ সম্পন্ন</Text>
           <View style={styles.bentoFooter}>
             <Text style={[styles.bentoAction, { color: Colors.emerald }]}>কুইজ নাও</Text>
-            <ChevronRight size={12} color={Colors.emerald} />
+            <ChevronRight size={13} color={Colors.emerald} />
           </View>
         </Pressable>
 
         {/* Mission */}
         <Pressable
-          style={({ pressed }) => [styles.bentoTile, styles.bentoTilePurple, pressed && styles.bentoTilePressed]}
+          style={({ pressed }) => [styles.bentoTile, pressed && styles.pressedState]}
           onPress={() => router.push('/(tabs)/mission')}
         >
-          <View style={[styles.bentoIcon, { backgroundColor: Colors.purpleBg }]}>
+          <View style={[styles.bentoIcon, { backgroundColor: 'rgba(180, 142, 255, 0.15)' }]}>
             <Rocket size={20} color={Colors.purple} />
           </View>
           <Text style={styles.bentoTileTitle}>চন্দ্রাভিযান 🌕</Text>
           <Text style={styles.bentoTileSub}>ল্যান্ডিং সিমুলেটর</Text>
           <View style={styles.bentoFooter}>
             <Text style={[styles.bentoAction, { color: Colors.purple }]}>অভিযান</Text>
-            <ChevronRight size={12} color={Colors.purple} />
+            <ChevronRight size={13} color={Colors.purple} />
           </View>
         </Pressable>
 
         {/* Profile */}
         <Pressable
-          style={({ pressed }) => [styles.bentoTile, styles.bentoTileGold, pressed && styles.bentoTilePressed]}
+          style={({ pressed }) => [styles.bentoTile, pressed && styles.pressedState]}
           onPress={() => router.push('/(tabs)/profile')}
         >
-          <View style={[styles.bentoIcon, { backgroundColor: Colors.goldBg }]}>
+          <View style={[styles.bentoIcon, { backgroundColor: 'rgba(255, 200, 107, 0.15)' }]}>
             <Award size={20} color={Colors.gold} />
           </View>
           <Text style={styles.bentoTileTitle}>ক্যাডেট ডসিয়ার 👨‍🚀</Text>
-          <Text style={styles.bentoTileSub}>স্যুট ও পদক</Text>
+          <Text style={styles.bentoTileSub}>পদবী ও অগ্রগতি</Text>
           <View style={styles.bentoFooter}>
             <Text style={[styles.bentoAction, { color: Colors.gold }]}>প্রোফাইল</Text>
-            <ChevronRight size={12} color={Colors.gold} />
+            <ChevronRight size={13} color={Colors.gold} />
           </View>
         </Pressable>
       </View>
 
-      {/* ── AI Tutor Mission Mentor Card ─────────────────── */}
+      {/* ── AI Tutor Mission Mentor Card ─────────────────────── */}
       <Pressable
-        style={({ pressed }) => [styles.tutorCard, pressed && styles.tutorCardPressed]}
+        style={({ pressed }) => [styles.tutorCard, pressed && styles.pressedState]}
         onPress={() => router.push('/tutor' as any)}
       >
-        <View style={styles.tutorCardLeft}>
+        <View style={styles.tutorLeft}>
           <View style={styles.tutorIconCircle}>
-            <Bot size={22} color={Colors.cyan} />
+            <Bot size={22} color={Colors.primaryLight} />
           </View>
           <View style={styles.tutorTextBox}>
             <View style={styles.tutorTitleRow}>
@@ -455,70 +428,55 @@ export default function DashboardScreen() {
                 <Text style={styles.tutorBadgeText}>অফলাইন + অনলাইন</Text>
               </View>
             </View>
-            <Text style={styles.tutorSub}>মহাকাশ নিয়ে তোমার যেকোনো প্রশ্ন বাংলায় জিজ্ঞেস করো!</Text>
+            <Text style={styles.tutorSub}>মহাকাশ নিয়ে তোমার যেকোনো প্রশ্ন বাংলায় জিজ্ঞেস করো!</Text>
           </View>
         </View>
-        <ChevronRight size={16} color={Colors.cyan} />
+        <ChevronRight size={16} color={Colors.primaryLight} />
       </Pressable>
 
-      {/* ── Cosmic Fact Widget ───────────────────────────── */}
-      <View style={styles.factShell}>
+      {/* ── Cosmic Fact Widget ───────────────────────────────── */}
+      <StoryCard style={styles.factCard}>
         <View style={styles.factHeader}>
           <View style={styles.factTitleRow}>
-            <Sparkles size={13} color={Colors.purple} />
-            <Text style={styles.factTitle}>মহাজাগতিক বিস্ময় (NASA Fact)</Text>
+            <Sparkles size={14} color={Colors.gold} />
+            <Text style={styles.factTitle}>আজকের মহাজাগতিক বিস্ময়</Text>
           </View>
           <Pressable
             style={styles.factNextBtn}
             onPress={() => setFactIndex((i) => (i + 1) % COSMIC_FACTS.length)}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <RefreshCw size={11} color={Colors.cyan} />
+            <RefreshCw size={12} color={Colors.primaryLight} />
             <Text style={styles.factNextText}>পরবর্তী</Text>
           </Pressable>
         </View>
         <Text style={styles.factBody}>{COSMIC_FACTS[factIndex]}</Text>
-      </View>
+      </StoryCard>
     </ScrollView>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DESIGN TOKENS (Deep Cosmic Dark — matched to onboarding aesthetic)
-// ─────────────────────────────────────────────────────────────────────────────
-
-/** Reusable surface: translucent indigo dark glass */
-const GLASS_SURFACE = 'rgba(14, 18, 60, 0.88)';
-const GLASS_BORDER = 'rgba(255, 255, 255, 0.09)';
-const GLOW_SHADOW = { shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.4, shadowRadius: 12, elevation: 6 };
-const CARD_RADIUS = 22;
-const INNER_RADIUS = 18;
-/** Bottom clay elevation lip color */
-const CLAY_LIP = 'rgba(0, 0, 0, 0.40)';
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.background,
   },
   content: {
     paddingTop: 8,
-    paddingBottom: 48,
+    paddingBottom: 60,
+    maxWidth: 620,
+    alignSelf: 'center',
+    width: '100%',
+  },
+  pressedState: {
+    opacity: 0.88,
+    transform: [{ scale: 0.98 }],
   },
 
-  // ── HERO ─────────────────────────────────────────────
-  heroShell: {
+  // ── Hero ──────────────────────────────────────────────
+  heroCard: {
     marginHorizontal: 16,
     marginBottom: 14,
-    backgroundColor: GLASS_SURFACE,
-    borderRadius: CARD_RADIUS,
-    borderWidth: 1.5,
-    borderBottomWidth: 4,
-    borderColor: 'rgba(56, 189, 248, 0.30)',
-    borderBottomColor: CLAY_LIP,
-    padding: 16,
-    shadowColor: '#38BDF8',
-    ...GLOW_SHADOW,
   },
   heroBadgeRow: {
     flexDirection: 'row',
@@ -530,31 +488,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(255,255,255,0.07)',
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 11,
-    borderWidth: 1.5,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    borderWidth: 1,
   },
   archetypePillText: {
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   rankPill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: 'rgba(255, 184, 0, 0.15)',
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 11,
+    backgroundColor: 'rgba(255, 200, 107, 0.12)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 184, 0, 0.30)',
+    borderColor: 'rgba(255, 200, 107, 0.25)',
   },
   rankPillText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   heroMain: {
     flexDirection: 'row',
@@ -568,19 +526,19 @@ const styles = StyleSheet.create({
   heroGreeting: {
     color: Colors.text,
     fontSize: Typography.size.h1,
-    fontWeight: Typography.weight.heavy,
-    lineHeight: Typography.lineHeight.h1,
-    marginBottom: 3,
+    fontFamily: Typography.family.hindBold,
+    marginBottom: 4,
   },
   heroMotto: {
     color: Colors.textSecondary,
     fontSize: Typography.size.bodySmall,
     lineHeight: Typography.lineHeight.bodySmall,
+    fontFamily: Typography.family.notoRegular,
     fontStyle: 'italic',
   },
-  fuelDivider: {
+  softDivider: {
     height: 1,
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     marginTop: 14,
     marginBottom: 12,
   },
@@ -588,25 +546,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    backgroundColor: 'rgba(255, 184, 0, 0.11)',
+    backgroundColor: 'rgba(255, 200, 107, 0.10)',
     borderRadius: 16,
-    borderWidth: 1.5,
-    borderBottomWidth: 3.5,
-    borderColor: 'rgba(255, 184, 0, 0.32)',
-    borderBottomColor: 'rgba(0,0,0,0.38)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 200, 107, 0.25)',
     paddingVertical: 10,
-    paddingHorizontal: 13,
-  },
-  rechargeBtnPressed: {
-    opacity: 0.78,
-    borderBottomWidth: 1.5,
-    transform: [{ translateY: 2 }],
+    paddingHorizontal: 14,
   },
   rechargeIconBox: {
     width: 32,
     height: 32,
     borderRadius: 10,
-    backgroundColor: 'rgba(255, 184, 0, 0.20)',
+    backgroundColor: 'rgba(255, 200, 107, 0.18)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -614,371 +565,301 @@ const styles = StyleSheet.create({
   rechargeLabel: {
     color: Colors.gold,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
   },
   rechargeSub: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
-    marginTop: 1,
+    fontFamily: Typography.family.notoRegular,
   },
   rechargeXpBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: 'rgba(255,184,0,0.22)',
-    paddingHorizontal: 7,
+    backgroundColor: 'rgba(255, 200, 107, 0.18)',
+    paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
   },
   rechargeXpText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
   },
   fuelFullRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
     justifyContent: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.13)',
-    borderRadius: 12,
+    backgroundColor: 'rgba(94, 214, 192, 0.12)',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.28)',
+    borderColor: 'rgba(94, 214, 192, 0.25)',
     paddingVertical: 9,
   },
   fuelFullText: {
     color: Colors.emerald,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindSemiBold,
   },
 
-  // ── ASTRO-BUDDY ───────────────────────────────────────
-  buddyShell: {
+  // ── Astro-Buddy Comms ─────────────────────────────────
+  buddyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginHorizontal: 16,
     marginBottom: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
     gap: 12,
-    backgroundColor: GLASS_SURFACE,
-    borderRadius: CARD_RADIUS,
-    borderWidth: 1.5,
-    borderBottomWidth: 4,
-    borderColor: 'rgba(255, 77, 139, 0.28)',
-    borderBottomColor: CLAY_LIP,
-    padding: 14,
-    shadowColor: Colors.pink,
-    ...GLOW_SHADOW,
   },
-  buddyBubble: {
+  buddyBubbleCard: {
     flex: 1,
-    backgroundColor: 'rgba(255, 77, 139, 0.10)',
-    borderRadius: 16,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 77, 139, 0.25)',
+    padding: 16,
   },
-  buddyBubbleHeader: {
+  buddyHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 5,
+    alignItems: 'center',
+    marginBottom: 6,
   },
-  buddyBubbleTitleRow: {
+  buddyTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
   },
-  buddyBubbleTitle: {
+  buddyTitle: {
     color: Colors.pink,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.heavy,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.hindBold,
   },
   factCycleBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
-    backgroundColor: 'rgba(0,240,255,0.12)',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
+    gap: 4,
+    backgroundColor: 'rgba(107, 138, 255, 0.10)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
   },
-  factCycleBtnText: {
-    color: Colors.cyan,
-    fontSize: 10,
-    fontWeight: Typography.weight.bold,
+  factCycleText: {
+    color: Colors.primaryLight,
+    fontSize: Typography.size.micro,
+    fontFamily: Typography.family.hindSemiBold,
   },
-  buddyBubbleMsg: {
+  buddyMsg: {
     color: Colors.text,
-    fontSize: Typography.size.caption,
-    lineHeight: Typography.lineHeight.caption,
-    fontWeight: Typography.weight.medium,
+    fontSize: Typography.size.bodySmall,
+    lineHeight: Typography.lineHeight.bodySmall,
+    fontFamily: Typography.family.notoRegular,
+    marginBottom: 10,
   },
-
-  // ── XP PROGRESS ──────────────────────────────────────
-  xpShell: {
-    marginHorizontal: 16,
-    marginBottom: 14,
-    backgroundColor: GLASS_SURFACE,
-    borderRadius: CARD_RADIUS,
-    borderWidth: 1.5,
-    borderBottomWidth: 4,
-    borderColor: 'rgba(255, 184, 0, 0.28)',
-    borderBottomColor: CLAY_LIP,
-    padding: 16,
-    shadowColor: Colors.gold,
-    ...GLOW_SHADOW,
-  },
-  xpShellHeader: {
+  buddyChatBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
+    gap: 6,
+    alignSelf: 'flex-start',
+    backgroundColor: 'rgba(107, 138, 255, 0.12)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
   },
-  xpShellTitle: {
-    color: Colors.text,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
+  buddyChatText: {
+    color: Colors.primaryLight,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.hindSemiBold,
   },
 
-  // ── MISSION DISPATCH ──────────────────────────────────
-  missionShell: {
+  // ── XP Card ───────────────────────────────────────────
+  xpCard: {
     marginHorizontal: 16,
     marginBottom: 14,
-    backgroundColor: GLASS_SURFACE,
-    borderRadius: CARD_RADIUS,
-    borderWidth: 1.5,
-    borderBottomWidth: 4,
-    borderColor: 'rgba(0, 240, 255, 0.28)',
-    borderBottomColor: CLAY_LIP,
     padding: 16,
-    shadowColor: Colors.cyan,
-    ...GLOW_SHADOW,
   },
-  missionShellEmerald: {
-    borderColor: 'rgba(16, 185, 129, 0.32)',
-    shadowColor: Colors.emerald,
+  xpCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 10,
   },
-  missionShellGold: {
-    borderColor: 'rgba(255, 184, 0, 0.32)',
-    shadowColor: Colors.gold,
+  xpCardTitle: {
+    color: Colors.gold,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.hindBold,
   },
-  missionShellCyan: {
-    borderColor: 'rgba(0, 240, 255, 0.28)',
-    shadowColor: Colors.cyan,
+
+  // ── Dispatch ──────────────────────────────────────────
+  dispatchCard: {
+    marginHorizontal: 16,
+    marginBottom: 14,
   },
-  missionHeader: {
+  dispatchHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
   },
-  missionBadgeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    flexShrink: 1,
-  },
-  missionTypeBadge: {
+  dispatchBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
+    backgroundColor: 'rgba(255, 200, 107, 0.12)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
   },
-  missionTypeBadgeText: {
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+  dispatchBadgeText: {
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.hindBold,
   },
-  affinityChip: {
+  dispatchXP: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    backgroundColor: Colors.emeraldBg,
-    paddingHorizontal: 7,
-    paddingVertical: 3,
-    borderRadius: 8,
-  },
-  affinityChipText: {
-    color: Colors.emerald,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
-  },
-  xpRewardBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: Colors.goldBg,
+    gap: 3,
+    backgroundColor: 'rgba(255, 200, 107, 0.15)',
     paddingHorizontal: 8,
-    paddingVertical: 3,
+    paddingVertical: 4,
     borderRadius: 8,
   },
-  xpRewardText: {
+  dispatchXPText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
   },
-  missionTitle: {
+  dispatchTitle: {
     color: Colors.text,
     fontSize: Typography.size.h2,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
     marginBottom: 6,
-    lineHeight: Typography.lineHeight.h2,
   },
-  missionDesc: {
+  dispatchDesc: {
     color: Colors.textSecondary,
     fontSize: Typography.size.bodySmall,
     lineHeight: Typography.lineHeight.bodySmall,
+    fontFamily: Typography.family.notoRegular,
     marginBottom: 12,
   },
-  missionMeta: {
+  dispatchMeta: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
     marginBottom: 14,
   },
-  missionMetaText: {
+  dispatchMetaText: {
     color: Colors.textMuted,
     fontSize: Typography.size.caption,
+    fontFamily: Typography.family.notoRegular,
   },
-  missionMetaDot: {
+  dispatchMetaDot: {
     color: Colors.textMuted,
-    fontSize: Typography.size.caption,
   },
 
-  // ── DAILY QUESTS ─────────────────────────────────────
-  questShell: {
+  // ── Quests ────────────────────────────────────────────
+  questCard: {
     marginHorizontal: 16,
-    marginBottom: 14,
-    backgroundColor: GLASS_SURFACE,
-    borderRadius: CARD_RADIUS,
-    borderWidth: 1.5,
-    borderBottomWidth: 4,
-    borderColor: 'rgba(0, 240, 255, 0.22)',
-    borderBottomColor: CLAY_LIP,
-    padding: 16,
-    shadowColor: Colors.cyan,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.28,
-    shadowRadius: 10,
-    elevation: 5,
+    marginBottom: 16,
   },
-  questShellHeader: {
+  questHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 14,
   },
-  questShellTitleRow: {
+  questTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
   },
-  questShellTitle: {
+  questTitle: {
     color: Colors.text,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
+    fontSize: Typography.size.h3,
+    fontFamily: Typography.family.hindBold,
   },
   questCounter: {
-    backgroundColor: 'rgba(0,240,255,0.14)',
-    paddingHorizontal: 9,
-    paddingVertical: 3,
-    borderRadius: 9,
-    borderWidth: 1,
-    borderColor: 'rgba(0,240,255,0.22)',
+    backgroundColor: 'rgba(107, 138, 255, 0.15)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
   },
   questCounterText: {
-    color: Colors.cyan,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.heavy,
+    color: Colors.primaryLight,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.hindBold,
   },
   questRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 11,
-    paddingVertical: 4,
+    gap: 12,
+    paddingVertical: 6,
   },
-  questInfo: { flex: 1 },
-  questTitle: {
+  questInfo: {
+    flex: 1,
+  },
+  questItemTitle: {
     color: Colors.text,
-    fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
-    marginBottom: 1,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.family.hindSemiBold,
   },
-  questTitleDone: { color: Colors.emerald },
-  questSub: {
+  questItemTitleDone: {
+    color: Colors.emerald,
+    textDecorationLine: 'line-through',
+  },
+  questItemSub: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
+    fontFamily: Typography.family.notoRegular,
+    marginTop: 2,
   },
-  questXP: {
-    backgroundColor: 'rgba(255,184,0,0.15)',
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    borderRadius: 7,
-  },
-  questXPText: {
+  questItemXP: {
     color: Colors.gold,
-    fontSize: 10,
-    fontWeight: Typography.weight.heavy,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.hindBold,
   },
-  questDivider: {
+  thinDivider: {
     height: 1,
-    backgroundColor: 'rgba(255,255,255,0.06)',
-    marginVertical: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    marginVertical: 10,
   },
 
-  // ── BENTO GRID ────────────────────────────────────────
-  sectionRow: {
+  // ── Bento Grid ────────────────────────────────────────
+  sectionHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 16,
+    marginHorizontal: 18,
     marginBottom: 12,
-    marginTop: 4,
   },
   sectionTitle: {
     color: Colors.text,
     fontSize: Typography.size.h3,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
-  sectionTag: {
-    color: Colors.cyan,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.semiBold,
-    letterSpacing: 0.4,
+  sectionSubtitle: {
+    color: Colors.textMuted,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.notoRegular,
   },
   bentoGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
     marginHorizontal: 16,
-    marginBottom: 14,
+    marginBottom: 16,
   },
   bentoTile: {
-    width: '47.5%',
-    backgroundColor: GLASS_SURFACE,
-    borderRadius: INNER_RADIUS,
-    borderWidth: 1.5,
-    borderBottomWidth: 4,
-    borderBottomColor: CLAY_LIP,
-    padding: 14,
+    width: '48%',
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    padding: 16,
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 4,
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+    elevation: 2,
   },
-  bentoTilePressed: {
-    opacity: 0.82,
-    borderBottomWidth: 1.5,
-    transform: [{ translateY: 2 }],
-  },
-  bentoTileCyan: { borderColor: 'rgba(0,240,255,0.30)', shadowColor: Colors.cyan },
-  bentoTileEmerald: { borderColor: 'rgba(16,185,129,0.30)', shadowColor: Colors.emerald },
-  bentoTilePurple: { borderColor: 'rgba(139,92,246,0.30)', shadowColor: Colors.purple },
-  bentoTileGold: { borderColor: 'rgba(255,184,0,0.30)', shadowColor: Colors.gold },
   bentoIcon: {
-    width: 40,
-    height: 40,
+    width: 38,
+    height: 38,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
@@ -986,41 +867,87 @@ const styles = StyleSheet.create({
   },
   bentoTileTitle: {
     color: Colors.text,
-    fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.heavy,
-    marginBottom: 3,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.family.hindBold,
+    marginBottom: 2,
   },
   bentoTileSub: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
-    marginBottom: 10,
+    fontFamily: Typography.family.notoRegular,
+    marginBottom: 12,
   },
   bentoFooter: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
+    justifyContent: 'space-between',
   },
   bentoAction: {
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.heavy,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.hindSemiBold,
   },
 
-  // ── COSMIC FACTS ─────────────────────────────────────
-  factShell: {
-    marginHorizontal: 16,
-    marginBottom: 10,
-    backgroundColor: GLASS_SURFACE,
-    borderRadius: CARD_RADIUS,
-    borderWidth: 1.5,
-    borderBottomWidth: 4,
-    borderColor: 'rgba(139, 92, 246, 0.28)',
-    borderBottomColor: CLAY_LIP,
+  // ── AI Tutor ──────────────────────────────────────────
+  tutorCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(107, 138, 255, 0.25)',
     padding: 16,
-    shadowColor: Colors.purple,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.28,
-    shadowRadius: 10,
-    elevation: 5,
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  tutorLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  tutorIconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    backgroundColor: 'rgba(107, 138, 255, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tutorTextBox: {
+    flex: 1,
+  },
+  tutorTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 2,
+  },
+  tutorTitle: {
+    color: Colors.text,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.family.hindBold,
+  },
+  tutorBadge: {
+    backgroundColor: 'rgba(94, 214, 192, 0.15)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  tutorBadgeText: {
+    color: Colors.emerald,
+    fontSize: 10,
+    fontFamily: Typography.family.hindSemiBold,
+  },
+  tutorSub: {
+    color: Colors.textSecondary,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.notoRegular,
+  },
+
+  // ── NASA Fact ─────────────────────────────────────────
+  factCard: {
+    marginHorizontal: 16,
   },
   factHeader: {
     flexDirection: 'row',
@@ -1034,117 +961,28 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   factTitle: {
-    color: Colors.purpleLight,
+    color: Colors.gold,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   factNextBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(0,240,255,0.12)',
+    backgroundColor: 'rgba(107, 138, 255, 0.12)',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
   },
   factNextText: {
-    color: Colors.cyan,
-    fontSize: 10,
-    fontWeight: Typography.weight.bold,
+    color: Colors.primaryLight,
+    fontSize: Typography.size.micro,
+    fontFamily: Typography.family.hindSemiBold,
   },
   factBody: {
     color: Colors.text,
-    fontSize: Typography.size.caption,
-    lineHeight: Typography.lineHeight.caption,
-    fontWeight: Typography.weight.medium,
-  },
-  buddyChatBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 240, 255, 0.12)',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 10,
-    marginTop: 8,
-    gap: 6,
-    alignSelf: 'flex-start',
-    borderWidth: 1,
-    borderColor: 'rgba(0, 240, 255, 0.3)',
-  },
-  buddyChatBtnPressed: {
-    backgroundColor: 'rgba(0, 240, 255, 0.25)',
-  },
-  buddyChatBtnText: {
-    color: Colors.cyan,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
-  },
-  tutorCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: 'rgba(14, 18, 60, 0.88)',
-    borderWidth: 1.5,
-    borderColor: 'rgba(0, 240, 255, 0.45)',
-    borderRadius: 20,
-    padding: 14,
-    marginBottom: 20,
-    shadowColor: Colors.cyan,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  tutorCardPressed: {
-    transform: [{ scale: 0.98 }],
-    borderColor: Colors.cyan,
-  },
-  tutorCardLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    flex: 1,
-  },
-  tutorIconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(0, 240, 255, 0.14)',
-    borderWidth: 1.5,
-    borderColor: Colors.cyan,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tutorTextBox: {
-    flex: 1,
-    gap: 3,
-  },
-  tutorTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  tutorTitle: {
-    color: Colors.text,
-    fontSize: Typography.size.h3,
-    fontWeight: Typography.weight.bold,
-  },
-  tutorBadge: {
-    backgroundColor: 'rgba(0, 230, 118, 0.15)',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(0, 230, 118, 0.4)',
-  },
-  tutorBadgeText: {
-    color: Colors.emerald,
-    fontSize: 9,
-    fontWeight: Typography.weight.bold,
-  },
-  tutorSub: {
-    color: Colors.textSecondary,
-    fontSize: Typography.size.micro,
-    lineHeight: 15,
+    fontSize: Typography.size.body,
+    lineHeight: Typography.lineHeight.body,
+    fontFamily: Typography.family.notoRegular,
   },
 });

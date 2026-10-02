@@ -10,6 +10,11 @@ interface DoubleBezelCardProps {
   tag?: string;
 }
 
+/**
+ * DoubleBezelCard — Refactored to Single-Surface Illustrated Cosmos aesthetic.
+ * Maintained for backward compatibility across existing routes while removing
+ * aggressive nested bezels, glowing borders, and visual clutter.
+ */
 export const DoubleBezelCard: React.FC<DoubleBezelCardProps> = ({
   children,
   style,
@@ -20,60 +25,40 @@ export const DoubleBezelCard: React.FC<DoubleBezelCardProps> = ({
     switch (glow) {
       case 'gold':
         return {
-          borderColor: 'rgba(255, 184, 0, 0.45)',
-          shadowColor: '#FFB800',
-          shadowOpacity: 0.28,
-          shadowRadius: 10,
+          borderColor: 'rgba(255, 200, 107, 0.35)',
+          backgroundColor: Colors.surface,
         };
       case 'emerald':
         return {
-          borderColor: 'rgba(16, 185, 129, 0.45)',
-          shadowColor: '#10B981',
-          shadowOpacity: 0.28,
-          shadowRadius: 10,
+          borderColor: 'rgba(94, 214, 192, 0.35)',
+          backgroundColor: Colors.surface,
         };
       case 'coral':
         return {
-          borderColor: 'rgba(255, 71, 87, 0.45)',
-          shadowColor: '#FF4757',
-          shadowOpacity: 0.28,
-          shadowRadius: 10,
+          borderColor: 'rgba(255, 138, 128, 0.35)',
+          backgroundColor: Colors.surface,
         };
       case 'pink':
         return {
-          borderColor: 'rgba(255, 77, 139, 0.45)',
-          shadowColor: '#FF4D8B',
-          shadowOpacity: 0.28,
-          shadowRadius: 10,
+          borderColor: 'rgba(232, 160, 191, 0.35)',
+          backgroundColor: Colors.surface,
         };
       case 'purple':
         return {
-          borderColor: 'rgba(139, 92, 246, 0.45)',
-          shadowColor: '#8B5CF6',
-          shadowOpacity: 0.28,
-          shadowRadius: 10,
+          borderColor: 'rgba(180, 142, 255, 0.35)',
+          backgroundColor: Colors.surface,
         };
       case 'cyan':
-        return {
-          borderColor: 'rgba(0, 240, 255, 0.45)',
-          shadowColor: '#00F0FF',
-          shadowOpacity: 0.28,
-          shadowRadius: 10,
-        };
       case 'blue':
         return {
-          borderColor: 'rgba(56, 189, 248, 0.45)',
-          shadowColor: '#38BDF8',
-          shadowOpacity: 0.28,
-          shadowRadius: 10,
+          borderColor: 'rgba(107, 138, 255, 0.35)',
+          backgroundColor: Colors.surface,
         };
       case 'none':
       default:
         return {
           borderColor: Colors.border,
-          shadowColor: '#000000',
-          shadowOpacity: 0.25,
-          shadowRadius: 8,
+          backgroundColor: Colors.surface,
         };
     }
   };
@@ -81,40 +66,24 @@ export const DoubleBezelCard: React.FC<DoubleBezelCardProps> = ({
   const glowStyle = getGlowStyles();
 
   return (
-    <View style={[styles.clayOuter, glowStyle, style]}>
-      {/* Specular Top Lighting Edge for 3D Clay Depth */}
-      <View style={styles.specularRim} />
-      <View style={[styles.innerCore, innerStyle]}>{children}</View>
+    <View style={[styles.singleSurface, glowStyle, style]}>
+      <View style={[styles.innerContent, innerStyle]}>{children}</View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  clayOuter: {
-    backgroundColor: Colors.surface,
-    borderRadius: 24,
-    borderWidth: 2,
-    borderBottomWidth: 3.5,
-    borderBottomColor: 'rgba(0, 0, 0, 0.35)',
-    padding: 2,
-    position: 'relative',
+  singleSurface: {
+    borderRadius: 22,
+    borderWidth: 1,
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
+    shadowOpacity: 0.22,
+    shadowRadius: 12,
+    elevation: 3,
     overflow: 'hidden',
   },
-  specularRim: {
-    position: 'absolute',
-    top: 0,
-    left: 14,
-    right: 14,
-    height: 2,
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    borderRadius: 2,
-    zIndex: 1,
-  },
-  innerCore: {
-    backgroundColor: Colors.surfaceCard,
-    borderRadius: 21,
-    padding: 16,
+  innerContent: {
+    padding: 18,
   },
 });

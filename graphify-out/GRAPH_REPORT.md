@@ -1,16 +1,16 @@
 # Graph Report - mohakashjr  (2026-10-02)
 
 ## Corpus Check
-- 196 files · ~285,251 words
+- 201 files · ~286,967 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2554 nodes · 3454 edges · 186 communities (143 shown, 43 thin omitted)
+- 2575 nodes · 3487 edges · 185 communities (145 shown, 40 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 210 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0bd77cef`
+- Built from commit: `3534de61`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -161,7 +161,6 @@
 - none
 - test_sync_brand_to_tokens.py
 - main
-- destructive
 - destructive-foreground
 - muted
 - primary-foreground
@@ -197,10 +196,10 @@
 - [id].tsx
 - DoubleBezelCard.tsx
 - onboarding.tsx
+- 8
 - secondary-foreground
 - expo-constants
 - lucide-react-native
-- react-native-svg
 
 ## God Nodes (most connected - your core abstractions)
 1. `TailwindConfigGenerator` - 57 edges
@@ -208,19 +207,19 @@
 3. `search()` - 40 edges
 4. `TestTailwindConfigGenerator` - 35 edges
 5. `ShadcnInstaller` - 33 edges
-6. `useAppStore` - 31 edges
-7. `search_stack()` - 30 edges
-8. `Colors` - 29 edges
-9. `TestShadcnInstaller` - 26 edges
-10. `Typography` - 25 edges
+6. `Colors` - 32 edges
+7. `useAppStore` - 31 edges
+8. `search_stack()` - 30 edges
+9. `Typography` - 27 edges
+10. `TestShadcnInstaller` - 26 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `ProfileScreen()` --calls--> `useAppStore`  [EXTRACTED]
-  app/(tabs)/profile.tsx → src/state/useAppStore.ts
-- `SplashScreen()` --calls--> `useAppStore`  [EXTRACTED]
-  app/splash.tsx → src/state/useAppStore.ts
 - `RootLayout()` --calls--> `useAppStore`  [EXTRACTED]
   app/_layout.tsx → src/state/useAppStore.ts
+- `SplashScreen()` --calls--> `useAppStore`  [EXTRACTED]
+  app/splash.tsx → src/state/useAppStore.ts
+- `ProfileScreen()` --calls--> `useAppStore`  [EXTRACTED]
+  app/(tabs)/profile.tsx → src/state/useAppStore.ts
 - `LessonReaderScreen()` --calls--> `useAppStore`  [EXTRACTED]
   app/lessons/[id].tsx → src/state/useAppStore.ts
 - `PsychometricOption` --references--> `CadetArchetype`  [EXTRACTED]
@@ -229,7 +228,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (186 total, 43 thin omitted)
+## Communities (185 total, 40 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -244,8 +243,8 @@ Cohesion: 0.07
 Nodes (46): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons, TestCurrentReactGuidance, TestSemanticColors, _catalog_date(), _check_app_interface_contract(), _check_catalog_contract() (+38 more)
 
 ### Community 3 - "/graphify"
-Cohesion: 0.14
-Nodes (19): RootLayout(), QuizHubScreen(), styles, COSMIC_FACTS, DashboardScreen(), GLOW_SHADOW, styles, LessonsScreen() (+11 more)
+Cohesion: 0.67
+Nodes (3): $type, $value, 16
 
 ### Community 4 - "Implementation Plan — Mohakash Jr (initial scaffold → MVP)"
 Cohesion: 0.20
@@ -316,8 +315,8 @@ Cohesion: 0.09
 Nodes (21): 1. Quick Start & Git Workflow (For Every Teammate & Agent), 2. Team Task Allocation & Dependency Matrix, 3. Step-by-Step "How-To" Instructions per Role, 4. Key Milestones Timeline, Guide for Humaira (Bangla Content & AI Knowledge), Guide for Jim (Typography, Design, Chat UI & QA), Guide for Mahi (Database & Cloudflare Proxy), Guide for Mahim (Mascot Motion & Moon Mission) (+13 more)
 
 ### Community 33 - "dependencies"
-Cohesion: 0.40
-Nodes (5): AnimatedXPBar(), AnimatedXPBarProps, BENGALI_DIGITS, styles, toBengaliNumber()
+Cohesion: 0.67
+Nodes (4): $type, $value, md, md
 
 ### Community 34 - "expo"
 Cohesion: 0.10
@@ -332,12 +331,12 @@ Cohesion: 0.05
 Nodes (53): $type, $value, $type, $value, $type, $value, $type, $value (+45 more)
 
 ### Community 37 - "HANDOFF — 2026-09-22 21:23"
-Cohesion: 0.40
-Nodes (4): Current task status, HANDOFF — 2026-09-27 00:45, Immediate next steps, Just completed
+Cohesion: 0.33
+Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-02 20:00, Immediate next steps, Just completed
 
 ### Community 38 - "BM25"
 Cohesion: 0.06
-Nodes (42): BM25, detect_domain(), get_cip_brief(), _load_csv(), Load CSV and return list of dicts, Core search function using BM25, Auto-detect the most relevant domain from query, Main search function with auto-domain detection (+34 more)
+Nodes (40): detect_domain(), get_cip_brief(), _load_csv(), Load CSV and return list of dicts, Core search function using BM25, Auto-detect the most relevant domain from query, Main search function with auto-domain detection, Search across all domains and combine results (+32 more)
 
 ### Community 39 - "Tailwind CSS Utility Reference"
 Cohesion: 0.05
@@ -368,8 +367,8 @@ Cohesion: 0.06
 Nodes (34): Accessibility, Available Domains, Available Stacks, Common Rules for Professional UI, Common Sticking Points, Example Workflow, How to Use This Skill, Icons & Visual Elements (+26 more)
 
 ### Community 46 - "spacing"
-Cohesion: 0.06
-Nodes (34): $type, $value, $type, $value, $type, $value, $type, $value (+26 more)
+Cohesion: 0.09
+Nodes (22): $type, $value, $type, $value, $type, $value, $type, $value (+14 more)
 
 ### Community 47 - "Form & Input Components"
 Cohesion: 0.06
@@ -460,8 +459,8 @@ Cohesion: 0.15
 Nodes (6): read_rows(), split_values(), style_identities(), TestGeneratedCatalogContract, TestLandingAndStackContract, TestStyleIdentityContract
 
 ### Community 69 - "search"
-Cohesion: 0.14
-Nodes (8): _exact_stack_identifier(), Resolve a deprecated in-domain alias, or expose a cross-domain redirect., Main search function with auto-domain detection, Resolve a standalone API identifier even when its BM25 IDF is low., search(), _style_search_destination(), TestSearchDomains, TestTextLayoutRetrieval
+Cohesion: 0.10
+Nodes (9): _exact_stack_identifier(), Resolve a deprecated in-domain alias, or expose a cross-domain redirect., Main search function with auto-domain detection, Resolve a standalone API identifier even when its BM25 IDF is low., search(), _style_search_destination(), TestSearchDomains, read_rows() (+1 more)
 
 ### Community 70 - "Routing by Task Type"
 Cohesion: 0.10
@@ -480,7 +479,7 @@ Cohesion: 0.10
 Nodes (11): Generate Tailwind CSS configuration files., Add full color palette (50-950 shades) for a base color.          Args:, TailwindConfigGenerator, Test adding custom fonts., Test validating valid configuration., Test generating complete TypeScript configuration., Test initialization with different frameworks., Test default output path for TypeScript. (+3 more)
 
 ### Community 74 - "DesignSystemGenerator"
-Cohesion: 0.18
+Cohesion: 0.17
 Nodes (5): DesignSystemGenerator, Generates design system recommendations from aggregated searches., Load reasoning rules from CSV., TestReasoningMatch, TestReasoningContract
 
 ### Community 75 - "Asset Organization Guide"
@@ -497,7 +496,7 @@ Nodes (18): 1. Wordmark (Logotype), 2. Lettermark (Monogram), 3. Pictorial Mark 
 
 ### Community 78 - "color"
 Cohesion: 0.11
-Nodes (19): $type, $value, background, foreground, muted-foreground, primary, primary-hover, secondary (+11 more)
+Nodes (19): $type, $value, background, destructive, foreground, muted-foreground, primary-hover, secondary (+11 more)
 
 ### Community 79 - "main"
 Cohesion: 0.11
@@ -635,6 +634,10 @@ Nodes (10): fast, normal, slow, $type, $value, $type, $value, duration (+2 more)
 Cohesion: 0.20
 Nodes (7): Tests for tailwind_config_gen.py, Reduce a generated TS/JS config to a bare assignable object so it can be     ha, Regression guard for the missing-comma bug between the ``theme`` block and, The property preceding ``plugins`` must end with a comma (pure-Python         c, The emitted config parses as valid JS via ``node --check``., _strip_to_object(), TestGeneratedConfigIsValidJs
 
+### Community 114 - "TestStyleTaxonomy"
+Cohesion: 0.67
+Nodes (3): $type, $value, 0
+
 ### Community 115 - "Brand"
 Cohesion: 0.20
 Nodes (9): Brand, Brand Sync Workflow, Quick Start, References, Routing, Scripts, Subcommands, Templates (+1 more)
@@ -672,16 +675,20 @@ Cohesion: 0.25
 Nodes (9): _exact_match_diagnostic(), _legacy_successor_guidance(), _normalize(), Apply longest-first synonym substitution at token boundaries., Whether a stack query explicitly targets an older framework generation., Choose one coherent applicability generation for stack retrieval., Prefer the explicit successor row for a brand-new app on legacy-only stacks., _stack_query_requests_legacy() (+1 more)
 
 ### Community 124 - "input"
-Cohesion: 0.29
-Nodes (8): padding-x, input, $type, $value, focus-ring, padding-x, $type, $value
+Cohesion: 0.20
+Nodes (12): padding-x, padding-y, input, $type, $value, focus-ring, padding-x, padding-y (+4 more)
 
 ### Community 125 - "radius"
-Cohesion: 0.24
-Nodes (10): $type, $value, $type, $value, primitive, radius, shadow, full (+2 more)
+Cohesion: 0.19
+Nodes (14): $type, $value, $type, $value, $type, $value, primitive, radius (+6 more)
 
 ### Community 126 - "._generate_javascript"
 Cohesion: 0.29
 Nodes (4): Generate TypeScript configuration., Generate JavaScript configuration., Format plugins array for config.          Validates each plugin name against a, Add indentation to JSON string.
+
+### Community 127 - "test_core.py"
+Cohesion: 0.20
+Nodes (4): BM25, BM25 ranking algorithm for text search, TestBm25CoreBehavior, TestDiagnosticsContracts
 
 ### Community 128 - "Slides Reference"
 Cohesion: 0.29
@@ -698,6 +705,10 @@ Nodes (6): Animation Classes, Background Images, Base Structure, Chart.js Integr
 ### Community 131 - "_filter_anti_patterns_for_mode"
 Cohesion: 0.43
 Nodes (3): _filter_anti_patterns_for_mode(), Drop "avoid dark mode" advice once dark mode is the resolved answer., TestAntiPatternGating
+
+### Community 132 - "TestTextLayoutDataContracts"
+Cohesion: 0.22
+Nodes (3): read_rows(), TestTextLayoutDataContracts, TestTextLayoutRetrieval
 
 ### Community 133 - "shadow"
 Cohesion: 0.60
@@ -717,7 +728,7 @@ Nodes (4): Brand Guidelines Template, Document Structure, Extractable Fields, Us
 
 ### Community 137 - "$type"
 Cohesion: 0.67
-Nodes (4): padding-y, padding-y, $type, $value
+Nodes (3): $type, $value, 6
 
 ### Community 138 - "radius"
 Cohesion: 0.60
@@ -733,19 +744,15 @@ Nodes (40): dependencies, expo, expo-asset, expo-constants, expo-font, @expo-goo
 
 ### Community 141 - "xl"
 Cohesion: 0.12
-Nodes (27): LessonReaderScreen(), styles, BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), lessonQuizzes (+19 more)
+Nodes (26): LessonReaderScreen(), BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), lessonQuizzes, outputPath (+18 more)
 
 ### Community 142 - "md"
 Cohesion: 0.67
-Nodes (4): $type, $value, none, none
+Nodes (3): primary, $type, $value
 
 ### Community 143 - "none"
-Cohesion: 0.27
-Nodes (9): AITutorChatScreen(), OfflineQAItem, findOfflineAnswer(), getAllOfflineQuestions(), getOfflineQuestionsByCategory(), ITEMS, normalizeText(), OfflineSearchResult (+1 more)
-
-### Community 146 - "destructive"
-Cohesion: 0.67
-Nodes (3): destructive, $type, $value
+Cohesion: 0.13
+Nodes (17): AITutorChatScreen(), ChatMessage, styles, AnimatedMascot(), AnimatedMascotProps, styles, MascotFeedbackSlot(), MascotFeedbackSlotProps (+9 more)
 
 ### Community 147 - "destructive-foreground"
 Cohesion: 0.60
@@ -768,8 +775,8 @@ Cohesion: 0.67
 Nodes (3): muted, $type, $value
 
 ### Community 177 - "useAppStore"
-Cohesion: 0.13
-Nodes (15): SplashScreen(), styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }, styles, styles, MascotFeedbackPopupProps, MascotReaction(), MascotReactionProps (+7 more)
+Cohesion: 0.09
+Nodes (26): styles, SplashScreen(), styles, { width: SCREEN_WIDTH }, styles, styles, AnimatedXPBar(), AnimatedXPBarProps (+18 more)
 
 ### Community 178 - "colors.ts"
 Cohesion: 0.33
@@ -777,15 +784,19 @@ Nodes (5): 1. Persona Overview, 2. Core Pedagogical Rules, 3. System Prompt (Rea
 
 ### Community 179 - "[id].tsx"
 Cohesion: 0.10
-Nodes (24): styles, ChatMessage, styles, AnimatedMascot(), AnimatedMascotProps, styles, AstronautAvatar(), styles (+16 more)
+Nodes (20): RootLayout(), styles, AstronautAvatar(), AstronautAvatarProps, styles, CONFETTI_COLORS, ConfettiEffect(), ConfettiPiece (+12 more)
 
 ### Community 180 - "DoubleBezelCard.tsx"
 Cohesion: 0.67
 Nodes (3): primary-foreground, $type, $value
 
 ### Community 181 - "onboarding.tsx"
-Cohesion: 0.14
-Nodes (20): OnboardingScreen(), PsychometricOption, PsychometricQuestion, QUESTIONS, styles, ProfileScreen(), styles, AstronautAvatarProps (+12 more)
+Cohesion: 0.10
+Nodes (34): OnboardingScreen(), PsychometricOption, PsychometricQuestion, QUESTIONS, styles, QuizHubScreen(), styles, COSMIC_FACTS (+26 more)
+
+### Community 182 - "8"
+Cohesion: 0.67
+Nodes (3): $type, $value, 8
 
 ### Community 183 - "secondary-foreground"
 Cohesion: 0.67
@@ -796,27 +807,23 @@ Cohesion: 0.15
 Nodes (12): 1. Executive Summary, 2.1 Embedded Bengali Fonts, 2.2 Conjunct & Diacritic Stress Testing, 2. Typography & Rendering Verification, 3. Full Airplane Mode Walkthrough, 4. Compiled Bug & Remediation List (Hour 44 Review), 5. Visual Asset Inventory Supplied in `assets/`, Device Testing, Typography & Bug Report — Mohakash Jr (+4 more)
 
 ### Community 189 - "lucide-react-native"
-Cohesion: 0.13
-Nodes (27): BENGALI_DIGITS, CargoPackingGame(), CargoPackingGameProps, styles, toBengaliNumber(), BENGALI_DIGITS, LunarSiteSelector(), LunarSiteSelectorProps (+19 more)
-
-### Community 193 - "react-native-svg"
-Cohesion: 0.67
-Nodes (4): $type, $value, default, default
+Cohesion: 0.09
+Nodes (38): DoubleBezelCard(), DoubleBezelCardProps, styles, MascotFeedbackPopupProps, MascotReaction(), MascotReactionProps, MascotReactionState, styles (+30 more)
 
 ## Knowledge Gaps
-- **1122 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1117 more)
+- **1131 isolated node(s):** `Current task status`, `Just completed`, `Active blockers`, `Immediate next steps`, `$schema` (+1126 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **43 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **40 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `DesignSystemGenerator` connect `DesignSystemGenerator` to `.generate`, `_filter_anti_patterns_for_mode`, `read_rows`, `search`, `design_system.py`, `_resolve_color_mode`, `_select_palette_for_mode`, `test_core.py`, `BM25`, `detect_domain`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
-- **Why does `search()` connect `search` to `.generate`, `/graphify`, `_row_identities`, `design_system.py`, `search_stack`, `TestStyleTaxonomy`, `core.py`, `_normalize`, `test_core.py`, `BM25`, `detect_domain`?**
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `BM25` connect `test_core.py` to `search`, `BM25`, `DesignSystemGenerator`, `design_system.py`, `BM25`, `detect_domain`?**
   _High betweenness centrality (0.009) - this node is a cross-community bridge._
-- **Why does `BM25` connect `BM25` to `search`, `DesignSystemGenerator`, `design_system.py`, `test_core.py`, `BM25`, `detect_domain`?**
-  _High betweenness centrality (0.008) - this node is a cross-community bridge._
+- **Why does `search()` connect `search` to `.generate`, `/graphify`, `TestTextLayoutDataContracts`, `_row_identities`, `design_system.py`, `search_stack`, `core.py`, `_normalize`, `test_core.py`, `BM25`, `detect_domain`?**
+  _High betweenness centrality (0.009) - this node is a cross-community bridge._
 - **Are the 36 inferred relationships involving `TailwindConfigGenerator` (e.g. with `TestGeneratedConfigIsValidJs` and `.test_node_check_parses_generated_config()`) actually correct?**
   _`TailwindConfigGenerator` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 30 inferred relationships involving `DesignSystemGenerator` (e.g. with `TestBm25CoreBehavior` and `TestDiagnosticsContracts`) actually correct?**

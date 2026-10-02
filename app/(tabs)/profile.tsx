@@ -1,17 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
-import { DoubleBezelCard } from '../../src/components/DoubleBezelCard';
+import { StoryCard } from '../../src/components/StoryCard';
 import { XPProgressBar } from '../../src/components/XPProgressBar';
 import { AstronautAvatar } from '../../src/components/AstronautAvatar';
 import { SpaceChoiceBadge } from '../../src/components/SpaceChoiceBadge';
-import { TactileButton } from '../../src/components/TactileButton';
+import { GentleButton } from '../../src/components/GentleButton';
 import { useAppStore, RANK_THRESHOLDS, ARCHETYPES } from '../../src/state/useAppStore';
 import {
   CheckCircle2,
-  WifiOff,
   RotateCcw,
   Sparkles,
   BookOpen,
@@ -19,8 +18,6 @@ import {
   Zap,
   Star,
   Award,
-  Rocket,
-  Shield,
   Lock,
 } from 'lucide-react-native';
 
@@ -86,8 +83,8 @@ export default function ProfileScreen() {
     {
       id: 'artemis-lunar',
       name_bn: 'চাঁদের গবেষক 🌕',
-      desc_bn: 'চাঁদ সম্পর্কিত পাঠ ও কুইজ জয় করার কৃতিত্ব',
-      icon: <Award size={20} color={Colors.cyan} />,
+      desc_bn: 'চাঁদ সম্পর্কিত পাঠ ও কুইজ জয় করার কৃতিত্ব',
+      icon: <Award size={20} color={Colors.primaryLight} />,
       unlocked: completedLessonIds.includes('lesson-1'),
     },
     {
@@ -99,12 +96,23 @@ export default function ProfileScreen() {
     },
     {
       id: 'astronaut-insignia',
-      name_bn: 'অফিসিয়াল নভোচারী মেডেল 🏆',
+      name_bn: 'অফিসিয়াল নভোচারী মেডেল 🏆',
       desc_bn: 'ক্যাডেট স্তর সফলভাবে পার করে মহাকাশচারী পদ অর্জন',
       icon: <Sparkles size={20} color={Colors.gold} />,
       unlocked: rank !== 'Cadet',
     },
   ];
+
+  const handleConfirmReset = () => {
+    Alert.alert(
+      'অগ্রগতি রিসেট',
+      'তুমি কি সত্যি তোমার সমস্ত মহাকাশ অগ্রগতি নতুন করে শুরু করতে চাও?',
+      [
+        { text: 'না', style: 'cancel' },
+        { text: 'হ্যাঁ, রিসেট করো', style: 'destructive', onPress: () => resetProgress() },
+      ]
+    );
+  };
 
   return (
     <ScrollView
@@ -112,21 +120,20 @@ export default function ProfileScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* Cute Astronaut ID Badge Card */}
-      <DoubleBezelCard glow="blue" style={styles.profileCardMargin}>
+      {/* Astronaut ID Badge Card */}
+      <StoryCard accent="primary" style={styles.profileCard}>
         <View style={styles.dossierHeader}>
           <View style={styles.idChip}>
-            <Text style={styles.idChipText}>মহাকাশ একাডেমি অফিসিয়াল আইডি</Text>
+            <Text style={styles.idChipText}>মহাকাশ একাডেমি অফিসিয়াল আইডি</Text>
           </View>
           <View style={styles.activePill}>
             <View style={styles.activeDot} />
-            <Text style={styles.activePillText}>সক্রিয় ক্যাডেট</Text>
+            <Text style={styles.activePillText}>সক্রিয় ক্যাডেট</Text>
           </View>
         </View>
 
         <View style={styles.avatarSection}>
-          <AstronautAvatar size={88} rank={rank} showHalo />
-
+          <AstronautAvatar size={84} rank={rank} showHalo />
           <Text style={styles.nameText}>{displayName}</Text>
 
           <View style={styles.rankPill}>
@@ -136,9 +143,9 @@ export default function ProfileScreen() {
         </View>
 
         {/* Cadet Psychometric Archetype Badge */}
-        <View style={[styles.archetypeDossierBox, { borderColor: archetypeInfo.accentColor }]}>
+        <View style={[styles.archetypeDossierBox, { borderColor: archetypeInfo.accentColor + '40' }]}>
           <View style={styles.archetypeHeader}>
-            <SpaceChoiceBadge type={cadetArchetype} size={42} isSelected />
+            <SpaceChoiceBadge type={cadetArchetype} size={40} isSelected />
             <View style={{ flex: 1 }}>
               <Text style={[styles.archetypeTitle, { color: archetypeInfo.accentColor }]}>{archetypeInfo.title_bn}</Text>
               <Text style={styles.archetypeMotto}>"{archetypeInfo.motto_bn}"</Text>
@@ -146,21 +153,21 @@ export default function ProfileScreen() {
           </View>
           <Text style={styles.archetypeDescText}>{archetypeInfo.description_bn}</Text>
         </View>
-      </DoubleBezelCard>
+      </StoryCard>
 
       {/* Experience & Onboarding Replay Shortcuts */}
       <View style={styles.shortcutsRow}>
-        <TactileButton
-          title="ওরিয়েন্টেশন পরীক্ষা ✨"
+        <GentleButton
+          title="ওরিয়েন্টেশন পরীক্ষা ✨"
           onPress={() => router.push('/onboarding')}
-          variant="outline"
+          variant="secondary"
           size="small"
           style={styles.shortcutBtn}
         />
-        <TactileButton
-          title="মঙ্গল স্প্ল্যাশ দৃশ্য 🚀"
+        <GentleButton
+          title="স্প্ল্যাশ দৃশ্য 🚀"
           onPress={() => router.push('/splash')}
-          variant="outline"
+          variant="secondary"
           size="small"
           style={styles.shortcutBtn}
         />
@@ -170,12 +177,9 @@ export default function ProfileScreen() {
       <Text style={styles.sectionHeading}>স্পেসস্যুট ও পদমর্যাদা অগ্রগতি</Text>
       <View style={styles.suitGrid}>
         {suitTiers.map((suit) => (
-          <View
+          <StoryCard
             key={suit.tier}
-            style={[
-              styles.suitCard,
-              suit.unlocked ? styles.suitCardUnlocked : styles.suitCardLocked,
-            ]}
+            style={[styles.suitCard, !suit.unlocked && styles.suitCardLocked]}
           >
             <Text style={styles.suitIcon}>{suit.icon}</Text>
             <Text style={[styles.suitTitle, !suit.unlocked && styles.textMuted]}>
@@ -191,88 +195,76 @@ export default function ProfileScreen() {
                 {suit.unlocked ? 'আনলকড' : suit.condition}
               </Text>
             </View>
-          </View>
+          </StoryCard>
         ))}
       </View>
 
       {/* Gamified XP Progress */}
       <Text style={styles.sectionHeading}>র‍্যাঙ্ক অগ্রগতি ও মাইলস্টোন</Text>
-      <XPProgressBar compact={false} />
+      <StoryCard style={styles.progressCard}>
+        <XPProgressBar compact={false} />
+      </StoryCard>
 
       {/* Stats Bento Grid */}
-      <Text style={styles.sectionHeading}>মিশন পরিসংখ্যান</Text>
+      <Text style={styles.sectionHeading}>অভিযাত্রা পরিসংখ্যান</Text>
       <View style={styles.statsGrid}>
-        <View style={styles.statBox}>
+        <StoryCard style={styles.statBox}>
           <Zap size={20} color={Colors.gold} fill={Colors.gold} style={styles.statIcon} />
           <Text style={styles.statNumber}>{xp}</Text>
           <Text style={styles.statLabel}>মোট অর্জিত XP</Text>
-        </View>
+        </StoryCard>
 
-        <View style={styles.statBox}>
-          <BookOpen size={20} color={Colors.cyan} style={styles.statIcon} />
+        <StoryCard style={styles.statBox}>
+          <BookOpen size={20} color={Colors.primaryLight} style={styles.statIcon} />
           <Text style={styles.statNumber}>{completedLessonIds.length}</Text>
-          <Text style={styles.statLabel}>পড়া সম্পন্ন</Text>
-        </View>
+          <Text style={styles.statLabel}>পড়া সম্পন্ন</Text>
+        </StoryCard>
 
-        <View style={styles.statBox}>
+        <StoryCard style={styles.statBox}>
           <Target size={20} color={Colors.emerald} style={styles.statIcon} />
           <Text style={styles.statNumber}>{totalQuizzesAnswered}</Text>
           <Text style={styles.statLabel}>কুইজ সম্পন্ন</Text>
-        </View>
+        </StoryCard>
       </View>
 
-      {/* Space Mission Badges Collection */}
-      <Text style={styles.sectionHeading}>আমার মহাকাশ পদক সংগ্রহশালা</Text>
-      <View style={styles.badgeList}>
-        {badges.map((badge) => (
-          <DoubleBezelCard
-            key={badge.id}
-            glow={badge.unlocked ? 'gold' : 'none'}
-            style={badge.unlocked ? styles.badgeUnlockedShell : styles.badgeLockedShell}
+      {/* Badges Collection */}
+      <Text style={styles.sectionHeading}>অর্জিত মহাকাশ পদক</Text>
+      <View style={styles.badgesList}>
+        {badges.map((b) => (
+          <StoryCard
+            key={b.id}
+            accent={b.unlocked ? 'gold' : 'none'}
+            style={[styles.badgeItemCard, !b.unlocked && styles.badgeLocked]}
           >
-            <View style={styles.badgeCardContent}>
-              <View
-                style={[
-                  styles.badgeIconCircle,
-                  badge.unlocked ? styles.badgeActiveCircle : styles.badgeInactiveCircle,
-                ]}
-              >
-                {badge.icon}
-              </View>
-              <View style={styles.badgeInfo}>
-                <Text style={[styles.badgeName, !badge.unlocked && styles.textLocked]}>
-                  {badge.name_bn}
-                </Text>
-                <Text style={styles.badgeDesc}>{badge.desc_bn}</Text>
-              </View>
-              <View style={badge.unlocked ? styles.badgeStatusActive : styles.badgeStatusLocked}>
-                {badge.unlocked ? (
-                  <CheckCircle2 size={18} color={Colors.emerald} />
-                ) : (
-                  <Text style={styles.lockText}>লকড</Text>
-                )}
-              </View>
+            <View style={[styles.badgeIconWrap, b.unlocked ? styles.badgeUnlockedWrap : styles.badgeLockedWrap]}>
+              {b.icon}
             </View>
-          </DoubleBezelCard>
+            <View style={styles.badgeInfo}>
+              <Text style={[styles.badgeTitle, !b.unlocked && styles.textMuted]}>{b.name_bn}</Text>
+              <Text style={styles.badgeDesc}>{b.desc_bn}</Text>
+            </View>
+            {b.unlocked ? (
+              <View style={styles.badgeCheck}>
+                <CheckCircle2 size={16} color={Colors.emerald} />
+              </View>
+            ) : (
+              <Lock size={15} color={Colors.textMuted} />
+            )}
+          </StoryCard>
         ))}
       </View>
 
-      {/* Offline Status */}
-      <View style={styles.offlineCard}>
-        <WifiOff size={18} color={Colors.cyan} />
-        <View style={styles.offlineTextCol}>
-          <Text style={styles.offlineTitle}>অফলাইন মোড সক্রিয়</Text>
-          <Text style={styles.offlineSubtitle}>
-            ইন্টারনেট সংযোগ ছাড়াও যেকোনো সময় সব পাঠ ও কুইজ পড়তে পারবে।
-          </Text>
-        </View>
+      {/* Danger Zone / Reset */}
+      <View style={styles.resetWrap}>
+        <GentleButton
+          title="নতুন করে শুরু করো (রিসেট)"
+          onPress={handleConfirmReset}
+          variant="outline"
+          size="normal"
+          icon={<RotateCcw size={15} color={Colors.textSecondary} />}
+          textStyle={{ color: Colors.textSecondary }}
+        />
       </View>
-
-      {/* Reset Progress */}
-      <Pressable style={styles.resetButton} onPress={resetProgress}>
-        <RotateCcw size={14} color={Colors.coral} />
-        <Text style={styles.resetButtonText}>অগ্রগতি রিসেট করো</Text>
-      </Pressable>
     </ScrollView>
   );
 }
@@ -280,42 +272,43 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.background,
   },
   content: {
-    padding: 16,
-    paddingBottom: 40,
+    padding: 18,
+    paddingBottom: 60,
+    maxWidth: 620,
+    alignSelf: 'center',
+    width: '100%',
   },
-  profileCardMargin: {
-    marginBottom: 12,
+  profileCard: {
+    marginBottom: 16,
   },
   dossierHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
   },
   idChip: {
-    backgroundColor: 'rgba(56, 189, 248, 0.15)',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
     paddingHorizontal: 10,
-    paddingVertical: 3,
+    paddingVertical: 4,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(56, 189, 248, 0.3)',
   },
   idChipText: {
-    color: Colors.cyan,
+    color: Colors.textMuted,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindSemiBold,
   },
   activePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.emeraldBg,
+    gap: 5,
+    backgroundColor: 'rgba(94, 214, 192, 0.12)',
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 8,
-    gap: 5,
+    borderRadius: 10,
   },
   activeDot: {
     width: 6,
@@ -326,71 +319,67 @@ const styles = StyleSheet.create({
   activePillText: {
     color: Colors.emerald,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   avatarSection: {
     alignItems: 'center',
-    paddingVertical: 4,
+    marginBottom: 16,
   },
   nameText: {
     color: Colors.text,
     fontSize: Typography.size.h1,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.hindBold,
     marginTop: 10,
     marginBottom: 6,
   },
   rankPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.goldBg,
-    paddingHorizontal: 14,
-    paddingVertical: 5,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 184, 0, 0.3)',
     gap: 6,
+    backgroundColor: 'rgba(255, 200, 107, 0.15)',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 200, 107, 0.25)',
   },
   rankPillText: {
     color: Colors.gold,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   archetypeDossierBox: {
-    marginTop: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
     borderRadius: 16,
-    padding: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    padding: 14,
   },
   archetypeHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginBottom: 6,
-  },
-  archetypeEmoji: {
-    fontSize: 26,
+    gap: 12,
+    marginBottom: 8,
   },
   archetypeTitle: {
-    color: Colors.gold,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
+    fontSize: Typography.size.h3,
+    fontFamily: Typography.family.hindBold,
   },
   archetypeMotto: {
-    color: Colors.cyan,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.medium,
+    color: Colors.textSecondary,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.notoRegular,
+    fontStyle: 'italic',
   },
   archetypeDescText: {
     color: Colors.textSecondary,
-    fontSize: Typography.size.micro,
+    fontSize: Typography.size.caption,
     lineHeight: Typography.lineHeight.caption,
+    fontFamily: Typography.family.notoRegular,
   },
   shortcutsRow: {
     flexDirection: 'row',
     gap: 10,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   shortcutBtn: {
     flex: 1,
@@ -398,47 +387,34 @@ const styles = StyleSheet.create({
   sectionHeading: {
     color: Colors.text,
     fontSize: Typography.size.h3,
-    fontWeight: Typography.weight.bold,
-    marginTop: 14,
-    marginBottom: 10,
+    fontFamily: Typography.family.hindBold,
+    marginBottom: 12,
+    marginTop: 4,
   },
   suitGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
-    marginBottom: 6,
+    marginBottom: 20,
   },
   suitCard: {
     width: '48%',
-    backgroundColor: Colors.surfaceCard,
-    borderRadius: 16,
-    padding: 12,
+    padding: 14,
     alignItems: 'center',
-    borderWidth: 1.5,
-    borderBottomWidth: 3,
-    borderBottomColor: 'rgba(0,0,0,0.3)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  suitCardUnlocked: {
-    borderColor: 'rgba(56, 189, 248, 0.4)',
-    backgroundColor: 'rgba(37, 99, 235, 0.12)',
   },
   suitCardLocked: {
-    opacity: 0.6,
+    opacity: 0.55,
   },
   suitIcon: {
-    fontSize: 24,
-    marginBottom: 4,
+    fontSize: 28,
+    marginBottom: 6,
   },
   suitTitle: {
     color: Colors.text,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
     textAlign: 'center',
-    marginBottom: 4,
-  },
-  textMuted: {
-    color: Colors.textMuted,
+    marginBottom: 6,
   },
   suitStatusUnlocked: {
     flexDirection: 'row',
@@ -452,137 +428,84 @@ const styles = StyleSheet.create({
   },
   suitStatusText: {
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.notoRegular,
+  },
+  textMuted: {
+    color: Colors.textMuted,
+  },
+  progressCard: {
+    marginBottom: 20,
+    padding: 16,
   },
   statsGrid: {
     flexDirection: 'row',
     gap: 10,
+    marginBottom: 20,
   },
   statBox: {
     flex: 1,
-    backgroundColor: Colors.surfaceCard,
-    padding: 14,
-    borderRadius: 20,
     alignItems: 'center',
-    borderWidth: 2,
-    borderBottomWidth: 3.5,
-    borderBottomColor: 'rgba(0, 0, 0, 0.35)',
-    borderColor: 'rgba(255, 255, 255, 0.10)',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.18,
-    shadowRadius: 5,
-    elevation: 2,
+    padding: 14,
   },
   statIcon: {
-    marginBottom: 4,
+    marginBottom: 6,
   },
   statNumber: {
     color: Colors.text,
-    fontSize: Typography.size.h2,
-    fontWeight: Typography.weight.heavy,
+    fontSize: Typography.size.h1,
+    fontFamily: Typography.family.hindBold,
     marginBottom: 2,
   },
   statLabel: {
-    color: Colors.textSecondary,
+    color: Colors.textMuted,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.semiBold,
+    fontFamily: Typography.family.notoRegular,
+    textAlign: 'center',
   },
-  badgeList: {
+  badgesList: {
     gap: 10,
+    marginBottom: 24,
   },
-  badgeUnlockedShell: {
-    marginBottom: 2,
-  },
-  badgeLockedShell: {
-    opacity: 0.55,
-    marginBottom: 2,
-  },
-  badgeCardContent: {
+  badgeItemCard: {
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 14,
+    gap: 12,
   },
-  badgeIconCircle: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+  badgeLocked: {
+    opacity: 0.5,
+  },
+  badgeIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
   },
-  badgeActiveCircle: {
-    backgroundColor: 'rgba(255, 184, 0, 0.15)',
+  badgeUnlockedWrap: {
+    backgroundColor: 'rgba(255, 200, 107, 0.15)',
   },
-  badgeInactiveCircle: {
-    backgroundColor: Colors.surface,
+  badgeLockedWrap: {
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
   },
   badgeInfo: {
     flex: 1,
   },
-  badgeName: {
+  badgeTitle: {
     color: Colors.text,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.family.hindBold,
     marginBottom: 2,
-  },
-  textLocked: {
-    color: Colors.textMuted,
   },
   badgeDesc: {
-    color: Colors.textSecondary,
-    fontSize: Typography.size.micro,
-    lineHeight: Typography.lineHeight.caption,
-  },
-  badgeStatusActive: {
-    padding: 4,
-  },
-  badgeStatusLocked: {
-    backgroundColor: Colors.surface,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-  },
-  lockText: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.notoRegular,
   },
-  offlineCard: {
-    flexDirection: 'row',
+  badgeCheck: {},
+  resetWrap: {
     alignItems: 'center',
-    backgroundColor: Colors.surface,
-    padding: 14,
-    borderRadius: 20,
-    marginTop: 18,
-    gap: 12,
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.10)',
-  },
-  offlineTextCol: {
-    flex: 1,
-  },
-  offlineTitle: {
-    color: Colors.text,
-    fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
-    marginBottom: 2,
-  },
-  offlineSubtitle: {
-    color: Colors.textSecondary,
-    fontSize: Typography.size.micro,
-    lineHeight: Typography.lineHeight.caption,
-  },
-  resetButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    marginTop: 14,
-    gap: 6,
-  },
-  resetButtonText: {
-    color: Colors.coral,
-    fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.semiBold,
+    marginTop: 10,
+    marginBottom: 20,
   },
 });

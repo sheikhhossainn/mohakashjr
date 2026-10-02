@@ -1,8 +1,12 @@
 /**
- * Mohakash Jr. - UI/UX Pro Max Typography System
- * Warm, friendly, highly legible typography scale tailored for Bengali children's education.
- * Generous line-heights (1.58x-1.68x) completely prevent Bengali diacritics
- * (কার-ফলা ও যুক্তবর্ণ) from clipping.
+ * Mohakash Jr. — "Illustrated Book" Typography System
+ * Designed for Bangladeshi children reading Bengali science text.
+ *
+ * Key decisions:
+ * - Body text at 17pt (up from 15pt) for comfortable reading
+ * - Line-height at 1.85x for Bengali diacritics breathing room
+ * - 20px minimum padding around all text containers
+ * - Hind Siliguri for headings, Noto Sans Bengali for body
  */
 
 // Safe font resolution that works across React Native runtime, Web, and Node.js test runners
@@ -32,29 +36,30 @@ export const Typography = {
     hindBold: 'HindSiliguri-Bold',
   },
 
-  // Font Sizes
+  // Font Sizes — Generous for children's readability
   size: {
-    hero: 28,          // Large Milestone / Screen Greeting
-    h1: 22,            // Primary Section Title
-    h2: 18,            // Card Header
-    h3: 16,            // Subtitle / Module Title
-    body: 15,          // Core Reading Text
-    bodySmall: 14,     // Explanations / Dialogue
-    caption: 13,       // Tags / Badges / Button subtext
-    micro: 11,         // Subtle Metadata
-    tag: 12,           // Category Badges
+    hero: 28,          // Screen greeting / milestone
+    h1: 24,            // Primary section title (up from 22)
+    h2: 20,            // Card header / lesson title (up from 18)
+    h3: 17,            // Subtitle / module title (up from 16)
+    body: 17,          // Core reading text (up from 15 — critical change)
+    bodySmall: 15,     // Explanations / dialogue (up from 14)
+    caption: 13,       // Tags / badges
+    micro: 11,         // Subtle metadata
+    tag: 12,           // Category badges
   },
 
-  // Calibrated Line Heights (Optimized for Bengali Conjuncts and Vowels)
+  // Calibrated Line Heights — Extra generous for Bengali conjuncts
+  // Bengali diacritics (কার-ফলা ও যুক্তবর্ণ) need room above AND below
   lineHeight: {
-    hero: 36,
-    h1: 30,
-    h2: 26,
-    h3: 24,
-    body: 24,          // 1.6x multiplier for effortless reading
-    bodySmall: 22,     // 1.57x multiplier
-    caption: 18,
-    micro: 16,
+    hero: 40,          // 1.43x — headings can be tighter
+    h1: 34,            // 1.42x
+    h2: 30,            // 1.5x
+    h3: 28,            // 1.65x
+    body: 32,          // 1.88x — generous reading flow for Bengali
+    bodySmall: 28,     // 1.87x
+    caption: 20,       // 1.54x
+    micro: 16,         // 1.45x
   },
 
   // Font Weights
@@ -65,5 +70,13 @@ export const Typography = {
     bold: '700' as const,
     heavy: '800' as const,
     black: '900' as const,
+  },
+
+  // Spacing tokens for text containers
+  textPadding: {
+    card: 20,          // Minimum padding inside any card with text
+    section: 24,       // Padding between sections
+    paragraph: 20,     // Spacing between paragraphs
+    inline: 16,        // Inline element spacing
   },
 };

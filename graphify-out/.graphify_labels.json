@@ -145,7 +145,6 @@
   "143": "none",
   "144": "test_sync_brand_to_tokens.py",
   "145": "main",
-  "146": "destructive",
   "147": "destructive-foreground",
   "148": "muted",
   "149": "primary-foreground",
@@ -181,8 +180,8 @@
   "179": "[id].tsx",
   "180": "DoubleBezelCard.tsx",
   "181": "onboarding.tsx",
+  "182": "8",
   "183": "secondary-foreground",
   "186": "expo-constants",
-  "189": "lucide-react-native",
-  "193": "react-native-svg"
+  "189": "lucide-react-native"
 }

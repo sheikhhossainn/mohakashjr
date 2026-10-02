@@ -6,18 +6,19 @@ import {
   TextInput,
   Pressable,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '../src/theme/colors';
 import { Typography } from '../src/theme/typography';
-import { DoubleBezelCard } from '../src/components/DoubleBezelCard';
-import { TactileButton } from '../src/components/TactileButton';
+import { StoryCard } from '../src/components/StoryCard';
+import { GentleButton } from '../src/components/GentleButton';
 import { AnimatedMascot } from '../src/components/AnimatedMascot';
 import { AstronautAvatar } from '../src/components/AstronautAvatar';
 import { SpaceChoiceBadge } from '../src/components/SpaceChoiceBadge';
 import { ConfettiEffect } from '../src/components/ConfettiEffect';
 import { useAppStore, ARCHETYPES, calculateArchetype, CadetArchetype } from '../src/state/useAppStore';
-import { Sparkles, ArrowRight, ArrowLeft, Check, Star, Award, Compass, Zap, CheckSquare2 } from 'lucide-react-native';
+import { Sparkles, ArrowRight, ArrowLeft, Check, Star, Award, Compass, Zap } from 'lucide-react-native';
 
 interface PsychometricOption {
   title_bn: string;
@@ -40,16 +41,16 @@ const QUESTIONS: PsychometricQuestion[] = [
     stepNumber: 1,
     tag: 'কৌতূহল ০১: মহাকাশ অভিযানের স্বপ্ন',
     topicTitle_bn: 'মহাকাশের স্বপ্ন 🌌',
-    scenario_bn: 'যদি তোমাকে একটি সত্যিকারের মহাকাশ অভিযানে পাঠানো হয়, মহাকাশে পৌঁছে তোমার সবচেয়ে বেশি কী করতে আনন্দ লাগবে?',
+    scenario_bn: 'যদি তোমাকে একটি সত্যিকারের মহাকাশ অভিযানে পাঠানো হয়, মহাকাশে পৌঁছে তোমার সবচেয়ে বেশি কী করতে আনন্দ লাগবে?',
     options: [
       {
-        title_bn: 'ঝড়ের গতিতে রকেট চালানো',
-        subtitle_bn: 'মহাশূন্যের বুক চিরে সুপারসনিক গতিতে রকেট নিয়ে ছুটে বেড়াব!',
+        title_bn: 'ঝড়ের গতিতে রকেট চালানো',
+        subtitle_bn: 'মহাশূন্যের বুক চিরে সুপারসনিক গতিতে রকেট নিয়ে ছুটে বেড়াব!',
         type: 'pilot',
       },
       {
         title_bn: 'তারা ও দূর গ্যালাক্সি দেখা',
-        subtitle_bn: 'বিশাল স্পেস টেলিস্কোপ দিয়ে দূর তারা, নেবুলা আর শনির বলয় দেখব!',
+        subtitle_bn: 'বিশাল স্পেস টেলিস্কোপ দিয়ে দূর তারা, নেবুলা আর শনির বলয় দেখব!',
         type: 'astronomer',
       },
       {
@@ -58,8 +59,8 @@ const QUESTIONS: PsychometricQuestion[] = [
         type: 'engineer',
       },
       {
-        title_bn: 'অচেনা গ্রহে নেমে ঘুরে বেড়ানো',
-        subtitle_bn: 'রহস্যময় দূর গ্রহে পা রেখে অদ্ভুত স্ফটিক গুহা আর এলিয়েন জগৎ খুঁজব!',
+        title_bn: 'অচেনা গ্রহে নেমে ঘুরে বেড়ানো',
+        subtitle_bn: 'রহস্যময় দূর গ্রহে পা রেখে অদ্ভুত স্ফটিক গুহা আর এলিয়েন জগৎ খুঁজব!',
         type: 'explorer',
       },
     ],
@@ -68,12 +69,12 @@ const QUESTIONS: PsychometricQuestion[] = [
     id: 2,
     stepNumber: 2,
     tag: 'কৌতূহল ০২: স্পেসশিপে তোমার স্পেশাল কেবিন',
-    topicTitle_bn: 'স্পেসশিপের দায়িত্ব 🚀',
-    scenario_bn: 'তোমার মহাকাশযান যখন কোটি মাইল দূরে দূরবর্তী কোনো গ্রহে উড়ে যাচ্ছে, তুমি কোন কেবিনে বসে সবচেয়ে বেশি কাজ করতে চাইবে?',
+    topicTitle_bn: 'স্পেসশিপের দায়িত্ব 🚀',
+    scenario_bn: 'তোমার মহাকাশযান যখন কোটি মাইল দূরে দূরবর্তী কোনো গ্রহে উড়ে যাচ্ছে, তুমি কোন কেবিনে বসে সবচেয়ে বেশি কাজ করতে চাইবে?',
     options: [
       {
-        title_bn: 'ককপিট ও স্টিয়ারিং কন্ট্রোল',
-        subtitle_bn: 'হাতে জয়স্টিক নিয়ে স্পেসশিপকে গ্রহ ও উল্কাপিণ্ডের পাশ দিয়ে ওড়াব!',
+        title_bn: 'ককপিট ও স্টিয়ারিং কন্ট্রোল',
+        subtitle_bn: 'হাতে জয়স্টিক নিয়ে স্পেসশিপকে গ্রহ ও উল্কাপিণ্ডের পাশ দিয়ে ওড়াব!',
         type: 'pilot',
       },
       {
@@ -83,7 +84,7 @@ const QUESTIONS: PsychometricQuestion[] = [
       },
       {
         title_bn: 'রোবটিক্স ও টেক ল্যাব',
-        subtitle_bn: 'রোবটের সার্কিট টিউন করব আর রকেটের নতুন শক্তিশালী পার্টস জুড়ব!',
+        subtitle_bn: 'রোবটের সার্কিট টিউন করব আর রকেটের নতুন শক্তিশালী পার্টস জুড়ব!',
         type: 'engineer',
       },
       {
@@ -96,28 +97,28 @@ const QUESTIONS: PsychometricQuestion[] = [
   {
     id: 3,
     stepNumber: 3,
-    tag: 'কৌতূহল ০৩: মহাজাগতিক বিস্ময় ও রোমাঞ্চ',
+    tag: 'কৌতূহল ০৩: মহাজাগতিক বিস্ময় ও রোমাঞ্চ',
     topicTitle_bn: 'ভবিষ্যতের মহাকাশ লক্ষ্য 🌟',
-    scenario_bn: 'বড় হয়ে বিজ্ঞানী বা নভোচারী হলে, মহাকাশের কোন রোমাঞ্চকর রহস্যটি তুমি সবার আগে সমাধান করতে চাও?',
+    scenario_bn: 'বড় হয়ে বিজ্ঞানী বা নভোচারী হলে, মহাকাশের কোন রোমাঞ্চকর রহস্যটি তুমি সবার আগে সমাধান করতে চাও?',
     options: [
       {
-        title_bn: 'আলোর গতিতে অন্য তারায় যাওয়া',
-        subtitle_bn: 'সবার চেয়ে দ্রুততম গতিতে অন্য সৌরজগতে পৌঁছে বিশ্বরেকর্ড গড়া!',
+        title_bn: 'আলোর গতিতে অন্য তারায় যাওয়া',
+        subtitle_bn: 'সবার চেয়ে দ্রুততম গতিতে অন্য সৌরজগতে পৌঁছে বিশ্বরেকর্ড গড়া!',
         type: 'pilot',
       },
       {
         title_bn: 'ব্ল্যাকহোল ও সৃষ্টির রহস্য',
-        subtitle_bn: 'রহস্যময় ব্ল্যাকহোলের শেষ সীমানা ও তারার জন্মরহস্য উন্মোচন করা!',
+        subtitle_bn: 'রহস্যময় ব্ল্যাকহোলের শেষ সীমানা ও তারার জন্মরহস্য উন্মোচন করা!',
         type: 'astronomer',
       },
       {
         title_bn: 'চাঁদ ও মঙ্গলে মানুষের শহর',
-        subtitle_bn: 'রোবট আর থ্রিডি প্রিন্টার দিয়ে অন্য গ্রহে সুরক্ষিত মহাকাশ শহর তৈরি করা!',
+        subtitle_bn: 'রোবট আর থ্রিডি প্রিন্টার দিয়ে অন্য গ্রহে সুরক্ষিত মহাকাশ শহর তৈরি করা!',
         type: 'engineer',
       },
       {
-        title_bn: 'অন্য গ্রহে বন্ধু বা এলিয়েন খোঁজা',
-        subtitle_bn: 'বহু দূর কোনো গ্রহে বন্ধুভাবাপন্ন এলিয়েন প্রাণ আছে কি না খুঁজে বের করা!',
+        title_bn: 'অন্য গ্রহে বন্ধু বা এলিয়েন খোঁজা',
+        subtitle_bn: 'বহু দূর কোনো গ্রহে বন্ধুভাবাপন্ন এলিয়েন প্রাণ আছে কি না খুঁজে বের করা!',
         type: 'explorer',
       },
     ],
@@ -129,7 +130,6 @@ export default function OnboardingScreen() {
   const { completeCadetOrientation } = useAppStore();
 
   const [step, setStep] = useState(0); // 0: Welcome, 1: Q1, 2: Q2, 3: Q3, 4: Result/Reveal
-  // No options selected by default as requested!
   const [answers, setAnswers] = useState<Record<number, number[]>>({});
   const [cadetName, setCadetName] = useState('সোহান');
 
@@ -138,7 +138,6 @@ export default function OnboardingScreen() {
   const currentSelections = answers[currentQIndex] || [];
   const hasSelection = currentSelections.length > 0;
 
-  // Toggle multi-select choice
   const handleToggleChoice = (questionId: number, choiceIndex: number) => {
     const qIdx = questionId - 1;
     setAnswers((prev) => {
@@ -155,7 +154,6 @@ export default function OnboardingScreen() {
   };
 
   const handleNext = () => {
-    // Guard: Kid must select at least 1 option before advancing
     if (step >= 1 && step <= 3 && !hasSelection) {
       return;
     }
@@ -187,116 +185,129 @@ export default function OnboardingScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
+      <StatusBar barStyle="light-content" />
+
       {/* Step 0: Welcome & Orientation Briefing */}
       {step === 0 && (
         <View style={styles.welcomeWrapper}>
           <View style={styles.topBadgeRow}>
-            <Sparkles size={14} color={Colors.gold} />
-            <Text style={styles.topBadgeText}>মহাকাশ একাডেমি ওরিয়েন্টেশন</Text>
-            <Sparkles size={14} color={Colors.gold} />
+            <Sparkles size={13} color={Colors.gold} />
+            <Text style={styles.topBadgeText}>মহাকাশ একাডেমি ওরিয়েন্টেশন</Text>
+            <Sparkles size={13} color={Colors.gold} />
           </View>
 
-          <DoubleBezelCard glow="cyan" style={styles.welcomeCard}>
+          <StoryCard accent="primary" style={styles.welcomeCard}>
             <View style={styles.mascotBox}>
-              <AnimatedMascot size={120} mood="waving" />
+              <AnimatedMascot size={86} mood="waving" />
             </View>
 
-            <Text style={styles.welcomeTitle}>স্বাগতম নতুন ক্যাডেট! 👨‍🚀</Text>
-            <Text style={styles.welcomeDesc}>
-              আমি তোমার গাইড অ্যাস্ট্রো-বন্ধু! মহাকাশ একাডেমিতে যোগ দেওয়ার আগে ৩টি মজার কৌতূহলের উত্তর দাও। তুমি চাইলে একাধিক বিষয় একসাথে বেছে নিতে পারো!
+            <Text style={styles.welcomeTitle}>স্বাগতম, মহাকাশযাত্রী! 🚀</Text>
+            <Text style={styles.welcomeSubtitle}>
+              বাংলাদেশ থেকে মঙ্গল গ্রহের অভিযাত্রায় তুমিই হতে পারো পরবর্তী শীর্ষ স্পেস ক্যাডেট।
             </Text>
 
-            <View style={styles.guidanceBox}>
-              <Text style={styles.guidanceText}>
-                ✨ কোনো ভুল উত্তর নেই! তোমার যা যা করতে ভালো লাগে, এক বা একাধিক বিষয় বেছে নাও।
-              </Text>
-            </View>
-          </DoubleBezelCard>
+            <View style={styles.featuresList}>
+              <View style={styles.featureItem}>
+                <View style={[styles.featureIconBubble, { backgroundColor: 'rgba(255, 200, 107, 0.15)' }]}>
+                  <Compass size={18} color={Colors.gold} />
+                </View>
+                <View style={styles.featureTextBox}>
+                  <Text style={styles.featureTitle}>কৌতূহলভিত্তিক অনুসন্ধান</Text>
+                  <Text style={styles.featureDesc}>৩টি সহজ প্রশ্নের মাধ্যমে জানো তোমার ক্যাডেট ধরন</Text>
+                </View>
+              </View>
 
-          <TactileButton
-            title="কৌতূহল আবিষ্কার শুরু করো ➔"
-            onPress={() => setStep(1)}
-            variant="gold"
-            size="large"
-            style={styles.fullBtn}
-          />
+              <View style={styles.featureItem}>
+                <View style={[styles.featureIconBubble, { backgroundColor: 'rgba(107, 138, 255, 0.15)' }]}>
+                  <Zap size={18} color={Colors.primaryLight} />
+                </View>
+                <View style={styles.featureTextBox}>
+                  <Text style={styles.featureTitle}>অফিসিয়াল নাসার বিজ্ঞান পাঠ</Text>
+                  <Text style={styles.featureDesc}>বাস্তব তথ্য ও সহজ উপমায় সাজানো ৮টি রোমাঞ্চকর পাঠ</Text>
+                </View>
+              </View>
+
+              <View style={styles.featureItem}>
+                <View style={[styles.featureIconBubble, { backgroundColor: 'rgba(94, 214, 192, 0.15)' }]}>
+                  <Award size={18} color={Colors.emerald} />
+                </View>
+                <View style={styles.featureTextBox}>
+                  <Text style={styles.featureTitle}>পদমর্যাদা ও চন্দ্রাভিযান</Text>
+                  <Text style={styles.featureDesc}>ক্যাডেট থেকে মহাকাশচারী পদে পৌঁছাও</Text>
+                </View>
+              </View>
+            </View>
+
+            <GentleButton
+              title="আমার ক্যাডেট রূপ নির্ধারণ করো ➔"
+              onPress={() => setStep(1)}
+              variant="gold"
+              size="large"
+              fullWidth
+            />
+          </StoryCard>
         </View>
       )}
 
-      {/* Steps 1 to 3: Multi-Select Kid Space Interest Questions */}
+      {/* Steps 1, 2, 3: Questions */}
       {step >= 1 && step <= 3 && currentQ && (
         <View style={styles.questionWrapper}>
-          {/* Header Progress Strip */}
-          <View style={styles.progressRow}>
+          <View style={styles.stepHeader}>
             <View style={styles.stepPill}>
-              <Text style={styles.stepPillText}>প্রশ্ন {step} / ৩</Text>
+              <Text style={styles.stepPillText}>ধাপ {step} / ৩</Text>
             </View>
             <Text style={styles.tagText}>{currentQ.tag}</Text>
           </View>
 
-          {/* Scenario Prompt Card */}
-          <DoubleBezelCard glow="blue" style={styles.scenarioCard}>
+          <StoryCard accent="primary" style={styles.scenarioCard}>
             <View style={styles.scenarioIconHeader}>
-              <Compass size={18} color={Colors.cyan} />
+              <Sparkles size={16} color={Colors.primaryLight} />
               <Text style={styles.scenarioSubtitle}>{currentQ.topicTitle_bn}</Text>
             </View>
             <Text style={styles.scenarioText}>{currentQ.scenario_bn}</Text>
 
-            {/* Multi-Select Friendly Tip */}
             <View style={styles.multiSelectHintPill}>
-              <Sparkles size={12} color={Colors.gold} />
-              <Text style={styles.multiSelectHintText}>
-                একাধিক উত্তর বেছে নিতে পারো (যেগুলো তোমার পছন্দ)
-              </Text>
+              <Text style={styles.multiSelectHintText}>💡 পছন্দমতো একাধিক উত্তর বেছে নিতে পারো</Text>
             </View>
-          </DoubleBezelCard>
+          </StoryCard>
 
-          {/* 4 Vector Illustration Multi-Select Choice Cards */}
+          {/* Choices List */}
           <View style={styles.choicesList}>
-            {currentQ.options.map((opt, idx) => {
+            {currentQ.options.map((option, idx) => {
               const isSelected = currentSelections.includes(idx);
-              const archetypeMeta = ARCHETYPES[opt.type];
+              const archetypeData = ARCHETYPES[option.type];
+
               return (
                 <Pressable
                   key={idx}
                   style={[
                     styles.choiceCard,
                     isSelected && {
-                      borderColor: archetypeMeta.accentColor,
+                      borderColor: archetypeData.accentColor,
                       backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                      borderBottomColor: archetypeMeta.accentColor,
                     },
                   ]}
                   onPress={() => handleToggleChoice(currentQ.id, idx)}
                 >
                   <SpaceChoiceBadge
-                    type={opt.type}
-                    size={48}
+                    type={option.type}
+                    size={38}
                     isSelected={isSelected}
                   />
 
                   <View style={styles.choiceTextContainer}>
-                    <Text
-                      style={[
-                        styles.choiceTitle,
-                        isSelected && { color: archetypeMeta.accentColor },
-                      ]}
-                    >
-                      {opt.title_bn}
-                    </Text>
-                    <Text style={styles.choiceSubtitle}>
-                      {opt.subtitle_bn}
-                    </Text>
+                    <Text style={styles.choiceTitle}>{option.title_bn}</Text>
+                    <Text style={styles.choiceSubtitle}>{option.subtitle_bn}</Text>
                   </View>
 
                   {isSelected ? (
                     <View
                       style={[
                         styles.checkBadge,
-                        { backgroundColor: archetypeMeta.accentColor },
+                        { backgroundColor: archetypeData.accentColor },
                       ]}
                     >
-                      <Check size={14} color="#0B1026" strokeWidth={3.5} />
+                      <Check size={14} color="#0F1128" strokeWidth={3} />
                     </View>
                   ) : (
                     <View style={styles.unselectedRing} />
@@ -308,27 +319,28 @@ export default function OnboardingScreen() {
 
           {/* Navigation Controls */}
           <View style={styles.navRow}>
-            <TactileButton
+            <GentleButton
               title="পেছনে"
               onPress={handlePrev}
               variant="outline"
               size="normal"
-              icon={<ArrowLeft size={16} color="#FFFFFF" />}
+              icon={<ArrowLeft size={16} color={Colors.text} />}
               style={styles.prevBtn}
             />
-            <TactileButton
+            <GentleButton
               title={
                 !hasSelection
                   ? 'কমপক্ষে ১টি বেছে নাও'
                   : step === 3
-                  ? 'ক্যাডেট পরিচয়পত্র দেখো ➔'
+                  ? 'ক্যাডেট পরিচয়পত্র দেখো ➔'
                   : 'পরবর্তী প্রশ্ন ➔'
               }
               onPress={handleNext}
-              variant={hasSelection ? 'primary' : 'outline'}
+              variant={hasSelection ? 'gold' : 'outline'}
               size="normal"
-              icon={hasSelection ? <ArrowRight size={16} color="#FFFFFF" /> : undefined}
-              style={[styles.nextBtn, !hasSelection && styles.disabledNextBtn]}
+              disabled={!hasSelection}
+              icon={hasSelection ? <ArrowRight size={16} color={Colors.textDark} /> : undefined}
+              style={styles.nextBtn}
             />
           </View>
         </View>
@@ -340,15 +352,14 @@ export default function OnboardingScreen() {
           <ConfettiEffect active />
 
           <View style={styles.topBadgeRow}>
-            <Sparkles size={14} color={Colors.gold} />
-            <Text style={styles.topBadgeText}>অফিসিয়াল স্পেস ক্যাডেট পরিচয়পত্র</Text>
-            <Sparkles size={14} color={Colors.gold} />
+            <Sparkles size={13} color={Colors.gold} />
+            <Text style={styles.topBadgeText}>অফিসিয়াল স্পেস ক্যাডেট পরিচয়পত্র</Text>
+            <Sparkles size={13} color={Colors.gold} />
           </View>
 
-          <DoubleBezelCard glow="gold" style={styles.archetypeCard}>
-            {/* Cadet Uniform Avatar based on Rank Tier: Cadet */}
+          <StoryCard accent="gold" style={styles.archetypeCard}>
             <View style={styles.avatarHolder}>
-              <AstronautAvatar size={92} rank="Cadet" showHalo />
+              <AstronautAvatar size={88} rank="Cadet" showHalo />
               <View
                 style={[
                   styles.archetypeBadgeFloating,
@@ -357,13 +368,12 @@ export default function OnboardingScreen() {
               >
                 <SpaceChoiceBadge
                   type={calculatedArchetypeKey}
-                  size={38}
+                  size={36}
                   isSelected
                 />
               </View>
             </View>
 
-            {/* Revealed Archetype Title & Motto */}
             <Text style={[styles.archetypeTitle, { color: archetypeInfo.accentColor }]}>
               {archetypeInfo.title_bn}
             </Text>
@@ -374,14 +384,13 @@ export default function OnboardingScreen() {
               <View style={styles.focusChip}>
                 <Star size={12} color={Colors.gold} fill={Colors.gold} />
                 <Text style={styles.focusChipText}>
-                  প্রস্তাবিত বিশেষায়িত পাঠ: {archetypeInfo.recommendedFocus_bn}
+                  প্রস্তাবিত বিশেষায়িত পাঠ: {archetypeInfo.recommendedFocus_bn}
                 </Text>
               </View>
             </View>
 
-            {/* Cadet Name Registration Input */}
             <View style={styles.nameSection}>
-              <Text style={styles.nameFieldLabel}>তোমার অফিসিয়াল ক্যাডেট নাম:</Text>
+              <Text style={styles.nameFieldLabel}>তোমার অফিসিয়াল ক্যাডেট নাম:</Text>
               <View style={styles.nameInputBox}>
                 <TextInput
                   style={styles.nameInput}
@@ -394,20 +403,19 @@ export default function OnboardingScreen() {
               </View>
             </View>
 
-            {/* Strict Rank Progression Rule Reminder */}
             <View style={styles.roleNotice}>
               <Text style={styles.roleNoticeText}>
-                ⭐ সকল নতুন শিক্ষার্থী স্পেস ক্যাডেট হিসেবে যাত্রা শুরু করে। পাঠ ও কুইজ জয় করে পয়েন্ট অর্জন করলে তোমার পদবী উন্নীত হবে!
+                ⭐ সকল নতুন শিক্ষার্থী স্পেস ক্যাডেট হিসেবে যাত্রা শুরু করে। পাঠ ও কুইজ জয় করে পয়েন্ট অর্জন করলে তোমার পদবী উন্নীত হবে!
               </Text>
             </View>
-          </DoubleBezelCard>
+          </StoryCard>
 
-          <TactileButton
+          <GentleButton
             title="ক্যাডেট হিসেবে মিশন শুরু করো 🚀"
             onPress={handleFinalize}
             variant="gold"
             size="large"
-            style={styles.fullBtn}
+            fullWidth
           />
         </View>
       )}
@@ -418,14 +426,17 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.background,
   },
   content: {
-    padding: 18,
-    paddingTop: 40,
-    paddingBottom: 40,
+    padding: 20,
+    paddingTop: 36,
+    paddingBottom: 48,
     minHeight: '100%',
     justifyContent: 'center',
+    maxWidth: 620,
+    alignSelf: 'center',
+    width: '100%',
   },
   welcomeWrapper: {
     width: '100%',
@@ -435,141 +446,152 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    backgroundColor: 'rgba(255, 184, 0, 0.15)',
+    backgroundColor: 'rgba(255, 200, 107, 0.12)',
     paddingHorizontal: 14,
-    paddingVertical: 6,
+    paddingVertical: 5,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(255, 184, 0, 0.3)',
+    borderColor: 'rgba(255, 200, 107, 0.25)',
     marginBottom: 16,
     alignSelf: 'center',
   },
   topBadgeText: {
     color: Colors.gold,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   welcomeCard: {
-    marginBottom: 20,
     alignItems: 'center',
+    padding: 22,
   },
   mascotBox: {
-    height: 130,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 10,
+    marginBottom: 14,
   },
   welcomeTitle: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontWeight: Typography.weight.black,
+    fontFamily: Typography.family.hindBold,
     textAlign: 'center',
     marginBottom: 8,
   },
-  welcomeDesc: {
+  welcomeSubtitle: {
     color: Colors.textSecondary,
-    fontSize: Typography.size.body,
-    lineHeight: Typography.lineHeight.body,
+    fontSize: Typography.size.bodySmall,
+    lineHeight: Typography.lineHeight.bodySmall,
+    fontFamily: Typography.family.notoRegular,
     textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  guidanceBox: {
-    backgroundColor: 'rgba(56, 189, 248, 0.12)',
-    borderRadius: 14,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(56, 189, 248, 0.25)',
-  },
-  guidanceText: {
-    color: Colors.cyan,
-    fontSize: Typography.size.caption,
-    lineHeight: Typography.lineHeight.caption,
-    textAlign: 'center',
-    fontWeight: Typography.weight.semiBold,
-  },
-  fullBtn: {
+  featuresList: {
     width: '100%',
+    gap: 12,
+    marginBottom: 22,
+  },
+  featureItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    padding: 12,
+    borderRadius: 16,
+  },
+  featureIconBubble: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  featureTextBox: {
+    flex: 1,
+  },
+  featureTitle: {
+    color: Colors.text,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.family.hindBold,
+  },
+  featureDesc: {
+    color: Colors.textMuted,
+    fontSize: Typography.size.micro,
+    fontFamily: Typography.family.notoRegular,
+    marginTop: 2,
   },
   questionWrapper: {
     width: '100%',
   },
-  progressRow: {
+  stepHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 12,
+    gap: 8,
+    marginBottom: 14,
   },
   stepPill: {
-    backgroundColor: Colors.cyanBg,
+    backgroundColor: 'rgba(107, 138, 255, 0.15)',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: Colors.borderGlowBlue,
   },
   stepPillText: {
-    color: Colors.cyan,
+    color: Colors.primaryLight,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   tagText: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.semiBold,
+    fontFamily: Typography.family.hindSemiBold,
   },
   scenarioCard: {
-    marginBottom: 16,
+    marginBottom: 18,
   },
   scenarioIconHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
     marginBottom: 8,
   },
   scenarioSubtitle: {
-    color: Colors.cyan,
+    color: Colors.primaryLight,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   scenarioText: {
     color: Colors.text,
     fontSize: Typography.size.h3,
     lineHeight: Typography.lineHeight.h3,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   multiSelectHintPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255, 184, 0, 0.12)',
+    backgroundColor: 'rgba(255, 200, 107, 0.10)',
     alignSelf: 'flex-start',
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 5,
     borderRadius: 8,
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 184, 0, 0.25)',
+    marginTop: 12,
   },
   multiSelectHintText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindSemiBold,
   },
   choicesList: {
     gap: 12,
-    marginBottom: 20,
+    marginBottom: 22,
   },
   choiceCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surfaceCard,
-    padding: 12,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderBottomWidth: 4,
-    borderBottomColor: 'rgba(0, 0, 0, 0.4)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: Colors.surface,
+    padding: 14,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
     gap: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 2,
   },
   choiceTextContainer: {
     flex: 1,
@@ -577,28 +599,28 @@ const styles = StyleSheet.create({
   },
   choiceTitle: {
     color: Colors.text,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.black,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.family.hindBold,
     marginBottom: 2,
   },
   choiceSubtitle: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
     lineHeight: Typography.lineHeight.caption,
-    fontWeight: Typography.weight.medium,
+    fontFamily: Typography.family.notoRegular,
   },
   unselectedRing: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.25)',
     marginLeft: 4,
   },
   checkBadge: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 4,
@@ -614,14 +636,11 @@ const styles = StyleSheet.create({
   nextBtn: {
     flex: 2,
   },
-  disabledNextBtn: {
-    opacity: 0.65,
-  },
   resultWrapper: {
     width: '100%',
   },
   archetypeCard: {
-    marginBottom: 20,
+    marginBottom: 22,
     alignItems: 'center',
   },
   avatarHolder: {
@@ -632,38 +651,37 @@ const styles = StyleSheet.create({
   archetypeBadgeFloating: {
     position: 'absolute',
     bottom: -6,
-    right: -10,
-    backgroundColor: Colors.surfaceCard,
-    borderRadius: 22,
+    right: -8,
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
     borderWidth: 2,
     overflow: 'hidden',
   },
   archetypeTitle: {
     fontSize: Typography.size.h1,
-    fontWeight: Typography.weight.black,
+    fontFamily: Typography.family.hindBold,
     textAlign: 'center',
     marginBottom: 4,
   },
   archetypeMotto: {
-    color: Colors.cyan,
+    color: Colors.primaryLight,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindSemiBold,
     textAlign: 'center',
-    marginBottom: 12,
+    marginBottom: 14,
   },
   archetypeDescCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
     borderRadius: 16,
     padding: 14,
     width: '100%',
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   archetypeDesc: {
     color: Colors.textSecondary,
     fontSize: Typography.size.bodySmall,
     lineHeight: Typography.lineHeight.bodySmall,
+    fontFamily: Typography.family.notoRegular,
     textAlign: 'center',
     marginBottom: 10,
   },
@@ -672,7 +690,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    backgroundColor: 'rgba(255, 184, 0, 0.12)',
+    backgroundColor: 'rgba(255, 200, 107, 0.12)',
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 10,
@@ -680,7 +698,7 @@ const styles = StyleSheet.create({
   focusChipText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   nameSection: {
     width: '100%',
@@ -689,33 +707,33 @@ const styles = StyleSheet.create({
   nameFieldLabel: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
     marginBottom: 6,
   },
   nameInputBox: {
-    backgroundColor: 'rgba(10, 14, 45, 0.85)',
+    backgroundColor: 'rgba(15, 17, 40, 0.8)',
     borderRadius: 16,
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
   nameInput: {
     color: Colors.text,
     fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.hindBold,
   },
   roleNotice: {
-    backgroundColor: 'rgba(37, 99, 235, 0.15)',
-    padding: 10,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(37, 99, 235, 0.3)',
+    backgroundColor: 'rgba(107, 138, 255, 0.12)',
+    padding: 12,
+    borderRadius: 14,
+    marginTop: 4,
   },
   roleNoticeText: {
-    color: Colors.cyan,
+    color: Colors.primaryLight,
     fontSize: Typography.size.micro,
     lineHeight: Typography.lineHeight.caption,
+    fontFamily: Typography.family.notoRegular,
     textAlign: 'center',
   },
 });

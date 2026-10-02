@@ -12,19 +12,24 @@ import {
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
 
-interface TactileButtonProps {
+export interface GentleButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'gold' | 'emerald' | 'coral' | 'pink' | 'purple' | 'outline' | 'ghost' | 'cyan';
+  variant?: 'primary' | 'gold' | 'emerald' | 'coral' | 'pink' | 'purple' | 'outline' | 'ghost' | 'secondary';
   size?: 'small' | 'normal' | 'large';
   icon?: React.ReactNode;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
-  callsign?: string;
+  fullWidth?: boolean;
 }
 
-export const TactileButton: React.FC<TactileButtonProps> = ({
+/**
+ * GentleButton — Calm, tactile action button with natural spring dynamics.
+ * Eliminates aggressive 3D "extrusion lips" in favor of soft surfaces
+ * and responsive micro-spring physics.
+ */
+export const GentleButton: React.FC<GentleButtonProps> = ({
   title,
   onPress,
   variant = 'primary',
@@ -33,21 +38,22 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
   disabled = false,
   style,
   textStyle,
+  fullWidth = false,
 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
-  const translateYAnim = useRef(new Animated.Value(0)).current;
+  const opacityAnim = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
     if (disabled) return;
     Animated.parallel([
       Animated.timing(scaleAnim, {
-        toValue: 0.96,
-        duration: 100,
+        toValue: 0.97,
+        duration: 90,
         useNativeDriver: true,
       }),
-      Animated.timing(translateYAnim, {
-        toValue: 3,
-        duration: 100,
+      Animated.timing(opacityAnim, {
+        toValue: 0.92,
+        duration: 90,
         useNativeDriver: true,
       }),
     ]).start();
@@ -58,93 +64,92 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
     Animated.parallel([
       Animated.spring(scaleAnim, {
         toValue: 1,
-        friction: 4,
-        tension: 40,
+        friction: 5,
+        tension: 50,
         useNativeDriver: true,
       }),
-      Animated.spring(translateYAnim, {
-        toValue: 0,
-        friction: 4,
-        tension: 40,
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 120,
         useNativeDriver: true,
       }),
     ]).start();
   };
 
-  // Chunky 3D Color Pairing (Main Face + 3D Bottom Lip)
   const getTheme = () => {
     if (disabled) {
       return {
-        face: '#1A2142',
-        lip: '#121730',
-        text: '#5B6999',
-        iconBg: 'rgba(255, 255, 255, 0.05)',
+        bg: 'rgba(255, 255, 255, 0.06)',
+        border: 'transparent',
+        text: Colors.textMuted,
+        iconColor: Colors.textMuted,
       };
     }
+
     switch (variant) {
       case 'gold':
         return {
-          face: Colors.gold,
-          lip: Colors.goldDark,
+          bg: Colors.gold,
+          border: 'transparent',
           text: Colors.textDark,
-          iconBg: 'rgba(0, 0, 0, 0.12)',
+          iconColor: Colors.textDark,
         };
       case 'emerald':
         return {
-          face: Colors.emerald,
-          lip: Colors.emeraldDark,
-          text: '#FFFFFF',
-          iconBg: 'rgba(0, 0, 0, 0.12)',
+          bg: Colors.emerald,
+          border: 'transparent',
+          text: Colors.textDark,
+          iconColor: Colors.textDark,
         };
       case 'coral':
         return {
-          face: Colors.coral,
-          lip: Colors.coralDark,
+          bg: Colors.coral,
+          border: 'transparent',
           text: '#FFFFFF',
-          iconBg: 'rgba(0, 0, 0, 0.15)',
-        };
-      case 'pink':
-        return {
-          face: Colors.pink,
-          lip: Colors.pinkDark,
-          text: '#FFFFFF',
-          iconBg: 'rgba(0, 0, 0, 0.15)',
+          iconColor: '#FFFFFF',
         };
       case 'purple':
         return {
-          face: Colors.purple,
-          lip: Colors.purpleDark,
+          bg: Colors.purple,
+          border: 'transparent',
           text: '#FFFFFF',
-          iconBg: 'rgba(0, 0, 0, 0.15)',
+          iconColor: '#FFFFFF',
         };
-      case 'cyan':
+      case 'pink':
         return {
-          face: Colors.cyan,
-          lip: Colors.cyanDark,
+          bg: Colors.pink,
+          border: 'transparent',
           text: Colors.textDark,
-          iconBg: 'rgba(0, 0, 0, 0.12)',
+          iconColor: Colors.textDark,
+        };
+      case 'secondary':
+        return {
+          bg: Colors.surfaceElevated,
+          border: 'rgba(255, 255, 255, 0.08)',
+          text: Colors.text,
+          iconColor: Colors.text,
         };
       case 'outline':
         return {
-          face: 'rgba(255, 255, 255, 0.08)',
-          lip: 'rgba(255, 255, 255, 0.18)',
-          text: '#FFFFFF',
-          iconBg: 'rgba(255, 255, 255, 0.1)',
+          bg: 'transparent',
+          border: 'rgba(255, 255, 255, 0.2)',
+          text: Colors.text,
+          iconColor: Colors.text,
         };
       case 'ghost':
         return {
-          face: 'transparent',
-          lip: 'transparent',
+          bg: 'transparent',
+          border: 'transparent',
           text: Colors.textSecondary,
-          iconBg: 'rgba(255, 255, 255, 0.06)',
+          iconColor: Colors.textSecondary,
         };
       case 'primary':
       default:
         return {
-          face: Colors.primary,
-          lip: Colors.primaryDark,
+          bg: Colors.primary,
+          border: 'transparent',
           text: '#FFFFFF',
-          iconBg: 'rgba(0, 0, 0, 0.15)',
+          iconColor: '#FFFFFF',
         };
     }
   };
@@ -155,28 +160,28 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
     switch (size) {
       case 'small':
         return {
-          paddingVertical: 9,
-          paddingHorizontal: 14,
-          borderRadius: 16,
+          paddingVertical: 10,
+          paddingHorizontal: 16,
+          borderRadius: 14,
           fontSize: Typography.size.caption,
-          iconSize: 22,
+          minHeight: 40,
         };
       case 'large':
         return {
-          paddingVertical: 15,
-          paddingHorizontal: 24,
-          borderRadius: 22,
-          fontSize: Typography.size.h2,
-          iconSize: 28,
+          paddingVertical: 16,
+          paddingHorizontal: 28,
+          borderRadius: 20,
+          fontSize: Typography.size.h3,
+          minHeight: 56,
         };
       case 'normal':
       default:
         return {
-          paddingVertical: 12,
-          paddingHorizontal: 20,
-          borderRadius: 18,
-          fontSize: Typography.size.body,
-          iconSize: 24,
+          paddingVertical: 13,
+          paddingHorizontal: 22,
+          borderRadius: 16,
+          fontSize: Typography.size.bodySmall,
+          minHeight: 48,
         };
     }
   };
@@ -187,7 +192,9 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
     <Animated.View
       style={[
         {
-          transform: [{ scale: scaleAnim }, { translateY: translateYAnim }],
+          transform: [{ scale: scaleAnim }],
+          opacity: opacityAnim,
+          width: fullWidth ? '100%' : undefined,
         },
         style,
       ]}
@@ -199,46 +206,34 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         style={[
-          styles.buttonBase,
+          styles.button,
           {
-            backgroundColor: theme.face,
-            borderColor: 'rgba(255, 255, 255, 0.1)',
-            borderWidth: variant === 'outline' ? 1 : 0,
+            backgroundColor: theme.bg,
+            borderColor: theme.border,
+            borderWidth: theme.border !== 'transparent' ? 1 : 0,
             borderRadius: sizing.borderRadius,
             paddingVertical: sizing.paddingVertical,
             paddingHorizontal: sizing.paddingHorizontal,
+            minHeight: sizing.minHeight,
+            width: fullWidth ? '100%' : undefined,
           },
         ]}
       >
         <View style={styles.contentRow}>
+          {icon && <View style={styles.iconContainer}>{icon}</View>}
           <Text
             style={[
               styles.label,
               {
                 color: theme.text,
                 fontSize: sizing.fontSize,
+                fontFamily: Typography.family.hindSemiBold,
               },
               textStyle,
             ]}
           >
             {title}
           </Text>
-
-          {icon && (
-            <View
-              style={[
-                styles.iconBubble,
-                {
-                  width: sizing.iconSize,
-                  height: sizing.iconSize,
-                  borderRadius: sizing.iconSize / 2,
-                  backgroundColor: theme.iconBg,
-                },
-              ]}
-            >
-              {icon}
-            </View>
-          )}
         </View>
       </Pressable>
     </Animated.View>
@@ -246,14 +241,14 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
 };
 
 const styles = StyleSheet.create({
-  buttonBase: {
+  button: {
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000000',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.22,
-    shadowRadius: 5,
-    elevation: 4,
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    elevation: 2,
   },
   contentRow: {
     flexDirection: 'row',
@@ -261,13 +256,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
   },
-  label: {
-    fontWeight: Typography.weight.heavy,
-    textAlign: 'center',
-    letterSpacing: 0.3,
-  },
-  iconBubble: {
+  iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  label: {
+    fontWeight: Typography.weight.bold,
+    textAlign: 'center',
+    letterSpacing: 0.2,
   },
 });
