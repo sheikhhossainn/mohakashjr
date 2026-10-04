@@ -10,8 +10,8 @@ test('missionGame i18n: All 5 stages have complete bilingual translations and NA
   assert.ok(bn, 'Bangla missionGame translations exist');
   assert.ok(en, 'English missionGame translations exist');
 
-  // Verify 5 stages dictionary
-  const stages = ['suit_up', 'fueling', 'cockpit_ignition', 'lunar_descent', 'moonwalk'] as const;
+  // Verify 6 stages dictionary
+  const stages = ['suit_up', 'fueling', 'cockpit_ignition', 'atmospheric_flight', 'lunar_descent', 'moonwalk'] as const;
   stages.forEach((stage) => {
     assert.ok(bn.stages[stage], `BN stage title exists for ${stage}`);
     assert.ok(en.stages[stage], `EN stage title exists for ${stage}`);
@@ -81,3 +81,13 @@ test('missionGame Gamification: Moonwalk completion awards +120 XP to Cadet stor
   const updatedStore = useAppStore.getState();
   assert.strictEqual(updatedStore.xp, initialXP + 120);
 });
+
+test('Theme & Palette: Illustrated Cosmos 2.0 soothing light-mode tokens are active', () => {
+  const { Colors } = require('../src/theme/colors');
+  assert.strictEqual(Colors.background, '#0B1026', 'Deep space background');
+  assert.strictEqual(Colors.surface, '#151C42', 'Card surface is navy');
+  assert.strictEqual(Colors.primary, '#8C9BFF', 'Primary action is nebula blue');
+  assert.strictEqual(Colors.spaceDark, '#0D1035', 'Space dark is preserved for mission/splash');
+  assert.strictEqual(Colors.text, '#F2F4FF', 'High contrast light text on dark surface');
+});
+

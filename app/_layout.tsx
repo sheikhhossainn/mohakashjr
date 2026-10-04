@@ -1,19 +1,24 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
+import {
+  BalooDa2_500Medium,
+  BalooDa2_600SemiBold,
+  BalooDa2_700Bold,
+} from '@expo-google-fonts/baloo-da-2';
 import { Colors } from '../src/theme/colors';
 import { Typography } from '../src/theme/typography';
 import { LevelUpModal } from '../src/components/LevelUpModal';
-import { CosmicBackground } from '../src/components/CosmicBackground';
+import { AppLogo } from '../src/components/AppLogo';
 import { useAppStore } from '../src/state/useAppStore';
 
 export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
-  const { hasCompletedOnboarding, initializeSession } = useAppStore();
+  const { hasCompletedOnboarding, isHydrated, loadSavedProgress } = useAppStore();
 
   const [fontsLoaded] = useFonts({
     'NotoSansBengali-Regular': require('../assets/fonts/NotoSansBengali-Regular.ttf'),
@@ -22,78 +27,97 @@ export default function RootLayout() {
     'HindSiliguri-Regular': require('../assets/fonts/HindSiliguri-Regular.ttf'),
     'HindSiliguri-SemiBold': require('../assets/fonts/HindSiliguri-SemiBold.ttf'),
     'HindSiliguri-Bold': require('../assets/fonts/HindSiliguri-Bold.ttf'),
+    'BalooDa2-Medium': BalooDa2_500Medium,
+    'BalooDa2-SemiBold': BalooDa2_600SemiBold,
+    'BalooDa2-Bold': BalooDa2_700Bold,
   });
 
   useEffect(() => {
-    // Attempt to restore persistent session from local database on app launch
-    initializeSession();
+    // Restore saved progress from this device on app launch
+    loadSavedProgress();
   }, []);
 
   useEffect(() => {
-    // If user has not completed onboarding and is not already on splash, onboarding or auth, direct them to splash
+    // Wait for saved progress to load, then send first-time students to splash
+    if (!isHydrated) return;
     const firstSeg = segments[0] as string | undefined;
-    const inAuthGroup = firstSeg === 'splash' || firstSeg === 'onboarding' || firstSeg === 'auth';
-    if (!hasCompletedOnboarding && !inAuthGroup) {
+    const inIntroFlow = firstSeg === 'splash' || firstSeg === 'onboarding';
+    if (!hasCompletedOnboarding && !inIntroFlow) {
       router.replace('/splash');
     }
-  }, [hasCompletedOnboarding, segments]);
+  }, [hasCompletedOnboarding, isHydrated, segments]);
+
+  if (!fontsLoaded || !isHydrated) {
+    // Loading screen = the logo, circling slowly until fonts and saved progress are ready
+    return (
+      <View style={[styles.rootContainer, styles.loadingScreen]}>
+        <StatusBar style="light" />
+        <AppLogo size={150} loading />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaProvider>
+      {/* Whole app is dark space — light status bar icons */}
       <StatusBar style="light" />
       <View style={styles.rootContainer}>
-        {/* Global Space Starfield Backdrop with Twinkling & Shooting Stars */}
-        <CosmicBackground />
-
         <Stack
           screenOptions={{
-            headerStyle: { backgroundColor: Colors.surfaceShell },
-            headerTintColor: Colors.cyan,
+            headerStyle: { backgroundColor: Colors.surface },
+            headerTintColor: Colors.primary,
             headerTitleStyle: {
               fontWeight: Typography.weight.bold,
               fontSize: Typography.size.body,
               color: Colors.text,
+              fontFamily: Typography.family.heading,
             },
-            contentStyle: { backgroundColor: 'transparent' },
+            headerShadowVisible: false,
+            contentStyle: { backgroundColor: Colors.background },
             animation: 'slide_from_right',
           }}
         >
           <Stack.Screen name="splash" options={{ headerShown: false, animation: 'fade' }} />
           <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'slide_from_right' }} />
-          <Stack.Screen name="auth" options={{ headerShown: false, animation: 'slide_from_right' }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="lessons/[id]"
             options={{
-              title: 'মহাকাশ পাঠাগার 📖',
+              headerShown: false,
+              title: 'মহাকাশ পাঠাগার',
               headerBackTitle: 'পেছনে',
             }}
           />
           <Stack.Screen
             name="quiz/[id]"
             options={{
-              title: 'কুইজ অভিযান 🎮',
+              headerShown: false,
+              title: 'কুইজ অভিযান',
               headerBackTitle: 'ফিরে যাও',
             }}
           />
           <Stack.Screen
             name="quiz/index"
             options={{
-              title: 'কুইজ হাব 🏆',
+              headerShown: false,
+              title: 'কুইজ হাব',
               headerBackTitle: 'পেছনে',
             }}
           />
           <Stack.Screen
             name="mission/index"
             options={{
-              title: 'চন্দ্রাভিযান মিশন কন্ট্রোল 🌕',
+              title: 'চন্দ্রাভিযান মিশন',
               headerBackTitle: 'পেছনে',
+              headerStyle: { backgroundColor: Colors.background },
+              headerTintColor: Colors.text,
             }}
           />
           <Stack.Screen
             name="tutor"
             options={{
-              title: 'ক্যাপ্টেন রোভার এআই 🛰️',
+              headerShown: false,
+              title: 'ক্যাপ্টেন রোভার এআই',
               headerBackTitle: 'পেছনে',
             }}
           />
@@ -109,6 +133,10 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    backgroundColor: Colors.void,
+    backgroundColor: Colors.background,
+  },
+  loadingScreen: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

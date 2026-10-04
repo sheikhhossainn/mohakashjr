@@ -333,7 +333,7 @@ export const LunarSiteSelector: React.FC<LunarSiteSelectorProps> = ({
       </View>
 
       {/* Selected Briefing Callout */}
-      <DoubleBezelCard glow="cyan" tag="মিশন কন্ট্রোল নির্দেশনা 📡" style={styles.briefingCard}>
+      <DoubleBezelCard glow="cyan" tag="মিশন কন্ট্রোল নির্দেশনা" style={styles.briefingCard}>
         <View style={styles.calloutRow}>
           <Info size={18} color={Colors.hudCyan} />
           <Text style={styles.calloutText}>{selectedRegion.scientificSignificance_bn}</Text>
@@ -343,7 +343,7 @@ export const LunarSiteSelector: React.FC<LunarSiteSelectorProps> = ({
       {/* Bottom Sticky Confirmation Action */}
       <View style={styles.bottomBar}>
         <TactileButton
-          title={`${selectedRegion.name_bn} নিশ্চিত করো ➔`}
+          title={`${selectedRegion.name_bn} নিশ্চিত করো`}
           onPress={() => onConfirmSite(selectedRegion)}
           variant="gold"
           size="large"
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
   },
   pinLabel: {
     color: Colors.textSecondary,
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: Typography.weight.bold,
     marginTop: 2,
     textShadowColor: '#000',

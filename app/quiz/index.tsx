@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
+import { Radius } from '../../src/theme/layout';
 import { DoubleBezelCard } from '../../src/components/DoubleBezelCard';
+import { ScreenHeader } from '../../src/components/ScreenHeader';
+import { ScalePressable } from '../../src/components/ScalePressable';
 import { TactileButton } from '../../src/components/TactileButton';
 import { Lesson } from '../../src/content/schema';
 import { getLessons } from '../../src/services/lessonService';
@@ -16,6 +19,9 @@ import {
   Sparkles,
 } from 'lucide-react-native';
 
+const BN_DIGITS = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+const toBn = (n: number) => String(n).replace(/\d/g, (d) => BN_DIGITS[Number(d)]);
+
 export default function QuizHubScreen() {
   const router = useRouter();
   const { quizAttempts } = useAppStore();
@@ -25,7 +31,11 @@ export default function QuizHubScreen() {
     getLessons().then((data) => setLessons(data));
   }, []);
 
+  const doneCount = lessons.filter((l) => (quizAttempts[l.id] || []).length > 0).length;
+
   return (
+    <View style={styles.root}>
+    <ScreenHeader title="কুইজ হাব" subtitle="জানা যাচাই করো, XP জিতে নাও" />
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
@@ -40,17 +50,17 @@ export default function QuizHubScreen() {
           </View>
           <View style={styles.xpBonusBadge}>
             <Zap size={12} color={Colors.gold} fill={Colors.gold} />
-            <Text style={styles.xpBonusText}>+৫০ বোনাস XP</Text>
+            <Text style={styles.xpBonusText}>+৬০ XP পর্যন্ত</Text>
           </View>
         </View>
 
-        <Text style={styles.placementTitle}>তোমার মহাকাশ জ্ঞান যাচাই করো 🌟</Text>
+        <Text style={styles.placementTitle}>তোমার মহাকাশ জ্ঞান যাচাই করো</Text>
         <Text style={styles.placementDesc}>
-          ক্যাডেট স্তর থেকে সরাসরি মহাকাশচারী স্তরে পদোন্নতি পেতে প্রশ্নের উত্তর দাও এবং বোনাস XP জিতে নাও!
+          ৫টি প্রশ্নের উত্তর দিয়ে দেখো তুমি মহাকাশ সম্পর্কে কতটা জানো, আর জিতে নাও XP!
         </Text>
 
         <TactileButton
-          title="চ্যালেঞ্জ শুরু করো ➔"
+          title="চ্যালেঞ্জ শুরু করো"
           onPress={() => router.push('/quiz/placement')}
           variant="gold"
           size="normal"
@@ -58,7 +68,12 @@ export default function QuizHubScreen() {
       </DoubleBezelCard>
 
       {/* Per-Lesson Quizzes List */}
-      <Text style={styles.sectionTitle}>পাঠ ভিত্তিক কুইজসমূহ</Text>
+      <View style={styles.sectionRow}>
+        <Text style={styles.sectionTitle}>পাঠ ভিত্তিক কুইজ</Text>
+        <Text style={styles.sectionCount}>
+          {toBn(doneCount)}/{toBn(lessons.length)} সম্পন্ন
+        </Text>
+      </View>
 
       <View style={styles.quizList}>
         {lessons.map((lesson, idx) => {
@@ -66,7 +81,7 @@ export default function QuizHubScreen() {
           const bestScore = attempts.length > 0 ? Math.max(...attempts.map((a) => a.score)) : null;
 
           return (
-            <Pressable
+            <ScalePressable
               key={lesson.id}
               style={styles.quizCard}
               onPress={() => router.push(`/quiz/${lesson.id}`)}
@@ -79,7 +94,7 @@ export default function QuizHubScreen() {
                   <Text style={styles.quizLessonTitle}>{lesson.title_bn}</Text>
                   <Text style={styles.quizLessonMeta}>
                     {attempts.length > 0
-                      ? `সেরা স্কোর: ${bestScore} (${attempts.length} বার চেষ্টা)`
+                      ? `সেরা স্কোর: ${toBn(bestScore ?? 0)}/${toBn(attempts[0].total_questions)} (${toBn(attempts.length)} বার চেষ্টা)`
                       : 'এখনও মূল্যায়ন করা হয়নি'}
                   </Text>
                 </View>
@@ -92,25 +107,31 @@ export default function QuizHubScreen() {
                 </View>
               ) : (
                 <View style={styles.startBadge}>
-                  <Text style={styles.startBadgeText}>খেলো ➔</Text>
+                  <Text style={styles.startBadgeText}>খেলো</Text>
+                  <ChevronRight size={14} color={Colors.primary} />
                 </View>
               )}
-            </Pressable>
+            </ScalePressable>
           );
         })}
       </View>
     </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: { flex: 1, backgroundColor: Colors.background },
   container: {
     flex: 1,
     backgroundColor: 'transparent',
   },
   content: {
-    padding: 16,
+    padding: 20,
     paddingBottom: 40,
+    maxWidth: 620,
+    alignSelf: 'center',
+    width: '100%',
   },
   bannerMargin: {
     marginBottom: 20,
@@ -133,7 +154,7 @@ const styles = StyleSheet.create({
   bannerTagText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.notoBold,
   },
   xpBonusBadge: {
     flexDirection: 'row',
@@ -147,25 +168,27 @@ const styles = StyleSheet.create({
   xpBonusText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.notoBold,
   },
   placementTitle: {
     color: Colors.text,
     fontSize: Typography.size.h2,
-    fontWeight: Typography.weight.heavy,
+    fontFamily: Typography.family.notoBold,
+    lineHeight: Typography.lineHeight.h2,
     marginBottom: 6,
   },
   placementDesc: {
     color: Colors.textSecondary,
     fontSize: Typography.size.bodySmall,
     lineHeight: Typography.lineHeight.bodySmall,
+    fontFamily: Typography.family.notoRegular,
     marginBottom: 16,
   },
   sectionTitle: {
     color: Colors.text,
     fontSize: Typography.size.h3,
-    fontWeight: Typography.weight.bold,
-    marginBottom: 12,
+    fontFamily: Typography.family.notoBold,
+    lineHeight: Typography.lineHeight.h3,
   },
   quizList: {
     gap: 10,
@@ -174,15 +197,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: Colors.surfaceCard,
+    backgroundColor: Colors.surface,
     padding: 14,
-    borderRadius: 20,
+    borderRadius: Radius.md,
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    shadowColor: '#000000',
+    borderColor: Colors.border,
+    shadowColor: Colors.text,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
     elevation: 2,
   },
   quizCardLeft: {
@@ -195,7 +218,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 14,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.primaryBg,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -204,13 +227,22 @@ const styles = StyleSheet.create({
   },
   quizLessonTitle: {
     color: Colors.text,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
+    fontSize: Typography.size.bodySmall,
+    lineHeight: Typography.lineHeight.bodySmall,
+    fontFamily: Typography.family.notoBold,
     marginBottom: 2,
   },
   quizLessonMeta: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
+    lineHeight: Typography.lineHeight.caption,
+    fontFamily: Typography.family.notoRegular,
+  },
+  sectionRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
+  sectionCount: {
+    color: Colors.textMuted,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.notoRegular,
   },
   scorePill: {
     flexDirection: 'row',
@@ -224,19 +256,22 @@ const styles = StyleSheet.create({
   scorePillText: {
     color: Colors.emerald,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.notoBold,
   },
   startBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
     backgroundColor: Colors.primaryBg,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(59, 130, 246, 0.3)',
+    borderColor: Colors.primary,
   },
   startBadgeText: {
     color: Colors.primary,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.notoBold,
   },
 });

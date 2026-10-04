@@ -83,7 +83,7 @@ export const WonderBox: React.FC<WonderBoxProps> = ({
             styles.title,
             {
               color: theme.titleColor,
-              fontFamily: Typography.family.hindBold,
+              fontFamily: Typography.family.heading,
             },
           ]}
         >
@@ -133,7 +133,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: Typography.size.h3,
-    letterSpacing: 0.2,
   },
   contentWrap: {},
   bodyText: {

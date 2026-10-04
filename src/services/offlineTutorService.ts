@@ -46,6 +46,10 @@ const STOP_WORDS = new Set([
  */
 function normalizeText(text: string): string {
   return text
+    // Bengali ড় ঢ় য় can be typed as one letter or as base letter + nukta; treat both the same
+    .replace(/য়/g, 'য়')
+    .replace(/ড়/g, 'ড়')
+    .replace(/ঢ়/g, 'ঢ়')
     .toLowerCase()
     .replace(/[।?!,.:;'"(){}\[\]\\\/_\-—–]/g, ' ')
     .replace(/\s+/g, ' ')

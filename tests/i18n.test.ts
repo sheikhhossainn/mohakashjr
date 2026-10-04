@@ -2,27 +2,27 @@ import { test } from 'node:test';
 import assert from 'node:assert';
 import { getTranslation, TRANSLATIONS, AppLanguage } from '../src/i18n/translations';
 import { useAppStore, ARCHETYPES, RANK_THRESHOLDS } from '../src/state/useAppStore';
-import { getStoredLanguage, setStoredLanguage } from '../src/services/authDatabase';
+import { getStoredLanguage, setStoredLanguage } from '../src/services/profileStorage';
 
 test('i18n: getTranslation returns accurate dictionary for Bangla and English', () => {
   const bn = getTranslation('bn');
   const en = getTranslation('en');
 
   // Navigation tabs
-  assert.strictEqual(bn.tabs.dashboard, 'ড্যাশবোর্ড');
-  assert.strictEqual(en.tabs.dashboard, 'Dashboard');
-  assert.strictEqual(bn.tabs.lessons, 'পাঠশালা');
-  assert.strictEqual(en.tabs.lessons, 'Academy');
-  assert.strictEqual(bn.tabs.mission, 'চন্দ্রাভিযান');
-  assert.strictEqual(en.tabs.mission, 'Moon Mission');
-  assert.strictEqual(bn.tabs.profile, 'প্রোফাইল');
-  assert.strictEqual(en.tabs.profile, 'Profile');
+  assert.strictEqual(bn.tabs.dashboard, 'হোম');
+  assert.strictEqual(en.tabs.dashboard, 'Home');
+  assert.strictEqual(bn.tabs.lessons, 'পাঠ');
+  assert.strictEqual(en.tabs.lessons, 'Learn');
+  assert.strictEqual(bn.tabs.mission, 'মহাকাশ');
+  assert.strictEqual(en.tabs.mission, 'Space');
+  assert.strictEqual(bn.tabs.profile, 'আমি');
+  assert.strictEqual(en.tabs.profile, 'Me');
 
   // Common microcopy
   assert.strictEqual(bn.common.xp, 'XP');
   assert.strictEqual(en.common.xp, 'XP');
-  assert.strictEqual(bn.common.guestBadge, 'অতিথি ক্যাডেট');
-  assert.strictEqual(en.common.guestBadge, 'Guest Cadet');
+  assert.strictEqual(bn.profile.savedOnDevice, 'এই ডিভাইসে সংরক্ষিত');
+  assert.strictEqual(en.profile.savedOnDevice, 'Saved on this device');
 
   // Rotating facts
   assert.ok(bn.cosmicFacts.length >= 7);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   Pressable,
   ScrollView,
   StatusBar,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
@@ -21,7 +20,6 @@ import { AstronautAvatar } from '../src/components/AstronautAvatar';
 import { SpaceChoiceBadge } from '../src/components/SpaceChoiceBadge';
 import { ConfettiEffect } from '../src/components/ConfettiEffect';
 import { useAppStore, ARCHETYPES, calculateArchetype, CadetArchetype } from '../src/state/useAppStore';
-import { authDatabase, UserAccount } from '../src/services/authDatabase';
 import {
   Sparkles,
   ArrowRight,
@@ -31,15 +29,6 @@ import {
   Award,
   Compass,
   Zap,
-  CheckSquare2,
-  User,
-  KeyRound,
-  Eye,
-  EyeOff,
-  AlertCircle,
-  Rocket,
-  ShieldCheck,
-  CheckCircle2,
 } from 'lucide-react-native';
 
 interface Option {
@@ -62,7 +51,7 @@ const QUESTIONS: Question[] = [
     id: 1,
     stepNumber: 1,
     tag: 'কৌতূহল ০১: মহাকাশ রোমাঞ্চ ও স্বপ্ন',
-    topicTitle_bn: 'মহাকাশের কোন জিনিসটি তোমাকে সবচেয়ে বেশি টানে? 🚀',
+    topicTitle_bn: 'মহাকাশের কোন জিনিসটি তোমাকে সবচেয়ে বেশি টানে?',
     scenario_bn: 'কল্পনা করো, তুমি আজই প্রথম নাসা মহাকাশ কেন্দ্রে প্রবেশ করেছ! চারদিকে তাকিয়ে সবার আগে কোন রোমাঞ্চকর কাজটিতে অংশ নিতে চাও?',
     options: [
       {
@@ -91,7 +80,7 @@ const QUESTIONS: Question[] = [
     id: 2,
     stepNumber: 2,
     tag: 'কৌতূহল ০২: তোমার ব্যক্তিগত মহাকাশযান',
-    topicTitle_bn: 'তোমার নিজস্ব মহাকাশযানের বিশেষ ক্ষমতা কেমন হবে? 🛸',
+    topicTitle_bn: 'তোমার নিজস্ব মহাকাশযানের বিশেষ ক্ষমতা কেমন হবে?',
     scenario_bn: 'নভোচারী প্রকৌশলীরা তোমাকে একটি অত্যাধুনিক ব্যক্তিগত স্পেসশিপ উপহার দিলেন! তুমি এর প্রধান বৈশিষ্ট্য হিসেবে কোনটি পছন্দ করবে?',
     options: [
       {
@@ -120,7 +109,7 @@ const QUESTIONS: Question[] = [
     id: 3,
     stepNumber: 3,
     tag: 'কৌতূহল ০৩: মহাজাগতিক বিস্ময় ও রোমাঞ্চ',
-    topicTitle_bn: 'ভবিষ্যতের মহাকাশ লক্ষ্য 🌟',
+    topicTitle_bn: 'ভবিষ্যতের মহাকাশ লক্ষ্য',
     scenario_bn: 'বড় হয়ে বিজ্ঞানী বা নভোচারী হলে, মহাকাশের কোন রোমাঞ্চকর রহস্যটি তুমি সবার আগে সমাধান করতে চাও?',
     options: [
       {
@@ -149,30 +138,11 @@ const QUESTIONS: Question[] = [
 
 export default function OnboardingScreen() {
   const router = useRouter();
-  const {
-    completeCadetOrientation,
-    signUpUser,
-    loginUser,
-    continueAsGuest,
-    isAuthLoading,
-    authError,
-  } = useAppStore();
+  const { completeCadetOrientation } = useAppStore();
 
-  const [step, setStep] = useState(0); // 0: Welcome, 1..3: Questions, 4: Reveal, 5: Auth
+  const [step, setStep] = useState(0); // 0: Welcome, 1..3: Questions, 4: Reveal
   const [answers, setAnswers] = useState<Record<number, number[]>>({});
   const [cadetName, setCadetName] = useState('সোহান');
-
-  // Auth Station States (Step 5)
-  const [authMode, setAuthMode] = useState<'signup' | 'login' | 'guest'>('signup');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [savedUsers, setSavedUsers] = useState<UserAccount[]>([]);
-  const [localAuthError, setLocalAuthError] = useState<string | null>(null);
-
-  useEffect(() => {
-    authDatabase.getAllUsers().then(setSavedUsers);
-  }, [step]);
 
   const currentQIndex = step - 1;
   const currentQ = QUESTIONS[currentQIndex];
@@ -201,8 +171,6 @@ export default function OnboardingScreen() {
 
     if (step < 4) {
       setStep(step + 1);
-    } else if (step === 4) {
-      setStep(5); // Advance to credentialing / auth station
     }
   };
 
@@ -215,56 +183,7 @@ export default function OnboardingScreen() {
   const calculatedArchetypeKey = calculateArchetype(answers);
   const archetypeInfo = ARCHETYPES[calculatedArchetypeKey];
 
-  // Auth Station Actions
-  const handleSignUp = async () => {
-    setLocalAuthError(null);
-    if (!username.trim()) {
-      setLocalAuthError('ইউজারনেম বা কল-সাইন প্রদান করো।');
-      return;
-    }
-    if (username.trim().length < 3) {
-      setLocalAuthError('ইউজারনেম কমপক্ষে ৩ অক্ষরের হতে হবে।');
-      return;
-    }
-    if (!password || password.length < 4) {
-      setLocalAuthError('পাসওয়ার্ড কমপক্ষে ৪ অক্ষরের হতে হবে।');
-      return;
-    }
-
-    const res = await signUpUser({
-      username: username.trim().toLowerCase(),
-      displayName: cadetName.trim() || 'ক্যাডেট',
-      password,
-      cadetArchetype: calculatedArchetypeKey,
-      psychometricAnswers: answers,
-    });
-
-    if (res.success) {
-      completeCadetOrientation(cadetName, answers);
-      router.replace('/(tabs)');
-    } else if (res.error) {
-      setLocalAuthError(res.error);
-    }
-  };
-
-  const handleLogin = async () => {
-    setLocalAuthError(null);
-    if (!username.trim() || !password) {
-      setLocalAuthError('ইউজারনেম ও পাসওয়ার্ড দুটিই পূরণ করো।');
-      return;
-    }
-
-    const res = await loginUser(username.trim().toLowerCase(), password);
-    if (res.success) {
-      router.replace('/(tabs)');
-    } else if (res.error) {
-      setLocalAuthError(res.error);
-    }
-  };
-
-  const handleGuest = async () => {
-    setLocalAuthError(null);
-    await continueAsGuest(cadetName, calculatedArchetypeKey, answers);
+  const handleStartMission = () => {
     completeCadetOrientation(cadetName, answers);
     router.replace('/(tabs)');
   };
@@ -295,7 +214,7 @@ export default function OnboardingScreen() {
                 <AnimatedMascot size={86} mood="waving" />
               </View>
 
-              <Text style={styles.welcomeTitle}>স্বাগতম, মহাকাশযাত্রী! 🚀</Text>
+              <Text style={styles.welcomeTitle}>স্বাগতম, মহাকাশযাত্রী!</Text>
               <Text style={styles.welcomeSubtitle}>
                 বাংলাদেশ থেকে মঙ্গল গ্রহের অভিযাত্রায় তুমিই হতে পারো পরবর্তী শীর্ষ স্পেস ক্যাডেট।
               </Text>
@@ -333,28 +252,12 @@ export default function OnboardingScreen() {
               </View>
 
               <GentleButton
-                title="আমার ক্যাডেট রূপ নির্ধারণ করো ➔"
+                title="আমার ক্যাডেট রূপ নির্ধারণ করো"
                 onPress={() => setStep(1)}
                 variant="gold"
                 size="large"
                 fullWidth
               />
-
-              {/* Returning User Quick Login */}
-              <Pressable
-                onPress={() => {
-                  setAuthMode('login');
-                  setStep(5);
-                }}
-                style={styles.alreadyHaveAccountBtn}
-              >
-                <Text style={styles.alreadyHaveAccountText}>
-                  তোমার কি ইতিমধ্যে একটি অ্যাকাউন্ট আছে?{' '}
-                  <Text style={{ color: Colors.primaryLight, fontFamily: Typography.family.hindBold }}>
-                    লগইন করো ➔
-                  </Text>
-                </Text>
-              </Pressable>
             </StoryCard>
           </View>
         )}
@@ -377,7 +280,7 @@ export default function OnboardingScreen() {
               <Text style={styles.scenarioText}>{currentQ.scenario_bn}</Text>
 
               <View style={styles.multiSelectHintPill}>
-                <Text style={styles.multiSelectHintText}>💡 পছন্দমতো একাধিক উত্তর বেছে নিতে পারো</Text>
+                <Text style={styles.multiSelectHintText}>পছন্দমতো একাধিক উত্তর বেছে নিতে পারো</Text>
               </View>
             </StoryCard>
 
@@ -432,7 +335,7 @@ export default function OnboardingScreen() {
                 style={styles.backBtn}
               />
               <GentleButton
-                title={hasSelection ? 'পরবর্তী ➔' : 'কমপক্ষে ১টি বেছে নাও'}
+                title={hasSelection ? 'পরবর্তী' : 'কমপক্ষে ১টি বেছে নাও'}
                 onPress={handleNext}
                 variant={hasSelection ? 'primary' : 'outline'}
                 size="normal"
@@ -508,277 +411,12 @@ export default function OnboardingScreen() {
             </StoryCard>
 
             <GentleButton
-              title="একাউন্টে অগ্রগতি সংরক্ষণ করো ➔"
-              onPress={() => setStep(5)}
+              title="মিশন শুরু করো"
+              onPress={handleStartMission}
               variant="gold"
               size="large"
               fullWidth
             />
-
-            <Pressable onPress={handleGuest} style={{ paddingVertical: 10, alignItems: 'center' }}>
-              <Text style={{ color: Colors.primaryLight, fontSize: 13, fontFamily: Typography.family.hindSemiBold }}>
-                সরাসরি অতিথি মোডে শুরু করো ➔
-              </Text>
-            </Pressable>
-          </View>
-        )}
-
-        {/* Step 5: Official Academy Credentialing (Sign Up, Log In, Guest) */}
-        {step === 5 && (
-          <View style={styles.authWrapper}>
-            <View style={styles.topBadgeRow}>
-              <Sparkles size={13} color={Colors.cyan} />
-              <Text style={styles.topBadgeText}>একাডেমি ক্রেডেনশিয়াল স্টেশন 🛰️</Text>
-              <Sparkles size={13} color={Colors.cyan} />
-            </View>
-
-            {/* 3-Way Mode Switcher Tabs */}
-            <View style={styles.authTabBar}>
-              <Pressable
-                style={[styles.authTabBtn, authMode === 'signup' && styles.authTabBtnActive]}
-                onPress={() => {
-                  setAuthMode('signup');
-                  setLocalAuthError(null);
-                }}
-              >
-                <Rocket size={13} color={authMode === 'signup' ? '#080D27' : Colors.cyan} />
-                <Text style={[styles.authTabBtnText, authMode === 'signup' && styles.authTabBtnTextActive]}>
-                  সাইন আপ
-                </Text>
-              </Pressable>
-
-              <Pressable
-                style={[styles.authTabBtn, authMode === 'login' && styles.authTabBtnActive]}
-                onPress={() => {
-                  setAuthMode('login');
-                  setLocalAuthError(null);
-                }}
-              >
-                <ShieldCheck size={13} color={authMode === 'login' ? '#080D27' : Colors.gold} />
-                <Text style={[styles.authTabBtnText, authMode === 'login' && styles.authTabBtnTextActive]}>
-                  লগইন
-                </Text>
-              </Pressable>
-
-              <Pressable
-                style={[styles.authTabBtn, authMode === 'guest' && styles.authTabBtnActive]}
-                onPress={() => {
-                  setAuthMode('guest');
-                  setLocalAuthError(null);
-                }}
-              >
-                <Compass size={13} color={authMode === 'guest' ? '#080D27' : Colors.emerald} />
-                <Text style={[styles.authTabBtnText, authMode === 'guest' && styles.authTabBtnTextActive]}>
-                  অতিথি
-                </Text>
-              </Pressable>
-            </View>
-
-            {/* Error Banner */}
-            {(localAuthError || authError) && (
-              <View style={styles.authErrorBanner}>
-                <AlertCircle size={15} color={Colors.coral} />
-                <Text style={styles.authErrorText}>{localAuthError || authError}</Text>
-              </View>
-            )}
-
-            {/* ── SIGN UP ── */}
-            {authMode === 'signup' && (
-              <StoryCard accent="cyan" style={styles.authCardShell}>
-                <View style={styles.authSectionHeader}>
-                  <SpaceChoiceBadge type={calculatedArchetypeKey} size={34} isSelected />
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.authCardTitle, { color: archetypeInfo.accentColor }]}>
-                      {archetypeInfo.title_bn}
-                    </Text>
-                    <Text style={styles.authCardSub}>নতুন অ্যাকাউন্ট তৈরি করো ও তথ্য সংরক্ষণ করো</Text>
-                  </View>
-                </View>
-
-                {/* Input: Callsign / Username */}
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.fieldLabel}>ইউজারনেম / স্পেস কল-সাইন:</Text>
-                  <View style={styles.fieldInputShell}>
-                    <User size={15} color={Colors.cyan} />
-                    <TextInput
-                      style={styles.fieldTextInput}
-                      value={username}
-                      onChangeText={(val) => setUsername(val.toLowerCase().replace(/\s+/g, '_'))}
-                      placeholder="যেমন: roket_pilot_10"
-                      placeholderTextColor={Colors.textMuted}
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                    />
-                  </View>
-                </View>
-
-                {/* Input: Password */}
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.fieldLabel}>সিকিউরিটি পাসওয়ার্ড:</Text>
-                  <View style={styles.fieldInputShell}>
-                    <KeyRound size={15} color={Colors.cyan} />
-                    <TextInput
-                      style={styles.fieldTextInput}
-                      value={password}
-                      onChangeText={setPassword}
-                      placeholder="কমপক্ষে ৪ অক্ষরের পাসওয়ার্ড"
-                      placeholderTextColor={Colors.textMuted}
-                      secureTextEntry={!showPassword}
-                    />
-                    <Pressable onPress={() => setShowPassword(!showPassword)} hitSlop={10}>
-                      {showPassword ? (
-                        <EyeOff size={16} color={Colors.textMuted} />
-                      ) : (
-                        <Eye size={16} color={Colors.textMuted} />
-                      )}
-                    </Pressable>
-                  </View>
-                </View>
-
-                <View style={styles.authBtnRow}>
-                  <GentleButton
-                    title={isAuthLoading ? 'অ্যাকাউন্ট তৈরি হচ্ছে...' : 'অ্যাকাউন্ট নিশ্চিত করো ➔'}
-                    onPress={handleSignUp}
-                    variant="primary"
-                    size="large"
-                    disabled={isAuthLoading}
-                    fullWidth
-                  />
-                </View>
-              </StoryCard>
-            )}
-
-            {/* ── LOGIN ── */}
-            {authMode === 'login' && (
-              <StoryCard accent="gold" style={styles.authCardShell}>
-                <View style={styles.authSectionHeader}>
-                  <ShieldCheck size={26} color={Colors.gold} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.authCardTitle}>ক্যাডেট অ্যাকাউন্টে লগইন</Text>
-                    <Text style={styles.authCardSub}>পূর্ববর্তী সংরক্ষিত অগ্রগতিতে ফিরে যাও</Text>
-                  </View>
-                </View>
-
-                {/* Quick Pick if previous accounts exist */}
-                {savedUsers.length > 0 && (
-                  <View style={styles.quickPickBox}>
-                    <Text style={styles.quickPickLabel}>সংরক্ষিত ক্যাডেট (১-ট্যাপ):</Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                      {savedUsers.map((u) => (
-                        <Pressable
-                          key={u.id}
-                          style={[
-                            styles.quickChip,
-                            username === u.username && styles.quickChipActive,
-                          ]}
-                          onPress={() => {
-                            setUsername(u.username);
-                            setCadetName(u.displayName);
-                            setLocalAuthError(null);
-                          }}
-                        >
-                          <AstronautAvatar size={22} rank={u.rank} />
-                          <Text style={styles.quickChipText}>@{u.username}</Text>
-                        </Pressable>
-                      ))}
-                    </ScrollView>
-                  </View>
-                )}
-
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.fieldLabel}>ইউজারনেম / কল-সাইন:</Text>
-                  <View style={styles.fieldInputShell}>
-                    <User size={15} color={Colors.gold} />
-                    <TextInput
-                      style={styles.fieldTextInput}
-                      value={username}
-                      onChangeText={(val) => setUsername(val.toLowerCase().replace(/\s+/g, '_'))}
-                      placeholder="ইউজারনেম"
-                      placeholderTextColor={Colors.textMuted}
-                      autoCapitalize="none"
-                    />
-                  </View>
-                </View>
-
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.fieldLabel}>পাসওয়ার্ড:</Text>
-                  <View style={styles.fieldInputShell}>
-                    <KeyRound size={15} color={Colors.gold} />
-                    <TextInput
-                      style={styles.fieldTextInput}
-                      value={password}
-                      onChangeText={setPassword}
-                      placeholder="পাসওয়ার্ড"
-                      placeholderTextColor={Colors.textMuted}
-                      secureTextEntry={!showPassword}
-                    />
-                    <Pressable onPress={() => setShowPassword(!showPassword)} hitSlop={10}>
-                      {showPassword ? (
-                        <EyeOff size={16} color={Colors.textMuted} />
-                      ) : (
-                        <Eye size={16} color={Colors.textMuted} />
-                      )}
-                    </Pressable>
-                  </View>
-                </View>
-
-                <View style={styles.authBtnRow}>
-                  <GentleButton
-                    title={isAuthLoading ? 'যাচাই করা হচ্ছে...' : 'লগইন করো ➔'}
-                    onPress={handleLogin}
-                    variant="gold"
-                    size="large"
-                    disabled={isAuthLoading}
-                    fullWidth
-                  />
-                </View>
-              </StoryCard>
-            )}
-
-            {/* ── GUEST ── */}
-            {authMode === 'guest' && (
-              <StoryCard accent="emerald" style={styles.authCardShell}>
-                <View style={styles.authSectionHeader}>
-                  <Compass size={26} color={Colors.emerald} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.authCardTitle}>অতিথি হিসেবে অন্বেষণ</Text>
-                    <Text style={styles.authCardSub}>পাসওয়ার্ড ছাড়া দ্রুত খেলা শুরু করো</Text>
-                  </View>
-                </View>
-
-                <View style={styles.guestNotice}>
-                  <CheckCircle2 size={16} color={Colors.emerald} />
-                  <Text style={styles.guestNoticeText}>
-                    কোনো পাসওয়ার্ড ছাড়াই তুমি অবিলম্বে সব পাঠ, কুইজ এবং চন্দ্রাভিযান খেলতে পারবে। পরবর্তীতে যেকোনো সময় তোমার প্রোফাইল থেকে স্থায়ী অ্যাকাউন্ট তৈরি করে নিতে পারবে।
-                  </Text>
-                </View>
-
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.fieldLabel}>তোমার ক্যাডেট নাম:</Text>
-                  <View style={styles.fieldInputShell}>
-                    <User size={15} color={Colors.emerald} />
-                    <TextInput
-                      style={styles.fieldTextInput}
-                      value={cadetName}
-                      onChangeText={setCadetName}
-                      placeholder="নাম লেখো"
-                      placeholderTextColor={Colors.textMuted}
-                    />
-                  </View>
-                </View>
-
-                <View style={styles.authBtnRow}>
-                  <GentleButton
-                    title="অতিথি হিসেবে ড্যাশবোর্ডে প্রবেশ করো ➔"
-                    onPress={handleGuest}
-                    variant="emerald"
-                    size="large"
-                    disabled={isAuthLoading}
-                    fullWidth
-                  />
-                </View>
-              </StoryCard>
-            )}
           </View>
         )}
       </ScrollView>
@@ -821,9 +459,10 @@ const styles = StyleSheet.create({
   topBadgeText: {
     color: Colors.gold,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   welcomeCard: {
+    width: '100%',
     alignItems: 'center',
     padding: 22,
   },
@@ -833,7 +472,8 @@ const styles = StyleSheet.create({
   welcomeTitle: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontFamily: Typography.family.hindBold,
+    lineHeight: Typography.lineHeight.hero,
+    fontFamily: Typography.family.heading,
     textAlign: 'center',
     marginBottom: 10,
   },
@@ -854,9 +494,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    backgroundColor: Colors.surfaceWarm,
     padding: 12,
     borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   featureIconBubble: {
     width: 36,
@@ -871,24 +513,16 @@ const styles = StyleSheet.create({
   featureTitle: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindBold,
+    lineHeight: Typography.lineHeight.caption + 4,
+    fontFamily: Typography.family.heading,
   },
   featureDesc: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
+    lineHeight: Typography.lineHeight.micro + 2,
     fontFamily: Typography.family.notoRegular,
     marginTop: 2,
   },
-  alreadyHaveAccountBtn: {
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  alreadyHaveAccountText: {
-    color: Colors.textMuted,
-    fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindRegular,
-  },
-
   // Questions Flow
   questionWrapper: {
     gap: 14,
@@ -908,12 +542,12 @@ const styles = StyleSheet.create({
   stepPillText: {
     color: Colors.primaryLight,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   tagText: {
     color: Colors.textMuted,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   scenarioCard: {
     padding: 18,
@@ -928,7 +562,7 @@ const styles = StyleSheet.create({
   scenarioSubtitle: {
     color: Colors.primaryLight,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   scenarioText: {
     color: Colors.text,
@@ -947,7 +581,7 @@ const styles = StyleSheet.create({
   multiSelectHintText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   optionsList: {
     gap: 10,
@@ -957,15 +591,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(22, 27, 61, 0.70)',
+    backgroundColor: Colors.surface,
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderWidth: 1.5,
+    borderColor: Colors.border,
     padding: 14,
+    shadowColor: Colors.text,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 1,
   },
   optionCardSelected: {
-    backgroundColor: 'rgba(107, 138, 255, 0.16)',
-    borderColor: Colors.primaryLight,
+    backgroundColor: Colors.backgroundTertiary,
+    borderColor: Colors.primary,
   },
   optionPressed: {
     opacity: 0.88,
@@ -983,14 +622,14 @@ const styles = StyleSheet.create({
   optionTitle: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 2,
   },
   optionTitleSelected: {
-    color: Colors.primaryLight,
+    color: Colors.primary,
   },
   optionSubtitle: {
-    color: Colors.textMuted,
+    color: Colors.textSecondary,
     fontSize: Typography.size.micro,
     lineHeight: Typography.lineHeight.caption,
     fontFamily: Typography.family.notoRegular,
@@ -1000,7 +639,7 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.25)',
+    borderColor: Colors.borderMedium,
     marginLeft: 4,
   },
   checkBadge: {
@@ -1050,23 +689,25 @@ const styles = StyleSheet.create({
   },
   archetypeTitle: {
     fontSize: Typography.size.h1,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     textAlign: 'center',
     marginBottom: 4,
   },
   archetypeMotto: {
     color: Colors.primaryLight,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
     textAlign: 'center',
     marginBottom: 14,
   },
   archetypeDescCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    backgroundColor: Colors.surfaceWarm,
     borderRadius: 16,
     padding: 14,
     width: '100%',
     marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   archetypeDesc: {
     color: Colors.textSecondary,
@@ -1081,7 +722,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    backgroundColor: 'rgba(255, 200, 107, 0.12)',
+    backgroundColor: Colors.goldBg,
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 10,
@@ -1089,7 +730,7 @@ const styles = StyleSheet.create({
   focusChipText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   nameSection: {
     width: '100%',
@@ -1099,183 +740,35 @@ const styles = StyleSheet.create({
   nameFieldLabel: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 6,
   },
   nameInputBox: {
-    backgroundColor: 'rgba(15, 17, 40, 0.8)',
+    backgroundColor: Colors.surfaceWarm,
     borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderWidth: 1.5,
+    borderColor: Colors.borderMedium,
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
   nameInput: {
     color: Colors.text,
     fontSize: Typography.size.body,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   roleNotice: {
-    backgroundColor: 'rgba(107, 138, 255, 0.12)',
+    backgroundColor: Colors.primaryBg,
     padding: 12,
     borderRadius: 14,
     marginTop: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(59, 91, 219, 0.15)',
   },
   roleNoticeText: {
-    color: Colors.primaryLight,
+    color: Colors.primary,
     fontSize: Typography.size.micro,
     lineHeight: Typography.lineHeight.caption,
     fontFamily: Typography.family.notoRegular,
     textAlign: 'center',
-  },
-
-  // ── Step 5: Auth Station Styles ──────────────────────────
-  authWrapper: {
-    gap: 14,
-  },
-  authTabBar: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(14, 18, 60, 0.85)',
-    borderRadius: 14,
-    padding: 3,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    gap: 4,
-  },
-  authTabBtn: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 5,
-    paddingVertical: 9,
-    borderRadius: 10,
-  },
-  authTabBtnActive: {
-    backgroundColor: Colors.cyan,
-  },
-  authTabBtnText: {
-    color: Colors.textSecondary,
-    fontSize: 12,
-    fontFamily: Typography.family.hindBold,
-  },
-  authTabBtnTextActive: {
-    color: '#080D27',
-    fontFamily: Typography.family.hindBold,
-  },
-  authErrorBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: 'rgba(255, 71, 87, 0.16)',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: Colors.coral,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  authErrorText: {
-    flex: 1,
-    color: Colors.coral,
-    fontSize: 12,
-    fontFamily: Typography.family.hindSemiBold,
-  },
-  authCardShell: {
-    paddingVertical: 18,
-    paddingHorizontal: 16,
-  },
-  authSectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 16,
-  },
-  authCardTitle: {
-    color: Colors.text,
-    fontSize: Typography.size.body,
-    fontFamily: Typography.family.hindBold,
-    marginBottom: 2,
-  },
-  authCardSub: {
-    color: Colors.textMuted,
-    fontSize: Typography.size.micro,
-    fontFamily: Typography.family.notoRegular,
-  },
-  fieldGroup: {
-    marginBottom: 12,
-  },
-  fieldLabel: {
-    color: Colors.textSecondary,
-    fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindSemiBold,
-    marginBottom: 6,
-  },
-  fieldInputShell: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(8, 12, 38, 0.9)',
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-    paddingHorizontal: 12,
-    height: 46,
-    gap: 10,
-  },
-  fieldTextInput: {
-    flex: 1,
-    color: '#FFFFFF',
-    fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindSemiBold,
-  },
-  authBtnRow: {
-    marginTop: 8,
-  },
-  quickPickBox: {
-    marginBottom: 14,
-  },
-  quickPickLabel: {
-    color: Colors.textMuted,
-    fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindSemiBold,
-    marginBottom: 6,
-  },
-  quickChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-    marginRight: 8,
-  },
-  quickChipActive: {
-    borderColor: Colors.cyan,
-    backgroundColor: 'rgba(0, 240, 255, 0.15)',
-  },
-  quickChipText: {
-    color: Colors.text,
-    fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
-  },
-  guestNotice: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 8,
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
-    padding: 10,
-    marginBottom: 14,
-  },
-  guestNoticeText: {
-    flex: 1,
-    color: Colors.textSecondary,
-    fontSize: Typography.size.caption,
-    lineHeight: Typography.lineHeight.caption,
-    fontFamily: Typography.family.notoRegular,
   },
 });

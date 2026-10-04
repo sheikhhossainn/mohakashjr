@@ -78,7 +78,7 @@ export const MissionDebriefView: React.FC<MissionDebriefViewProps> = ({
       {/* Hero Debrief Status Card */}
       <DoubleBezelCard
         glow={result.starRating === 3 ? 'gold' : isSuccess ? 'emerald' : 'coral'}
-        tag="মিশন কন্ট্রোল ডিব্রিফ 📡"
+        tag="মিশন কন্ট্রোল ডিব্রিফ"
         style={styles.heroCard}
       >
         {/* Animated Mascot Reaction */}
@@ -230,7 +230,7 @@ export const MissionDebriefView: React.FC<MissionDebriefViewProps> = ({
       </View>
 
       {/* NASA Artemis Real-World Science Callout */}
-      <DoubleBezelCard glow="cyan" tag="নাসা আর্টেমিস বৈজ্ঞানিক সত্য 🪐" style={styles.nasaCard}>
+      <DoubleBezelCard glow="cyan" tag="নাসা আর্টেমিস বৈজ্ঞানিক সত্য" style={styles.nasaCard}>
         <View style={styles.nasaRow}>
           <Info size={18} color={Colors.hudCyan} />
           <Text style={styles.nasaText}>{result.nasaArtemisInsight_bn}</Text>
@@ -240,7 +240,7 @@ export const MissionDebriefView: React.FC<MissionDebriefViewProps> = ({
       {/* Action Buttons */}
       <View style={styles.actionButtons}>
         <TactileButton
-          title="আবার খেলো 🔄"
+          title="আবার খেলো"
           onPress={onPlayAgain}
           variant="outline"
           size="normal"
@@ -248,7 +248,7 @@ export const MissionDebriefView: React.FC<MissionDebriefViewProps> = ({
         />
 
         <TactileButton
-          title="ড্যাশবোর্ডে ফিরে যাও 🏠"
+          title="ড্যাশবোর্ডে ফিরে যাও"
           onPress={onExitMission}
           variant="primary"
           size="normal"
@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
   },
   statCardSub: {
     color: Colors.textMuted,
-    fontSize: 9,
+    fontSize: 12,
     marginTop: 2,
   },
   feedbackList: {

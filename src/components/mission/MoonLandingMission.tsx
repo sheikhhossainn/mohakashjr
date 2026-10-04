@@ -5,6 +5,7 @@ import { Typography } from '../../theme/typography';
 import { AstronautSuitUpGame } from './AstronautSuitUpGame';
 import { RocketFuelingStation } from './RocketFuelingStation';
 import { CockpitIgnitionDeck } from './CockpitIgnitionDeck';
+import { AtmosphericJourney } from './AtmosphericJourney';
 import { LunarDescentModule } from './LunarDescentModule';
 import { MoonwalkCelebration } from './MoonwalkCelebration';
 import { LunarSiteSelector } from './LunarSiteSelector';
@@ -19,6 +20,7 @@ export type MissionStage =
   | 'suit_up'
   | 'fueling'
   | 'cockpit_ignition'
+  | 'atmospheric_flight'
   | 'lunar_descent'
   | 'moonwalk'
   | 'select_site'
@@ -74,13 +76,23 @@ export const MoonLandingMission: React.FC<MoonLandingMissionProps> = ({
   if (currentStage === 'cockpit_ignition') {
     return (
       <CockpitIgnitionDeck
-        onProceed={() => setCurrentStage('lunar_descent')}
+        onProceed={() => setCurrentStage('atmospheric_flight')}
         onBackToFueling={() => setCurrentStage('fueling')}
       />
     );
   }
 
-  // 4. Stage 4: Trans-Lunar Flight & Descent Simulation
+  // 4. Stage 4: Atmospheric Crossing & ISS Flyby
+  if (currentStage === 'atmospheric_flight') {
+    return (
+      <AtmosphericJourney
+        onMissionComplete={() => setCurrentStage('lunar_descent')}
+        onBack={() => setCurrentStage('cockpit_ignition')}
+      />
+    );
+  }
+
+  // 5. Stage 5: Trans-Lunar Flight & Descent Simulation
   if (currentStage === 'lunar_descent') {
     return (
       <LunarDescentModule
@@ -88,7 +100,7 @@ export const MoonLandingMission: React.FC<MoonLandingMissionProps> = ({
           setSelectedSite(site);
           setCurrentStage('moonwalk');
         }}
-        onBackToIgnition={() => setCurrentStage('cockpit_ignition')}
+        onBackToIgnition={() => setCurrentStage('atmospheric_flight')}
       />
     );
   }

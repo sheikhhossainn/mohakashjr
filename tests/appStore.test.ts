@@ -171,3 +171,31 @@ test('useAppStore: Cadet Psychometric Orientation and Dossier Assignment', () =>
   state = useAppStore.getState();
   assert.strictEqual(state.hasCompletedOnboarding, false);
 });
+
+test('useAppStore: loads saved progress and deleteLocalData wipes it', async () => {
+  const { profileStorage } = await import('../src/services/profileStorage');
+  await profileStorage.saveProfile({
+    displayName: 'রিয়া',
+    rank: 'Astronaut',
+    xp: 250,
+    completedLessonIds: ['lesson-1'],
+    quizAttempts: {},
+    cadetArchetype: 'engineer',
+    psychometricAnswers: {},
+    hasCompletedOnboarding: true,
+  });
+
+  await useAppStore.getState().loadSavedProgress();
+  let state = useAppStore.getState();
+  assert.strictEqual(state.isHydrated, true);
+  assert.strictEqual(state.displayName, 'রিয়া');
+  assert.strictEqual(state.xp, 250);
+  assert.strictEqual(state.hasCompletedOnboarding, true);
+
+  await useAppStore.getState().deleteLocalData();
+  state = useAppStore.getState();
+  assert.strictEqual(state.xp, 0);
+  assert.strictEqual(state.rank, 'Cadet');
+  assert.strictEqual(state.hasCompletedOnboarding, false);
+  assert.strictEqual(await profileStorage.loadProfile(), null);
+});

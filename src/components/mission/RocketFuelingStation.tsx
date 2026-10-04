@@ -318,11 +318,11 @@ export const RocketFuelingStation: React.FC<RocketFuelingStationProps> = ({
               accessibilityRole="button"
               accessibilityLabel={t.holdToPump}
             >
-              <Fuel size={28} color={isFuelFull ? Colors.emerald : '#FFFFFF'} />
-              <Text style={styles.pumpButtonText}>
-                {isFuelFull ? 'জ্বালানি ভরার কাজ সম্পন্ন ✓' : isPumping ? 'পাম্প হচ্ছে... ধরে রাখো!' : 'চেপে ধরে জ্বালানি পাম্প করো'}
+              <Fuel size={28} color={isFuelFull ? Colors.emeraldDark : '#FFFFFF'} />
+              <Text style={[styles.pumpButtonText, isFuelFull && styles.pumpButtonTextFull]}>
+                {isFuelFull ? 'জ্বালানি ভরার কাজ সম্পন্ন' : isPumping ? 'পাম্প হচ্ছে... ধরে রাখো!' : 'চেপে ধরে জ্বালানি পাম্প করো'}
               </Text>
-              <Text style={styles.pumpButtonSub}>
+              <Text style={[styles.pumpButtonSub, isFuelFull && styles.pumpButtonSubFull]}>
                 {isFuelFull ? 'প্রেশার ব্যালেন্স ১০০%' : `${fuelPercentage}% / ১০০%`}
               </Text>
             </Pressable>
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
   stageTagText: {
     color: Colors.cyan,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   headerBlock: {
     marginBottom: 14,
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
   title: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 4,
   },
   subtitle: {
@@ -432,13 +432,13 @@ const styles = StyleSheet.create({
   },
   pressureHUD: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    backgroundColor: '#0F172A',
     borderRadius: 14,
     padding: 12,
     width: '100%',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   hudStat: {
     flex: 1,
@@ -451,16 +451,16 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   hudLabel: {
-    color: Colors.textSecondary,
+    color: '#CBD5E1',
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   hudValue: {
     fontSize: Typography.size.h2,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   hudSub: {
-    color: Colors.textMuted,
+    color: '#94A3B8',
     fontSize: Typography.size.micro,
     fontFamily: Typography.family.notoRegular,
   },
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
   statusTitle: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   pumpButtonWrapper: {
     width: '100%',
@@ -509,22 +509,29 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   pumpButtonDisabled: {
-    backgroundColor: 'rgba(94, 214, 192, 0.2)',
-    borderBottomColor: Colors.emerald,
-    borderWidth: 1.5,
+    backgroundColor: Colors.emeraldBg,
+    borderBottomColor: Colors.emeraldDark,
+    borderBottomWidth: 3,
+    borderWidth: 2,
     borderColor: Colors.emerald,
   },
   pumpButtonText: {
     color: '#FFFFFF',
     fontSize: Typography.size.body,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginTop: 6,
+  },
+  pumpButtonTextFull: {
+    color: Colors.emeraldDark,
   },
   pumpButtonSub: {
     color: 'rgba(255, 255, 255, 0.8)',
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
     marginTop: 2,
+  },
+  pumpButtonSubFull: {
+    color: Colors.emerald,
   },
   factCard: {
     marginBottom: 16,
@@ -539,8 +546,7 @@ const styles = StyleSheet.create({
   factTitle: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
-    letterSpacing: 0.5,
+    fontFamily: Typography.family.heading,
   },
   factContent: {
     color: Colors.text,

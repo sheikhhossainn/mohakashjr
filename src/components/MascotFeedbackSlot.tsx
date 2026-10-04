@@ -29,7 +29,7 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
           border: 'rgba(16, 185, 129, 0.45)',
           bg: '#14273E',
           text: Colors.emerald,
-          defaultTitle: 'দারুণ বলেছ, নভোচারী! 🌟',
+          defaultTitle: 'দারুণ বলেছ, নভোচারী!',
           icon: <CheckCircle size={18} color={Colors.emerald} />,
           mood: 'excited' as const,
         };
@@ -38,7 +38,7 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
           border: 'rgba(255, 71, 87, 0.45)',
           bg: '#2C1B33',
           text: Colors.coral,
-          defaultTitle: 'একটু ভুল হয়েছে, চলো শিখি! 🚀',
+          defaultTitle: 'একটু ভুল হয়েছে, চলো শিখি!',
           icon: <AlertCircle size={18} color={Colors.coral} />,
           mood: 'thinking' as const,
         };
@@ -47,7 +47,7 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
           border: 'rgba(255, 184, 0, 0.45)',
           bg: '#2E271E',
           text: Colors.gold,
-          defaultTitle: 'অসাধারণ পারফরম্যান্স! 🏆',
+          defaultTitle: 'অসাধারণ পারফরম্যান্স!',
           icon: <Sparkles size={18} color={Colors.gold} />,
           mood: 'waving' as const,
         };
@@ -57,7 +57,7 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
           border: 'rgba(56, 189, 248, 0.45)',
           bg: '#181E52',
           text: Colors.cyan,
-          defaultTitle: 'অ্যাস্ট্রো-বন্ধুর মহাকাশ পরামর্শ 👨‍🚀',
+          defaultTitle: 'অ্যাস্ট্রো-বন্ধুর মহাকাশ পরামর্শ',
           icon: <Sparkles size={18} color={Colors.cyan} />,
           mood: 'happy' as const,
         };
@@ -106,7 +106,7 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
               <View style={styles.hintTriggerLeft}>
                 <Lightbulb size={15} color={Colors.gold} />
                 <Text style={styles.hintTriggerText}>
-                  {showHint ? 'ইঙ্গিত লুকাও' : 'মহাকাশ বিজ্ঞানীর গোপন ইঙ্গিত 💡'}
+                  {showHint ? 'ইঙ্গিত লুকাও' : 'মহাকাশ বিজ্ঞানীর গোপন ইঙ্গিত'}
                 </Text>
               </View>
               {showHint ? (

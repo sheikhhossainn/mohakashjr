@@ -498,7 +498,7 @@ export const CargoPackingGame: React.FC<CargoPackingGameProps> = ({
                   {isSelected ? (
                     <>
                       <CheckCircle2 size={13} color="#0B0E2B" strokeWidth={2.6} />
-                      <Text style={styles.actionBtnTextSelected}>প্যাকড ✓</Text>
+                      <Text style={styles.actionBtnTextSelected}>প্যাকড</Text>
                     </>
                   ) : (
                     <>
@@ -543,7 +543,7 @@ export const CargoPackingGame: React.FC<CargoPackingGameProps> = ({
               ? 'ওজন অতিরিক্ত (সর্বোচ্চ ৫০০ কেজি)'
               : !hasPrimaryOxygen
               ? 'অক্সিজেন সিলিন্ডার নির্বাচন করো'
-              : 'অবতরণ সিমুলেশন শুরু করো 🚀'
+              : 'অবতরণ সিমুলেশন শুরু করো'
           }
           onPress={() => onConfirmPacking(selectedIds)}
           disabled={isOverweight || !hasPrimaryOxygen}
@@ -632,7 +632,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: Typography.weight.heavy,
     marginBottom: 6,
-    letterSpacing: 0.2,
   },
   subtitle: {
     color: Colors.textMuted,
@@ -685,7 +684,7 @@ const styles = StyleSheet.create({
   },
   hudLabel: {
     color: Colors.textMuted,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: Typography.weight.semiBold,
     marginBottom: 2,
   },
@@ -729,12 +728,12 @@ const styles = StyleSheet.create({
   },
   capacityTextOk: {
     color: Colors.emerald,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: Typography.weight.bold,
   },
   capacityTextOverweight: {
     color: Colors.coral,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: Typography.weight.bold,
   },
 
@@ -813,7 +812,7 @@ const styles = StyleSheet.create({
   },
   gaugeItemName: {
     color: Colors.textMuted,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: Typography.weight.semiBold,
   },
   gaugeItemValue: {
@@ -865,7 +864,7 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weight.bold,
   },
   categoryTabTextActive: {
-    color: '#080D27',
+    color: Colors.text,
     fontWeight: Typography.weight.heavy,
   },
   categoryCountBadge: {
@@ -875,15 +874,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
   },
   categoryCountBadgeActive: {
-    backgroundColor: 'rgba(8, 13, 39, 0.18)',
+    backgroundColor: 'rgba(15, 17, 40, 0.12)',
   },
   categoryCountText: {
     color: Colors.textMuted,
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: Typography.weight.bold,
   },
   categoryCountTextActive: {
-    color: '#080D27',
+    color: Colors.text,
     fontWeight: Typography.weight.heavy,
   },
 
@@ -948,7 +947,7 @@ const styles = StyleSheet.create({
   },
   itemSubtitle: {
     color: Colors.textMuted,
-    fontSize: 11,
+    fontSize: 12,
     lineHeight: 14,
   },
 
@@ -967,7 +966,7 @@ const styles = StyleSheet.create({
   },
   essentialBadgeText: {
     color: Colors.coral,
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: Typography.weight.heavy,
   },
   optionalBadge: {
@@ -981,7 +980,7 @@ const styles = StyleSheet.create({
   },
   optionalBadgeText: {
     color: Colors.textMuted,
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: Typography.weight.semiBold,
   },
 
@@ -1023,7 +1022,7 @@ const styles = StyleSheet.create({
   },
   weightPillText: {
     color: Colors.gold,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: Typography.weight.bold,
   },
   bonusPill: {
@@ -1038,7 +1037,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   bonusPillText: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: Typography.weight.bold,
   },
 
@@ -1076,7 +1075,7 @@ const styles = StyleSheet.create({
     fontWeight: Typography.weight.bold,
   },
   actionBtnTextSelected: {
-    color: '#080D27',
+    color: Colors.text,
     fontSize: 12,
     fontWeight: Typography.weight.heavy,
   },

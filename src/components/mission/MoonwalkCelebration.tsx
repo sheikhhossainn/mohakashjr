@@ -110,6 +110,19 @@ export const MoonwalkCelebration: React.FC<MoonwalkCelebrationProps> = ({
             <Path d="M 242 42 Q 252 36 258 44 Q 254 52 246 49 Z" fill="#22C55E" opacity={0.8} />
             <Path d="M 238 45 Q 248 40 255 42" stroke="#FFFFFF" strokeWidth="2" opacity={0.5} />
 
+            {/* Celebration Confetti */}
+            {allActionsDone && (
+              <G>
+                <Circle cx="80" cy="50" r="3" fill={Colors.gold} opacity={0.85} />
+                <Circle cx="120" cy="35" r="2.5" fill={Colors.coral} opacity={0.85} />
+                <Circle cx="160" cy="48" r="3" fill={Colors.emerald} opacity={0.85} />
+                <Circle cx="200" cy="30" r="2.5" fill={Colors.cyan} opacity={0.85} />
+                <Circle cx="230" cy="60" r="3" fill={Colors.purple} opacity={0.85} />
+                <Circle cx="100" cy="70" r="2" fill={Colors.gold} opacity={0.7} />
+                <Circle cx="180" cy="65" r="2.5" fill={Colors.pink} opacity={0.8} />
+              </G>
+            )}
+
             {/* Lunar Regolith Horizon */}
             <Path d="M 0 150 Q 80 138 160 148 Q 230 155 300 142 L 300 210 L 0 210 Z" fill="url(#regolithDust)" />
             {/* Crater shadows */}
@@ -372,7 +385,7 @@ const styles = StyleSheet.create({
   stageTagText: {
     color: Colors.emerald,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   regionBadge: {
     backgroundColor: 'rgba(255, 200, 107, 0.15)',
@@ -383,7 +396,7 @@ const styles = StyleSheet.create({
   regionBadgeText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   headerBlock: {
     marginBottom: 14,
@@ -391,7 +404,7 @@ const styles = StyleSheet.create({
   title: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 4,
   },
   subtitle: {
@@ -457,7 +470,7 @@ const styles = StyleSheet.create({
   actionTitle: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 2,
   },
   actionSub: {
@@ -487,12 +500,12 @@ const styles = StyleSheet.create({
   rewardTitle: {
     color: Colors.text,
     fontSize: Typography.size.h2,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   rewardXP: {
     color: Colors.gold,
     fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 10,
   },
   mascotSlot: {
