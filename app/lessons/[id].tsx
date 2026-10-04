@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ScrollView, ActivityIndicator, StatusBar } from
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
+import { ScreenHeader } from '../../src/components/ScreenHeader';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WonderBox } from '../../src/components/WonderBox';
 import { GentleButton } from '../../src/components/GentleButton';
 import { IllustrationHeader, IllustrationTopic } from '../../src/components/IllustrationHeader';
@@ -13,13 +15,13 @@ import {
   Clock,
   Sparkles,
   ExternalLink,
-  ChevronLeft,
   BookOpen,
 } from 'lucide-react-native';
 
 export default function LessonReaderScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { completeLesson } = useAppStore();
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [loading, setLoading] = useState(true);
@@ -35,17 +37,23 @@ export default function LessonReaderScreen() {
 
   if (loading) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color={Colors.primary} />
-        <Text style={styles.loadingText}>মহাকাশ পাঠের পৃষ্ঠা খোলা হচ্ছে...</Text>
+      <View style={styles.container}>
+        <ScreenHeader title="মহাকাশ পাঠাগার" subtitle="পড়ো, জানো, কুইজ দাও" />
+        <View style={styles.centerContainer}>
+          <ActivityIndicator size="large" color={Colors.primary} />
+          <Text style={styles.loadingText}>মহাকাশ পাঠের পৃষ্ঠা খোলা হচ্ছে...</Text>
+        </View>
       </View>
     );
   }
 
   if (!lesson) {
     return (
-      <View style={styles.centerContainer}>
-        <Text style={styles.errorText}>দুঃখিত! পাঠটি খুঁজে পাওয়া যায়নি।</Text>
+      <View style={styles.container}>
+        <ScreenHeader title="মহাকাশ পাঠাগার" subtitle="পড়ো, জানো, কুইজ দাও" />
+        <View style={styles.centerContainer}>
+          <Text style={styles.errorText}>দুঃখিত! পাঠটি খুঁজে পাওয়া যায়নি।</Text>
+        </View>
       </View>
     );
   }
@@ -55,22 +63,25 @@ export default function LessonReaderScreen() {
     router.push(`/quiz/${lesson.id}`);
   };
 
-  const getIllustrationTopic = (lessonId: string): IllustrationTopic => {
-    if (lessonId.includes('1') || lessonId.includes('moon')) return 'moon';
-    if (lessonId.includes('2') || lessonId.includes('mars')) return 'mars';
-    if (lessonId.includes('3') || lessonId.includes('iss')) return 'iss';
-    if (lessonId.includes('4') || lessonId.includes('jwst')) return 'jwst';
-    if (lessonId.includes('5')) return 'earth';
-    if (lessonId.includes('6')) return 'sun';
-    if (lessonId.includes('7')) return 'stars';
-    return 'rocket';
+  // Banner scene that matches each lesson's subject
+  const LESSON_TOPICS: Record<string, IllustrationTopic> = {
+    'lesson-1': 'moon', // Apollo 11
+    'lesson-2': 'earth', // microgravity
+    'lesson-3': 'rocket', // rockets
+    'lesson-4': 'moon', // lunar ice
+    'lesson-5': 'stars', // spacesuits
+    'lesson-6': 'iss', // space station
+    'lesson-7': 'mars', // Mars rovers
+    'lesson-8': 'jwst', // Webb telescope
   };
+  const getIllustrationTopic = (lessonId: string): IllustrationTopic => LESSON_TOPICS[lessonId] ?? 'rocket';
 
   const topic = getIllustrationTopic(lesson.id);
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
+      <ScreenHeader title="মহাকাশ পাঠাগার" subtitle="পড়ো, জানো, কুইজ দাও" />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {/* Full-width Storybook Illustration Header */}
@@ -170,22 +181,15 @@ export default function LessonReaderScreen() {
         </View>
       </ScrollView>
 
-      {/* Floating Bottom Navigation Bar */}
-      <View style={styles.floatingBottomBar}>
+      {/* One CTA, pinned above the home indicator */}
+      <View style={[styles.floatingBottomBar, { paddingBottom: Math.max(insets.bottom, 12) + 2 }]}>
         <GentleButton
-          title="ফিরে যাও"
-          onPress={() => router.back()}
-          variant="ghost"
-          size="normal"
-          icon={<ChevronLeft size={18} color={Colors.textSecondary} />}
-        />
-
-        <GentleButton
-          title="কৌতূহল যাচাই কুইজ ➔"
+          title="কৌতূহল যাচাই কুইজ"
           onPress={handleStartQuiz}
           variant="gold"
-          size="normal"
-          icon={<BookOpen size={17} color={Colors.textDark} />}
+          size="large"
+          fullWidth
+          icon={<BookOpen size={18} color={Colors.textDark} />}
         />
       </View>
     </View>
@@ -216,7 +220,7 @@ const styles = StyleSheet.create({
     fontFamily: Typography.family.notoRegular,
   },
   content: {
-    paddingBottom: 110,
+    paddingBottom: 120,
   },
   bookPage: {
     paddingHorizontal: 22,
@@ -227,6 +231,7 @@ const styles = StyleSheet.create({
   },
   badgeRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     gap: 8,
     marginBottom: 14,
@@ -240,7 +245,7 @@ const styles = StyleSheet.create({
   levelBadgeText: {
     color: Colors.primaryLight,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   metaBadge: {
     flexDirection: 'row',
@@ -268,15 +273,14 @@ const styles = StyleSheet.create({
   xpBadgeText: {
     color: Colors.gold,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   title: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     lineHeight: Typography.lineHeight.hero,
     marginBottom: 10,
-    letterSpacing: -0.2,
   },
   summary: {
     color: Colors.textSecondary,
@@ -286,7 +290,7 @@ const styles = StyleSheet.create({
   },
   softDivider: {
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    backgroundColor: Colors.border,
     marginVertical: 22,
   },
   paragraphBlock: {
@@ -307,7 +311,7 @@ const styles = StyleSheet.create({
   paragraphHeading: {
     color: Colors.text,
     fontSize: Typography.size.h2,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   paragraphText: {
     color: Colors.text,
@@ -322,7 +326,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.06)',
+    borderColor: Colors.border,
   },
   sourceHeaderRow: {
     flexDirection: 'row',
@@ -333,7 +337,7 @@ const styles = StyleSheet.create({
   sourceLabel: {
     color: Colors.textMuted,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   sourceUrl: {
     color: Colors.primaryLight,
@@ -344,13 +348,15 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(15, 17, 40, 0.95)',
+    backgroundColor: Colors.surface,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.08)',
+    borderTopColor: Colors.border,
     paddingHorizontal: 20,
-    paddingVertical: 14,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    paddingTop: 12,
+    shadowColor: Colors.text,
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 4,
   },
 });

@@ -1,50 +1,60 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TextInput,
-  Pressable,
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '../src/theme/colors';
 import { Typography } from '../src/theme/typography';
-import { DoubleBezelCard } from '../src/components/DoubleBezelCard';
-import { TactileButton } from '../src/components/TactileButton';
 import { AstronautAvatar } from '../src/components/AstronautAvatar';
 import { AnimatedMascot } from '../src/components/AnimatedMascot';
+import { ScreenHeader } from '../src/components/ScreenHeader';
+import { ScalePressable } from '../src/components/ScalePressable';
+import { MessageIn } from '../src/components/MessageIn';
 import { useAppStore } from '../src/state/useAppStore';
-import { findOfflineAnswer } from '../src/services/offlineTutorService';
+import { findOfflineAnswer, getAllOfflineQuestions } from '../src/services/offlineTutorService';
 import { AI_TUTOR_CONFIG } from '../src/content/aiTutorPrompt';
 import {
   Send,
-  Wifi,
-  WifiOff,
   Sparkles,
-  ArrowLeft,
-  Bot,
-  User,
   Zap,
   HelpCircle,
   RotateCcw,
 } from 'lucide-react-native';
+
+const TUTOR_ENDPOINT = 'https://mohakashjr-ai-proxy.workers.dev/api/tutor';
+
+/** Quick reachability probe: any response at all means the phone is online. */
+async function hasInternet(): Promise<boolean> {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 4000);
+  try {
+    await fetch('https://www.gstatic.com/generate_204', { method: 'HEAD', signal: ctrl.signal });
+    return true;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 interface ChatMessage {
   id: string;
   sender: 'user' | 'tutor';
   text: string;
   timestamp: string;
-  source: 'online' | 'offline';
   suggestedReplies?: string[];
 }
 
 export default function AITutorChatScreen() {
-  const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { displayName, rank, cadetArchetype } = useAppStore();
   const flatListRef = useRef<FlatList>(null);
 
@@ -54,7 +64,6 @@ export default function AITutorChatScreen() {
       sender: 'tutor',
       text: AI_TUTOR_CONFIG.welcome_message_bn,
       timestamp: 'এখন',
-      source: 'offline',
       suggestedReplies: [
         'চাঁদে কি সত্যিই পানি আছে?',
         'মহাকাশে নভোচারীরা কীভাবে বাথরুমে যান?',
@@ -65,7 +74,19 @@ export default function AITutorChatScreen() {
 
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [isOnlineMode, setIsOnlineMode] = useState(false); // Default to offline-first for reliability
+
+  // A fresh random handful of the 100+ built-in questions each time the chat is opened or cleared
+  const [shuffleKey, setShuffleKey] = useState(0);
+  const presetQuestions = useMemo(() => {
+    const pool = getAllOfflineQuestions()
+      .filter((q) => q.category !== 'about_rover')
+      .map((q) => q.question_bn);
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool.slice(0, 12);
+  }, [shuffleKey]);
 
   // Auto scroll to bottom when new messages arrive
   useEffect(() => {
@@ -79,84 +100,75 @@ export default function AITutorChatScreen() {
     if (!query) return;
 
     const userMsgId = `user-${Date.now()}`;
-    const userMessage: ChatMessage = {
-      id: userMsgId,
-      sender: 'user',
-      text: query,
-      timestamp: new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }),
-      source: isOnlineMode ? 'online' : 'offline',
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
+    const stamp = () => new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
+    setMessages((prev) => [
+      ...prev,
+      { id: userMsgId, sender: 'user', text: query, timestamp: stamp() },
+    ]);
     if (!textToSend) setInputText('');
     setIsTyping(true);
 
-    if (isOnlineMode) {
-      // ── Online Mode Handler ──────────────────────────────────────────────
-      try {
-        // Attempt to call Cloudflare Worker proxy (Mahi's serverless endpoint)
-        const response = await fetch('https://mohakashjr-ai-proxy.workers.dev/api/tutor', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prompt: query,
-            system_prompt: AI_TUTOR_CONFIG.system_prompt,
-            user_context: {
-              name: displayName,
-              rank,
-              archetype: cadetArchetype,
-            },
-          }),
-        });
+    const reply = (text: string, suggestedReplies?: string[]) => {
+      setMessages((prev) => [
+        ...prev,
+        { id: `tutor-${Date.now()}`, sender: 'tutor', text, timestamp: stamp(), suggestedReplies },
+      ]);
+      setIsTyping(false);
+    };
 
-        if (response.ok) {
-          const data = await response.json();
-          const tutorMsg: ChatMessage = {
-            id: `tutor-${Date.now()}`,
-            sender: 'tutor',
-            text: data.reply || data.answer_bn,
-            timestamp: new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }),
-            source: 'online',
-            suggestedReplies: data.quick_replies || [
-              'রকেট কীভাবে ওড়ে?',
-              'মহাকাশে কীভাবে ঘুমায়?',
-            ],
-          };
-          setMessages((prev) => [...prev, tutorMsg]);
-          setIsTyping(false);
-          return;
-        }
-      } catch (err) {
-        // Smoothly fall through to offline matcher on network timeout / airplane mode
-      }
+    // 1. Saved answers first: instant and works without internet
+    const match = findOfflineAnswer(query);
+    if (match.item) {
+      setTimeout(() => reply(match.answer_bn, match.suggestedQuestions_bn), 450);
+      return;
     }
 
-    // ── Offline Mode Fallback Engine (Humaira's Keyword Matcher) ───────────
-    setTimeout(() => {
-      const match = findOfflineAnswer(query);
-      const tutorMsg: ChatMessage = {
-        id: `tutor-${Date.now()}`,
-        sender: 'tutor',
-        text: match.answer_bn,
-        timestamp: new Date().toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }),
-        source: 'offline',
-        suggestedReplies: match.suggestedQuestions_bn,
-      };
+    // 2. Not saved: check the connection, then ask the student to use the internet
+    const online = await hasInternet();
+    if (!online) {
+      reply(
+        'এই প্রশ্নের উত্তর আমার সংরক্ষিত তালিকায় নেই। 📡\nউত্তর পেতে মোবাইলের ইন্টারনেট বা ওয়াই-ফাই চালু করে আবার জিজ্ঞেস করো। এর মধ্যে নিচের প্রশ্নগুলো ইন্টারনেট ছাড়াই জানতে পারো।',
+        match.suggestedQuestions_bn
+      );
+      return;
+    }
 
-      setMessages((prev) => [...prev, tutorMsg]);
-      setIsTyping(false);
-    }, 450); // Natural 450ms simulated computing latency
+    try {
+      const response = await fetch(TUTOR_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: query,
+          system_prompt: AI_TUTOR_CONFIG.system_prompt,
+          user_context: { name: displayName, rank, archetype: cadetArchetype },
+        }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        const text = data.reply || data.answer_bn;
+        if (text) {
+          reply(text, data.quick_replies || match.suggestedQuestions_bn);
+          return;
+        }
+      }
+    } catch {
+      // fall through to the gentle message below
+    }
+    reply(
+      'ইন্টারনেট আছে, কিন্তু এই প্রশ্নের উত্তর এখন আনতে পারলাম না। 🌐\nএকটু পরে আবার চেষ্টা করো, অথবা ইন্টারনেটে খুঁজে দেখো বা শিক্ষককে জিজ্ঞেস করো।',
+      [query, ...match.suggestedQuestions_bn.slice(0, 2)]
+    );
   };
 
   const handleClearChat = () => {
+    setShuffleKey((k) => k + 1);
     setMessages([
       {
         id: `welcome-${Date.now()}`,
         sender: 'tutor',
         text: AI_TUTOR_CONFIG.welcome_message_bn,
         timestamp: 'এখন',
-        source: 'offline',
-        suggestedReplies: AI_TUTOR_CONFIG.suggested_queries_bn.slice(0, 3),
+          suggestedReplies: AI_TUTOR_CONFIG.suggested_queries_bn.slice(0, 3),
       },
     ]);
   };
@@ -165,7 +177,7 @@ export default function AITutorChatScreen() {
     const isUser = item.sender === 'user';
 
     return (
-      <View style={[styles.messageRow, isUser ? styles.userRow : styles.tutorRow]}>
+      <MessageIn style={[styles.messageRow, isUser ? styles.userRow : styles.tutorRow]}>
         {!isUser && (
           <View style={styles.tutorAvatarBox}>
             <AnimatedMascot size={38} mood="happy" />
@@ -186,16 +198,6 @@ export default function AITutorChatScreen() {
                   <Sparkles size={11} color={Colors.cyan} />
                   <Text style={styles.tutorNameText}>ক্যাপ্টেন রোভার</Text>
                 </View>
-                <View
-                  style={[
-                    styles.modeBadge,
-                    item.source === 'online' ? styles.onlineBadge : styles.offlineBadge,
-                  ]}
-                >
-                  <Text style={styles.modeBadgeText}>
-                    {item.source === 'online' ? 'অনলাইন' : 'অফলাইন ক্যাশ'}
-                  </Text>
-                </View>
               </View>
             )}
 
@@ -212,17 +214,14 @@ export default function AITutorChatScreen() {
           {!isUser && item.suggestedReplies && item.suggestedReplies.length > 0 && (
             <View style={styles.quickRepliesList}>
               {item.suggestedReplies.map((reply, idx) => (
-                <Pressable
+                <ScalePressable
                   key={idx}
-                  style={({ pressed }) => [
-                    styles.replyChip,
-                    pressed && styles.replyChipPressed,
-                  ]}
+                  style={styles.replyChip}
                   onPress={() => handleSendMessage(reply)}
                 >
                   <HelpCircle size={12} color={Colors.cyan} />
                   <Text style={styles.replyChipText}>{reply}</Text>
-                </Pressable>
+                </ScalePressable>
               ))}
             </View>
           )}
@@ -233,76 +232,44 @@ export default function AITutorChatScreen() {
             <AstronautAvatar size={34} rank={rank} />
           </View>
         )}
-      </View>
+      </MessageIn>
     );
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.screenContainer}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={0}
     >
-      {/* ── Chat Header & Mode Toggle ────────────────────────────── */}
-      <View style={styles.headerBar}>
-        <Pressable
-          style={styles.backBtn}
-          onPress={() => router.back()}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-        >
-          <ArrowLeft size={20} color={Colors.text} />
-        </Pressable>
-
-        <View style={styles.headerTitleBox}>
-          <Text style={styles.headerTitle}>ক্যাপ্টেন রোভার এআই 🛰️</Text>
-          <Text style={styles.headerSubtitle}>মহাকাশ মেন্টর ও বিজ্ঞান শিক্ষক</Text>
-        </View>
-
-        {/* Online / Offline Mode Toggle Pill */}
-        <Pressable
-          style={[
-            styles.networkToggle,
-            isOnlineMode ? styles.networkOnline : styles.networkOffline,
-          ]}
-          onPress={() => setIsOnlineMode(!isOnlineMode)}
-        >
-          {isOnlineMode ? (
-            <>
-              <Wifi size={13} color={Colors.emerald} />
-              <Text style={styles.networkToggleTextOnline}>অনলাইন</Text>
-            </>
-          ) : (
-            <>
-              <WifiOff size={13} color={Colors.gold} />
-              <Text style={styles.networkToggleTextOffline}>অফলাইন</Text>
-            </>
-          )}
-        </Pressable>
-
-        <Pressable
-          style={styles.clearBtn}
-          onPress={handleClearChat}
-          hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-        >
-          <RotateCcw size={16} color={Colors.textMuted} />
-        </Pressable>
-      </View>
+      <ScreenHeader
+        title="ক্যাপ্টেন রোভার"
+        subtitle="মহাকাশ মেন্টর ও বিজ্ঞান শিক্ষক"
+        right={
+          <ScalePressable
+            style={styles.clearBtn}
+            onPress={handleClearChat}
+            hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel="নতুন করে শুরু করো"
+          >
+            <RotateCcw size={18} color={Colors.textSecondary} />
+          </ScalePressable>
+        }
+      />
 
       {/* ── Suggested Questions Carousel ──────────────────────────── */}
       <View style={styles.presetTopicsContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.presetTopicsScroll}>
-          {AI_TUTOR_CONFIG.suggested_queries_bn.map((q, idx) => (
-            <Pressable
+          {presetQuestions.map((q, idx) => (
+            <ScalePressable
               key={idx}
-              style={({ pressed }) => [
-                styles.presetChip,
-                pressed && styles.presetChipPressed,
-              ]}
+              style={styles.presetChip}
               onPress={() => handleSendMessage(q)}
             >
               <Zap size={11} color={Colors.gold} fill={Colors.gold} />
-              <Text style={styles.presetChipText}>{q}</Text>
-            </Pressable>
+              <Text style={styles.presetChipText} numberOfLines={2}>{q}</Text>
+            </ScalePressable>
           ))}
         </ScrollView>
       </View>
@@ -329,28 +296,27 @@ export default function AITutorChatScreen() {
       />
 
       {/* ── Sticky Bottom Input Deck ─────────────────────────────── */}
-      <View style={styles.inputDeckContainer}>
+      <View style={[styles.inputDeckContainer, { paddingBottom: Math.max(insets.bottom, 12) }]}>
         <View style={styles.inputOuterBox}>
           <TextInput
             style={styles.textInput}
             value={inputText}
             onChangeText={setInputText}
             placeholder="মহাকাশ নিয়ে যেকোনো কিছু বাংলায় জিজ্ঞেস করো..."
-            placeholderTextColor="rgba(255, 255, 255, 0.45)"
+            placeholderTextColor={Colors.textMuted}
             multiline
             maxLength={300}
           />
-          <Pressable
-            style={({ pressed }) => [
-              styles.sendBtn,
-              !inputText.trim() && styles.sendBtnDisabled,
-              pressed && styles.sendBtnPressed,
-            ]}
+          <ScalePressable
+            style={[styles.sendBtn, !inputText.trim() && styles.sendBtnDisabled]}
             onPress={() => handleSendMessage()}
             disabled={!inputText.trim()}
+            accessibilityRole="button"
+            accessibilityLabel="পাঠাও"
+            scale={0.92}
           >
             <Send size={18} color="#FFFFFF" />
-          </Pressable>
+          </ScalePressable>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -360,73 +326,23 @@ export default function AITutorChatScreen() {
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: Colors.void,
-  },
-  headerBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 48 : 16,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.08)',
-    backgroundColor: '#0E1236',
-    gap: 10,
-  },
-  backBtn: {
-    padding: 6,
-    borderRadius: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-  },
-  headerTitleBox: {
-    flex: 1,
-  },
-  headerTitle: {
-    color: Colors.text,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
-  },
-  headerSubtitle: {
-    color: Colors.cyan,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.medium,
-  },
-  networkToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 12,
-    gap: 5,
-    borderWidth: 1,
-  },
-  networkOnline: {
-    backgroundColor: 'rgba(0, 230, 118, 0.15)',
-    borderColor: Colors.emerald,
-  },
-  networkOffline: {
-    backgroundColor: 'rgba(255, 184, 0, 0.15)',
-    borderColor: Colors.gold,
-  },
-  networkToggleTextOnline: {
-    color: Colors.emerald,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
-  },
-  networkToggleTextOffline: {
-    color: Colors.gold,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    backgroundColor: Colors.background,
   },
   clearBtn: {
-    padding: 6,
-    borderRadius: 8,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   presetTopicsContainer: {
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.05)',
-    backgroundColor: 'rgba(14, 18, 54, 0.5)',
+    borderBottomColor: Colors.border,
+    backgroundColor: Colors.surfaceWarm,
   },
   presetTopicsScroll: {
     paddingHorizontal: 16,
@@ -435,22 +351,21 @@ const styles = StyleSheet.create({
   presetChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    backgroundColor: Colors.surface,
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 8,
     borderRadius: 16,
     gap: 6,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-  },
-  presetChipPressed: {
-    backgroundColor: 'rgba(0, 240, 255, 0.15)',
-    borderColor: Colors.cyan,
+    borderColor: Colors.border,
   },
   presetChipText: {
+    flexShrink: 1,
+    maxWidth: 230,
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.medium,
+    lineHeight: Typography.lineHeight.caption,
+    fontFamily: Typography.family.notoRegular,
   },
   listContent: {
     padding: 16,
@@ -475,7 +390,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   messageContentCol: {
-    maxWidth: '82%',
+    flexShrink: 1,
+    maxWidth: '86%',
     gap: 8,
   },
   messageBubble: {
@@ -484,14 +400,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   userBubble: {
-    backgroundColor: '#4A6AE0',
-    borderColor: 'rgba(107, 138, 255, 0.35)',
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primaryDark,
     borderTopRightRadius: 4,
   },
   tutorBubble: {
     backgroundColor: Colors.surface,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: Colors.border,
     borderTopLeftRadius: 4,
+    shadowColor: Colors.text,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
   },
   tutorTagRow: {
     flexDirection: 'row',
@@ -509,22 +430,6 @@ const styles = StyleSheet.create({
     fontSize: Typography.size.micro,
     fontWeight: Typography.weight.bold,
   },
-  modeBadge: {
-    paddingHorizontal: 7,
-    paddingVertical: 3,
-    borderRadius: 8,
-  },
-  onlineBadge: {
-    backgroundColor: 'rgba(94, 214, 192, 0.18)',
-  },
-  offlineBadge: {
-    backgroundColor: 'rgba(255, 200, 107, 0.18)',
-  },
-  modeBadgeText: {
-    color: Colors.textSecondary,
-    fontSize: 10,
-    fontWeight: Typography.weight.bold,
-  },
   messageText: {
     color: Colors.text,
     fontSize: Typography.size.body,
@@ -533,11 +438,11 @@ const styles = StyleSheet.create({
   },
   userMessageText: {
     color: '#FFFFFF',
-    fontWeight: Typography.weight.medium,
+    fontFamily: Typography.family.hindSemiBold,
   },
   timestampText: {
     color: Colors.textMuted,
-    fontSize: 10,
+    fontSize: 12,
     alignSelf: 'flex-end',
     marginTop: 6,
   },
@@ -553,21 +458,26 @@ const styles = StyleSheet.create({
   replyChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(107, 138, 255, 0.10)',
+    maxWidth: '100%',
+    backgroundColor: Colors.surface,
     borderWidth: 1,
-    borderColor: 'rgba(107, 138, 255, 0.22)',
+    borderColor: Colors.border,
     borderRadius: 14,
     paddingHorizontal: 12,
     paddingVertical: 7,
     gap: 6,
-  },
-  replyChipPressed: {
-    backgroundColor: 'rgba(107, 138, 255, 0.20)',
+    shadowColor: Colors.text,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 3,
+    elevation: 1,
   },
   replyChipText: {
-    color: Colors.primaryLight,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    flexShrink: 1,
+    color: Colors.primary,
+    fontSize: Typography.size.caption,
+    lineHeight: Typography.lineHeight.caption,
+    fontFamily: Typography.family.headingSemi,
   },
   typingContainer: {
     flexDirection: 'row',
@@ -583,20 +493,24 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(107, 138, 255, 0.20)',
+    borderColor: Colors.border,
     gap: 8,
+    shadowColor: Colors.text,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 1,
   },
   typingText: {
-    color: Colors.primaryLight,
+    color: Colors.primary,
     fontSize: Typography.size.caption,
     fontWeight: Typography.weight.medium,
   },
   inputDeckContainer: {
     padding: 12,
-    paddingBottom: Platform.OS === 'ios' ? 24 : 12,
     backgroundColor: Colors.background,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.08)',
+    borderTopColor: Colors.border,
   },
   inputOuterBox: {
     flexDirection: 'row',
@@ -606,15 +520,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: Colors.borderMedium,
     gap: 8,
+    shadowColor: Colors.text,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
   },
   textInput: {
     flex: 1,
-    color: '#FFFFFF',
-    fontSize: Typography.size.body,
-    maxHeight: 90,
-    paddingVertical: 6,
+    color: Colors.text,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.family.notoRegular,
+    maxHeight: 96,
+    paddingVertical: 8,
   },
   sendBtn: {
     width: 40,
@@ -625,9 +545,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sendBtnDisabled: {
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-  },
-  sendBtnPressed: {
-    transform: [{ scale: 0.94 }],
+    backgroundColor: Colors.borderMedium,
   },
 });

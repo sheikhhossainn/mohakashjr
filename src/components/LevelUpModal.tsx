@@ -26,7 +26,7 @@ export const LevelUpModal: React.FC = () => {
           {/* Top Cosmic Confetti Header */}
           <View style={styles.sparkleHeader}>
             <Sparkles size={20} color={Colors.gold} />
-            <Text style={styles.eyebrow}>অভিনন্দন! পদোন্নতি বার্তা 🚀</Text>
+            <Text style={styles.eyebrow}>অভিনন্দন! পদোন্নতি বার্তা</Text>
             <Sparkles size={20} color={Colors.gold} />
           </View>
 
@@ -67,7 +67,7 @@ export const LevelUpModal: React.FC = () => {
 
           {/* Action CTA */}
           <TactileButton
-            title="মিশন চালিয়ে যাও ➔"
+            title="মিশন চালিয়ে যাও"
             onPress={dismissLevelUp}
             variant="gold"
             size="large"

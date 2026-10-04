@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Pressable, ScrollView, Animated, Easing } from 'react-native';
-import Svg, { Rect, Circle, Path, Defs, LinearGradient, Stop, G, Line } from 'react-native-svg';
+import Svg, { Rect, Circle, Path, Defs, LinearGradient, Stop, G, Line, Ellipse } from 'react-native-svg';
 import { Colors } from '../../theme/colors';
 import { Typography } from '../../theme/typography';
 import { StoryCard } from '../StoryCard';
@@ -48,6 +48,8 @@ export const LunarDescentModule: React.FC<LunarDescentModuleProps> = ({
   // Animations
   const landerVerticalAnim = useRef(new Animated.Value(0)).current;
   const landerRumbleAnim = useRef(new Animated.Value(0)).current;
+  const touchdownShakeAnim = useRef(new Animated.Value(0)).current;
+  const dustAnim = useRef(new Animated.Value(0)).current;
 
   // Simulator loop
   useEffect(() => {
@@ -61,6 +63,17 @@ export const LunarDescentModule: React.FC<LunarDescentModuleProps> = ({
             setIsTouchdown(true);
             setIsSimulating(false);
             setVelocityMs(0);
+
+            // Touchdown shake & dust plume
+            Animated.sequence([
+              Animated.timing(touchdownShakeAnim, { toValue: 5, duration: 60, useNativeDriver: true }),
+              Animated.timing(touchdownShakeAnim, { toValue: -5, duration: 60, useNativeDriver: true }),
+              Animated.timing(touchdownShakeAnim, { toValue: 2, duration: 60, useNativeDriver: true }),
+              Animated.timing(touchdownShakeAnim, { toValue: 0, duration: 60, useNativeDriver: true }),
+            ]).start();
+            dustAnim.setValue(0);
+            Animated.timing(dustAnim, { toValue: 1, duration: 700, useNativeDriver: true }).start();
+
             return 0;
           }
 
@@ -173,7 +186,7 @@ export const LunarDescentModule: React.FC<LunarDescentModuleProps> = ({
       </View>
 
       {/* Illustrated Lunar Descent View */}
-      <Animated.View style={{ transform: [{ translateX: landerRumbleAnim }] }}>
+      <Animated.View style={{ transform: [{ translateX: Animated.add(landerRumbleAnim, touchdownShakeAnim) }] }}>
         <StoryCard accent={isTouchdown ? 'emerald' : 'gold'} style={styles.sceneCard}>
           <View style={styles.radarWrapper}>
             <Svg width={290} height={200} viewBox="0 0 290 200">
@@ -234,6 +247,18 @@ export const LunarDescentModule: React.FC<LunarDescentModuleProps> = ({
                       </G>
                     )}
 
+                    {/* Touchdown Dust Plumes */}
+                    {isTouchdown && (
+                      <G>
+                        <Ellipse cx="132" cy={landerY + 30} rx="16" ry="6" fill="#CBD5E1" opacity={0.65} />
+                        <Ellipse cx="192" cy={landerY + 30} rx="16" ry="6" fill="#CBD5E1" opacity={0.65} />
+                        <Circle cx="120" cy={landerY + 26} r="4" fill="#94A3B8" opacity={0.7} />
+                        <Circle cx="204" cy={landerY + 26} r="4" fill="#94A3B8" opacity={0.7} />
+                        <Circle cx="128" cy={landerY + 20} r="2.5" fill="#E2E8F0" opacity={0.8} />
+                        <Circle cx="196" cy={landerY + 20} r="2.5" fill="#E2E8F0" opacity={0.8} />
+                      </G>
+                    )}
+
                     {/* Lander Octagonal Body */}
                     <Rect x="148" y={landerY} width="28" height="20" rx="4" fill="#FFC86B" stroke="#D97706" strokeWidth="1.5" />
                     {/* Crew Ascent Cabin */}
@@ -276,7 +301,7 @@ export const LunarDescentModule: React.FC<LunarDescentModuleProps> = ({
               </View>
             ) : isSimulating ? (
               <Text style={styles.simulatingText}>
-                {velocityMs > 40 ? '⚠️ গতি বেশি! রেট্রো থ্রাস্টার ফায়ার করো!' : 'ল্যান্ডিং গতি নিয়ন্ত্রিত ✓'}
+                {velocityMs > 40 ? 'গতি বেশি! রেট্রো থ্রাস্টার ফায়ার করো!' : 'ল্যান্ডিং গতি নিয়ন্ত্রিত'}
               </Text>
             ) : (
               <Text style={styles.readyText}>অবতরণ শুরু করতে নিচে ট্যাপ করো</Text>
@@ -289,7 +314,7 @@ export const LunarDescentModule: React.FC<LunarDescentModuleProps> = ({
       <View style={styles.controlBox}>
         {!isSimulating && !isTouchdown && (
           <GentleButton
-            title="অবতরণ সিকোয়েন্স শুরু করো 🌖"
+            title="অবতরণ সিকোয়েন্স শুরু করো"
             onPress={handleStartDescent}
             variant="gold"
             size="large"
@@ -391,7 +416,7 @@ const styles = StyleSheet.create({
   stageTagText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   headerBlock: {
     marginBottom: 14,
@@ -399,7 +424,7 @@ const styles = StyleSheet.create({
   title: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 4,
   },
   subtitle: {
@@ -434,14 +459,14 @@ const styles = StyleSheet.create({
   siteChipTitle: {
     color: Colors.text,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   siteChipTitleSelected: {
     color: Colors.gold,
   },
   siteChipSub: {
     color: Colors.textMuted,
-    fontSize: 9,
+    fontSize: 12,
     fontFamily: Typography.family.notoRegular,
   },
   sceneCard: {
@@ -457,33 +482,33 @@ const styles = StyleSheet.create({
   },
   hudRow: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    backgroundColor: '#0F172A',
     borderRadius: 14,
     padding: 10,
     width: '100%',
     alignItems: 'center',
     marginTop: 10,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   hudItem: {
     flex: 1,
     alignItems: 'center',
   },
   hudLabel: {
-    color: Colors.textSecondary,
+    color: '#CBD5E1',
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   hudVal: {
-    color: Colors.text,
+    color: '#F8FAFC',
     fontSize: Typography.size.body,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   hudDivider: {
     width: 1,
     height: 32,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
   },
   statusRow: {
     marginTop: 10,
@@ -501,7 +526,7 @@ const styles = StyleSheet.create({
   touchdownText: {
     color: Colors.emerald,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   simulatingText: {
     color: Colors.gold,
@@ -540,7 +565,7 @@ const styles = StyleSheet.create({
   brakeButtonText: {
     color: '#FFFFFF',
     fontSize: Typography.size.body,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   factCard: {
     marginBottom: 16,
@@ -555,8 +580,7 @@ const styles = StyleSheet.create({
   factTitle: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
-    letterSpacing: 0.5,
+    fontFamily: Typography.family.heading,
   },
   factContent: {
     color: Colors.text,

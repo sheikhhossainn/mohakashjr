@@ -41,7 +41,7 @@ export default function LessonsScreen() {
     return false;
   };
 
-  const renderLessonItem = ({ item, index }: { item: Lesson; index: number }) => {
+  const renderLessonItem = ({ item }: { item: Lesson }) => {
     const isCompleted = completedLessonIds.includes(item.id);
     const locked = isLevelLocked(item.level);
     const title = language === 'en' ? (t.lessonsData[item.id]?.title || item.title_bn) : item.title_bn;
@@ -78,7 +78,7 @@ export default function LessonsScreen() {
                   {item.level === 'Cadet' ? t.lessonsScreen.cadetTab : t.lessonsScreen.astronautTab}
                 </Text>
               </View>
-              <Text style={styles.orderText}>{t.lessonsScreen.lessonPrefix}{index + 1}</Text>
+              <Text style={styles.orderText}>{t.lessonsScreen.lessonPrefix}{item.order_index}</Text>
             </View>
 
             {isCompleted ? (
@@ -181,29 +181,29 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     gap: 10,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.06)',
+    borderBottomColor: Colors.border,
     backgroundColor: Colors.surface,
   },
   pill: {
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: Colors.surfaceWarm,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: Colors.border,
   },
   pillActive: {
-    backgroundColor: 'rgba(107, 138, 255, 0.18)',
-    borderColor: Colors.primaryLight,
+    backgroundColor: Colors.primaryBg,
+    borderColor: Colors.primary,
   },
   pillText: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   pillTextActive: {
-    color: Colors.primaryLight,
-    fontFamily: Typography.family.hindBold,
+    color: Colors.primary,
+    fontFamily: Typography.family.heading,
   },
   listContent: {
     padding: 18,
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   },
   levelTagText: {
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   orderText: {
     color: Colors.textMuted,
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   completedText: {
     color: Colors.emerald,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   lockedBadge: {
     flexDirection: 'row',
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
   lockedText: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   xpBadge: {
     flexDirection: 'row',
@@ -290,12 +290,12 @@ const styles = StyleSheet.create({
   xpBadgeText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   lessonTitle: {
     color: Colors.text,
     fontSize: Typography.size.h3,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 6,
   },
   textLocked: {
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.06)',
+    borderTopColor: Colors.border,
     paddingTop: 12,
   },
   metaTimeGroup: {
@@ -332,9 +332,9 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   readActionText: {
-    color: Colors.primaryLight,
+    color: Colors.primary,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   lockHintText: {
     color: Colors.textMuted,

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
+import { ScreenHeader } from '../../src/components/ScreenHeader';
+import { ScalePressable } from '../../src/components/ScalePressable';
 import { StoryCard } from '../../src/components/StoryCard';
 import { GentleButton } from '../../src/components/GentleButton';
 import { MascotFeedbackSlot } from '../../src/components/MascotFeedbackSlot';
@@ -25,6 +27,11 @@ import {
 const BENGALI_DIGITS = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
 const OPTION_PREFIXES = ['ক', 'খ', 'গ', 'ঘ'];
 
+/** XP a full run is worth: 10 per correct answer, +10 for a perfect score. */
+function xpForScore(score: number, total: number): number {
+  return score * 10 + (total > 0 && score === total ? 10 : 0);
+}
+
 function toBengaliNumber(num: number): string {
   return num
     .toString()
@@ -36,7 +43,7 @@ function toBengaliNumber(num: number): string {
 export default function QuizScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { recordQuizAttempt, rank } = useAppStore();
+  const { recordQuizAttempt, rank, quizAttempts } = useAppStore();
 
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,6 +53,7 @@ export default function QuizScreen() {
   const [score, setScore] = useState(0);
   const [answersHistory, setAnswersHistory] = useState<QuizAttemptRecord['answers']>([]);
   const [isQuizComplete, setIsQuizComplete] = useState(false);
+  const [earnedXP, setEarnedXP] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -58,15 +66,20 @@ export default function QuizScreen() {
 
   if (loading) {
     return (
+      <View style={styles.root}>
+      <ScreenHeader title="কুইজ অভিযান" subtitle={id === 'placement' ? 'অভিযাত্রা সূচনা' : 'কৌতূহল যাচাই'} />
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color={Colors.primaryLight} />
         <Text style={styles.loadingText}>মহাকাশ কুইজ সাজানো হচ্ছে...</Text>
+      </View>
       </View>
     );
   }
 
   if (questions.length === 0) {
     return (
+      <View style={styles.root}>
+      <ScreenHeader title="কুইজ অভিযান" subtitle={id === 'placement' ? 'অভিযাত্রা সূচনা' : 'কৌতূহল যাচাই'} />
       <View style={styles.centerContainer}>
         <Text style={styles.emptyTitle}>এই পাঠের জন্য কোনো প্রশ্ন পাওয়া যায়নি।</Text>
         <GentleButton
@@ -75,6 +88,7 @@ export default function QuizScreen() {
           variant="primary"
           icon={<BookOpen size={17} color="#FFFFFF" />}
         />
+      </View>
       </View>
     );
   }
@@ -108,19 +122,26 @@ export default function QuizScreen() {
       setSelectedOption(null);
       setIsAnswerSubmitted(false);
     } else {
-      const finalScore = score + (isCorrect ? 1 : 0);
-      const isPerfect = finalScore === questions.length;
-      const earnedXP = finalScore * 10 + (isPerfect ? 10 : 0);
+      // `score` already counts the answer just given
+      const finalScore = score;
+
+      // Only pay out XP for beating the best earlier run, so replaying can't farm XP
+      const previousBestXP = (quizAttempts[id as string] || []).reduce(
+        (best, a) => Math.max(best, xpForScore(a.score, a.total_questions)),
+        0
+      );
+      const newXP = Math.max(0, xpForScore(finalScore, questions.length) - previousBestXP);
 
       const attemptRecord: QuizAttemptRecord = {
         lesson_id: id as string,
         score: finalScore,
         total_questions: questions.length,
-        xp_earned: earnedXP,
+        xp_earned: newXP,
         answers: answersHistory,
         completed_at: new Date().toISOString(),
       };
 
+      setEarnedXP(newXP);
       recordQuizAttempt(attemptRecord);
       saveQuizAttempt(attemptRecord);
       setIsQuizComplete(true);
@@ -134,15 +155,17 @@ export default function QuizScreen() {
     setScore(0);
     setAnswersHistory([]);
     setIsQuizComplete(false);
+    setEarnedXP(0);
   };
 
   // Completion Victory Screen
   if (isQuizComplete) {
     const finalScore = score;
     const isPerfect = finalScore === questions.length;
-    const earnedXP = finalScore * 10 + (isPerfect ? 10 : 0);
 
     return (
+      <View style={styles.root}>
+      <ScreenHeader title="কুইজ অভিযান" subtitle={id === 'placement' ? 'অভিযাত্রা সূচনা' : 'কৌতূহল যাচাই'} />
       <ScrollView contentContainerStyle={styles.summaryContainer} showsVerticalScrollIndicator={false}>
         <StatusBar barStyle="light-content" />
         {finalScore > 0 && <ConfettiEffect active />}
@@ -153,7 +176,7 @@ export default function QuizScreen() {
             <AstronautAvatar size={82} rank={rank} showHalo />
           </View>
 
-          <Text style={styles.summaryTitle}>দারুণ অন্বেষণ! 🎉</Text>
+          <Text style={styles.summaryTitle}>দারুণ অন্বেষণ!</Text>
           <Text style={styles.summarySubtitle}>
             তুমি {toBengaliNumber(questions.length)}টি অনুসন্ধানের মধ্যে {toBengaliNumber(finalScore)}টির রহস্য উন্মোচন করেছো!
           </Text>
@@ -173,15 +196,21 @@ export default function QuizScreen() {
           <View style={styles.xpRewardBox}>
             <Zap size={22} color={Colors.gold} fill={Colors.gold} />
             <View>
-              <Text style={styles.xpRewardTitle}>+{earnedXP} XP অর্জিত হয়েছে!</Text>
-              <Text style={styles.xpRewardDesc}>তোমার মহাকাশ গবেষণার ঝুলিতে জমা হয়েছে</Text>
+              <Text style={styles.xpRewardTitle}>
+                {earnedXP > 0 ? `+${toBengaliNumber(earnedXP)} XP অর্জিত হয়েছে!` : 'নতুন XP নেই'}
+              </Text>
+              <Text style={styles.xpRewardDesc}>
+                {earnedXP > 0
+                  ? 'তোমার মহাকাশ গবেষণার ঝুলিতে জমা হয়েছে'
+                  : 'আগের সেরা স্কোরের চেয়ে বেশি নম্বর পেলে নতুন XP পাবে'}
+              </Text>
             </View>
           </View>
 
           {/* Mascot Celebrate Reaction */}
           <MascotFeedbackSlot
             state={finalScore > 0 ? 'celebrate' : 'incorrect'}
-            title={isPerfect ? 'অনবদ্য নৈপুণ্য! 🌟' : 'দারুণ প্রচেষ্টা! 🚀'}
+            title={isPerfect ? 'অনবদ্য নৈপুণ্য!' : 'দারুণ প্রচেষ্টা!'}
             message={
               isPerfect
                 ? 'চমৎকার! মহাকাশ বিজ্ঞানের প্রতিটি জটিল প্রশ্নের বিজ্ঞানসম্মত রহস্য বুঝে নিয়েছো।'
@@ -199,7 +228,7 @@ export default function QuizScreen() {
               icon={<RotateCcw size={16} color={Colors.text} />}
             />
             <GentleButton
-              title="পরবর্তী পাঠশালায় চলো ➔"
+              title="পরবর্তী পাঠশালায় চলো"
               onPress={() => router.push('/(tabs)/lessons')}
               variant="gold"
               size="normal"
@@ -207,11 +236,14 @@ export default function QuizScreen() {
           </View>
         </StoryCard>
       </ScrollView>
+      </View>
     );
   }
 
   // Active Quiz Deck
   return (
+    <View style={styles.root}>
+    <ScreenHeader title="কুইজ অভিযান" subtitle={id === 'placement' ? 'অভিযাত্রা সূচনা' : 'কৌতূহল যাচাই'} />
     <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <StatusBar barStyle="light-content" />
 
@@ -271,8 +303,9 @@ export default function QuizScreen() {
           }
 
           return (
-            <Pressable
+            <ScalePressable
               key={idx}
+              scale={0.98}
               style={cardStyle}
               onPress={() => handleSelectOption(idx)}
               disabled={isAnswerSubmitted}
@@ -288,7 +321,7 @@ export default function QuizScreen() {
               {isAnswerSubmitted && isSelected && !isCorrectAnswer && (
                 <AlertCircle size={20} color={Colors.coral} style={styles.indicatorIcon} />
               )}
-            </Pressable>
+            </ScalePressable>
           );
         })}
       </View>
@@ -304,7 +337,7 @@ export default function QuizScreen() {
 
           <View style={styles.nextButtonWrap}>
             <GentleButton
-              title={currentIndex + 1 < questions.length ? 'পরবর্তী প্রশ্ন ➔' : 'ফলাফল দেখো ➔'}
+              title={currentIndex + 1 < questions.length ? 'পরবর্তী প্রশ্ন' : 'ফলাফল দেখো'}
               onPress={handleNextQuestion}
               variant={isCorrect ? 'emerald' : 'primary'}
               size="large"
@@ -315,10 +348,12 @@ export default function QuizScreen() {
         </View>
       )}
     </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: { flex: 1, backgroundColor: Colors.background },
   container: {
     flex: 1,
     backgroundColor: Colors.background,
@@ -371,37 +406,39 @@ const styles = StyleSheet.create({
   stepperTag: {
     color: Colors.gold,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   stepperCounter: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   stepperTrack: {
-    height: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 3,
+    height: 8,
+    backgroundColor: Colors.surfaceWarm,
+    borderRadius: 4,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   stepperFill: {
     height: '100%',
-    backgroundColor: Colors.primaryLight,
-    borderRadius: 3,
+    backgroundColor: Colors.primary,
+    borderRadius: 4,
   },
   questionCardMargin: {
     marginBottom: 18,
   },
   promptLabel: {
-    color: Colors.primaryLight,
+    color: Colors.primary,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.notoSemiBold,
     marginBottom: 4,
   },
   promptText: {
     color: Colors.text,
     fontSize: Typography.size.h2,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.notoBold,
     lineHeight: Typography.lineHeight.h2,
   },
   optionsList: {
@@ -413,40 +450,40 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
     padding: 16,
     borderRadius: 18,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
-    shadowColor: '#000000',
+    borderWidth: 1.5,
+    borderColor: Colors.border,
+    shadowColor: Colors.text,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.05,
     shadowRadius: 6,
     elevation: 2,
   },
   optionCardSelected: {
-    borderColor: Colors.primaryLight,
-    backgroundColor: 'rgba(107, 138, 255, 0.12)',
+    borderColor: Colors.primary,
+    backgroundColor: Colors.backgroundTertiary,
   },
   optionCardCorrect: {
     borderColor: Colors.emerald,
-    backgroundColor: 'rgba(94, 214, 192, 0.15)',
+    backgroundColor: Colors.emeraldBg,
   },
   optionCardIncorrect: {
     borderColor: Colors.coral,
-    backgroundColor: 'rgba(255, 138, 128, 0.15)',
+    backgroundColor: Colors.coralBg,
   },
   optionBadge: {
     width: 34,
     height: 34,
     borderRadius: 12,
-    backgroundColor: Colors.surfaceCard,
+    backgroundColor: Colors.surfaceWarm,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: Colors.borderMedium,
   },
   optionBadgeSelected: {
     backgroundColor: Colors.primary,
-    borderColor: Colors.primaryLight,
+    borderColor: Colors.primary,
   },
   optionBadgeCorrect: {
     backgroundColor: Colors.emerald,
@@ -459,13 +496,13 @@ const styles = StyleSheet.create({
   badgeLabel: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   optionText: {
     flex: 1,
     color: Colors.text,
     fontSize: Typography.size.body,
-    lineHeight: Typography.lineHeight.bodySmall,
+    lineHeight: Typography.lineHeight.body,
     fontFamily: Typography.family.notoRegular,
   },
   indicatorIcon: {
@@ -495,7 +532,7 @@ const styles = StyleSheet.create({
   summaryTitle: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 6,
   },
   summarySubtitle: {
@@ -527,7 +564,7 @@ const styles = StyleSheet.create({
   xpRewardTitle: {
     color: Colors.gold,
     fontSize: Typography.size.body,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   xpRewardDesc: {
     color: Colors.textSecondary,

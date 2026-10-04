@@ -158,35 +158,35 @@ export const MascotReaction: React.FC<MascotReactionProps> = ({
       glow: Colors.gold,
       visorColor: '#FFD700',
       visorReflect: '#FFF9D2',
-      defaultSpeech: 'অবিশ্বাস্য সাফল্য! তুমি অনন্য নভোচারী! 🏆',
+      defaultSpeech: 'অবিশ্বাস্য সাফল্য! তুমি অনন্য নভোচারী!',
       bgHalo: 'rgba(255, 184, 0, 0.22)',
     },
     correct: {
       glow: Colors.emerald,
       visorColor: '#10B981',
       visorReflect: '#A7F3D0',
-      defaultSpeech: 'একদম নিখুঁত! চন্দ্রাভিযান এগিয়ে চলেছে! 🚀',
+      defaultSpeech: 'একদম নিখুঁত! চন্দ্রাভিযান এগিয়ে চলেছে!',
       bgHalo: 'rgba(16, 185, 129, 0.20)',
     },
     incorrect: {
       glow: Colors.coral,
       visorColor: '#F43F5E',
       visorReflect: '#FECDD3',
-      defaultSpeech: 'একটু সাবধান! আবার চেষ্টা করে সফল হও! 🛰️',
+      defaultSpeech: 'একটু সাবধান! আবার চেষ্টা করে সফল হও!',
       bgHalo: 'rgba(244, 63, 94, 0.18)',
     },
     thinking: {
       glow: Colors.hudCyan,
       visorColor: '#00F0FF',
       visorReflect: '#CFFAFE',
-      defaultSpeech: 'টেলিমেট্রি স্ক্যান করছি... সিদ্ধান্ত নাও! 📡',
+      defaultSpeech: 'টেলিমেট্রি স্ক্যান করছি... সিদ্ধান্ত নাও!',
       bgHalo: 'rgba(0, 240, 255, 0.16)',
     },
     neutral: {
       glow: Colors.cyan,
       visorColor: '#38BDF8',
       visorReflect: '#E0F2FE',
-      defaultSpeech: 'আমি অ্যাস্ট্রো-বন্ধু, তোমার সাথে সবসময়! 👨‍🚀',
+      defaultSpeech: 'আমি অ্যাস্ট্রো-বন্ধু, তোমার সাথে সবসময়!',
       bgHalo: 'rgba(56, 189, 248, 0.12)',
     },
   }[state];
@@ -214,7 +214,7 @@ export const MascotReaction: React.FC<MascotReactionProps> = ({
           <Text style={styles.bubbleText}>
             {bubbleText || stateConfig.defaultSpeech}
           </Text>
-          <View style={[styles.bubbleTail, { borderTopColor: stateConfig.glow }]} />
+          <View style={[styles.bubbleTail, { borderTopColor: Colors.surfaceElevated }]} />
         </View>
       )}
 
@@ -403,7 +403,7 @@ export const MascotFeedbackPopup: React.FC<MascotFeedbackPopupProps> = ({
   hint,
   earnedXP,
   onDismiss,
-  actionButtonText = 'চালিয়ে যাও ➔',
+  actionButtonText = 'চালিয়ে যাও',
 }) => {
   const scaleAnim = useRef(new Animated.Value(0.7)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
@@ -523,34 +523,29 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   bubbleBox: {
-    backgroundColor: '#0F172A',
-    borderWidth: 1.5,
-    borderRadius: 14,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginBottom: 8,
-    maxWidth: 240,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 4,
+    backgroundColor: Colors.surfaceElevated,
+    borderWidth: 2,
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginBottom: 10,
+    maxWidth: 280,
   },
   bubbleText: {
     color: Colors.text,
-    fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.semiBold,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.family.headingSemi,
     textAlign: 'center',
-    lineHeight: Typography.lineHeight.caption,
+    lineHeight: Typography.lineHeight.bodySmall,
   },
   bubbleTail: {
     position: 'absolute',
-    bottom: -8,
+    bottom: -7,
     alignSelf: 'center',
     width: 0,
     height: 0,
-    borderLeftWidth: 6,
-    borderRightWidth: 6,
+    borderLeftWidth: 7,
+    borderRightWidth: 7,
     borderTopWidth: 8,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
@@ -566,13 +561,13 @@ const styles = StyleSheet.create({
   popupCard: {
     width: '100%',
     maxWidth: 360,
-    backgroundColor: '#0E123C',
+    backgroundColor: Colors.surface,
     borderRadius: 24,
     borderWidth: 2,
     overflow: 'hidden',
-    shadowColor: '#000',
+    shadowColor: '#1A1A2E',
     shadowOffset: { width: 0, height: 12 },
-    shadowOpacity: 0.6,
+    shadowOpacity: 0.25,
     shadowRadius: 20,
     elevation: 12,
   },
@@ -583,7 +578,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.08)',
+    borderBottomColor: Colors.border,
   },
   popupHeaderRow: {
     flexDirection: 'row',
@@ -614,9 +609,9 @@ const styles = StyleSheet.create({
   hintBox: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: 'rgba(0, 240, 255, 0.08)',
+    backgroundColor: 'rgba(12, 133, 153, 0.08)',
     borderWidth: 1,
-    borderColor: 'rgba(0, 240, 255, 0.3)',
+    borderColor: 'rgba(12, 133, 153, 0.25)',
     borderRadius: 12,
     marginHorizontal: 18,
     padding: 12,
@@ -625,7 +620,7 @@ const styles = StyleSheet.create({
   },
   hintText: {
     flex: 1,
-    color: Colors.hudCyan,
+    color: Colors.cyanDark,
     fontSize: Typography.size.caption,
     lineHeight: Typography.lineHeight.caption,
   },

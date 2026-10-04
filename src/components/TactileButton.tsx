@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   StyleSheet,
@@ -7,10 +7,11 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
-  Animated,
 } from 'react-native';
+import { PressScaleView } from './PressScaleView';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
+import { tapHaptic } from '../utils/haptics';
 
 interface TactileButtonProps {
   title: string;
@@ -34,51 +35,24 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
   style,
   textStyle,
 }) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const translateYAnim = useRef(new Animated.Value(0)).current;
+  const [pressed, setPressed] = useState(false);
 
   const handlePressIn = () => {
     if (disabled) return;
-    Animated.parallel([
-      Animated.timing(scaleAnim, {
-        toValue: 0.96,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateYAnim, {
-        toValue: 3,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    tapHaptic();
+    setPressed(true);
   };
 
-  const handlePressOut = () => {
-    if (disabled) return;
-    Animated.parallel([
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        friction: 4,
-        tension: 40,
-        useNativeDriver: true,
-      }),
-      Animated.spring(translateYAnim, {
-        toValue: 0,
-        friction: 4,
-        tension: 40,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
+  const handlePressOut = () => setPressed(false);
 
   // Chunky 3D Color Pairing (Main Face + 3D Bottom Lip)
   const getTheme = () => {
     if (disabled) {
       return {
-        face: '#1A2142',
-        lip: '#121730',
-        text: '#5B6999',
-        iconBg: 'rgba(255, 255, 255, 0.05)',
+        face: Colors.surfaceWarm,
+        lip: Colors.borderMedium,
+        text: Colors.textMuted,
+        iconBg: 'rgba(255, 255, 255, 0.04)',
       };
     }
     switch (variant) {
@@ -93,28 +67,28 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
         return {
           face: Colors.emerald,
           lip: Colors.emeraldDark,
-          text: '#FFFFFF',
+          text: Colors.textDark,
           iconBg: 'rgba(0, 0, 0, 0.12)',
         };
       case 'coral':
         return {
           face: Colors.coral,
           lip: Colors.coralDark,
-          text: '#FFFFFF',
+          text: Colors.textDark,
           iconBg: 'rgba(0, 0, 0, 0.15)',
         };
       case 'pink':
         return {
           face: Colors.pink,
           lip: Colors.pinkDark,
-          text: '#FFFFFF',
+          text: Colors.textDark,
           iconBg: 'rgba(0, 0, 0, 0.15)',
         };
       case 'purple':
         return {
           face: Colors.purple,
           lip: Colors.purpleDark,
-          text: '#FFFFFF',
+          text: Colors.textDark,
           iconBg: 'rgba(0, 0, 0, 0.15)',
         };
       case 'cyan':
@@ -128,7 +102,7 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
         return {
           face: 'rgba(255, 255, 255, 0.08)',
           lip: 'rgba(255, 255, 255, 0.18)',
-          text: '#FFFFFF',
+          text: Colors.text,
           iconBg: 'rgba(255, 255, 255, 0.1)',
         };
       case 'ghost':
@@ -143,7 +117,7 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
         return {
           face: Colors.primary,
           lip: Colors.primaryDark,
-          text: '#FFFFFF',
+          text: Colors.textDark,
           iconBg: 'rgba(0, 0, 0, 0.15)',
         };
     }
@@ -155,8 +129,8 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
     switch (size) {
       case 'small':
         return {
-          paddingVertical: 9,
-          paddingHorizontal: 14,
+          paddingVertical: 12,
+          paddingHorizontal: 16,
           borderRadius: 16,
           fontSize: Typography.size.caption,
           iconSize: 22,
@@ -184,17 +158,19 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
   const sizing = getSizing();
 
   return (
-    <Animated.View
+    <PressScaleView
+      pressed={pressed}
+      sink={3}
       style={[
-        {
-          transform: [{ scale: scaleAnim }, { translateY: translateYAnim }],
-        },
         style,
       ]}
     >
       <Pressable
         onPress={onPress}
         disabled={disabled}
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        accessibilityState={{ disabled }}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
@@ -241,7 +217,7 @@ export const TactileButton: React.FC<TactileButtonProps> = ({
           )}
         </View>
       </Pressable>
-    </Animated.View>
+    </PressScaleView>
   );
 };
 
@@ -264,7 +240,6 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: Typography.weight.heavy,
     textAlign: 'center',
-    letterSpacing: 0.3,
   },
   iconBubble: {
     alignItems: 'center',

@@ -3,51 +3,53 @@ import { View, StyleSheet } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
-import { Rocket, BookOpen, User, Compass, Sparkles } from 'lucide-react-native';
+import { Home, BookOpen, Rocket, User } from 'lucide-react-native';
 import { useAppStore } from '../../src/state/useAppStore';
 import { getTranslation } from '../../src/i18n/translations';
+
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabsLayout() {
   const { language } = useAppStore();
   const t = getTranslation(language);
+  const insets = useSafeAreaInsets();
+
+  const bottomInset = Math.max(insets.bottom, 8);
+  const tabHeight = 64 + bottomInset;
 
   return (
     <Tabs
       screenOptions={{
         headerStyle: {
-          backgroundColor: Colors.void,
+          backgroundColor: Colors.surface,
           elevation: 0,
           shadowOpacity: 0,
           borderBottomWidth: 1,
-          borderBottomColor: 'rgba(255, 255, 255, 0.08)',
+          borderBottomColor: Colors.border,
         },
-        headerTintColor: Colors.text,
+        headerTintColor: Colors.primary,
         headerTitleStyle: {
-          fontWeight: Typography.weight.bold,
+          fontFamily: Typography.family.heading,
           fontSize: Typography.size.h3,
           color: Colors.text,
         },
-        // ← THE FIX: each tab screen painted solid white by default.
-        // sceneStyle (not contentStyle) is the correct prop for BottomTab navigator.
-        sceneStyle: { backgroundColor: 'transparent' },
+        headerShadowVisible: false,
+        sceneStyle: { backgroundColor: Colors.background },
         tabBarStyle: {
-          backgroundColor: '#12173E',
-          borderTopColor: 'rgba(255, 255, 255, 0.1)',
+          backgroundColor: Colors.surface,
+          borderTopColor: Colors.border,
           borderTopWidth: 1,
-          height: 68,
-          paddingBottom: 10,
+          height: tabHeight,
+          paddingBottom: bottomInset + 2,
           paddingTop: 8,
-          shadowColor: '#000000',
-          shadowOffset: { width: 0, height: -3 },
-          shadowOpacity: 0.2,
-          shadowRadius: 8,
-          elevation: 6,
+          elevation: 0,
         },
-        tabBarActiveTintColor: Colors.gold,
+        tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: Colors.textMuted,
         tabBarLabelStyle: {
           fontSize: Typography.size.micro,
-          fontWeight: Typography.weight.bold,
+          lineHeight: Typography.lineHeight.micro,
+          fontFamily: Typography.family.headingSemi,
           marginTop: 2,
         },
       }}
@@ -58,10 +60,11 @@ export default function TabsLayout() {
           title: t.tabs.dashboard,
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.tabIconCircle, focused && styles.tabActiveCircle]}>
-              <Compass color={color} size={22} />
+              <Home color={color} size={24} strokeWidth={focused ? 2.5 : 2} />
             </View>
           ),
-          headerTitle: t.tabs.dashboardHeader,
+          // The home screen draws its own merged top bar (logo, rank, XP)
+          headerShown: false,
         }}
       />
       <Tabs.Screen
@@ -70,7 +73,7 @@ export default function TabsLayout() {
           title: t.tabs.lessons,
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.tabIconCircle, focused && styles.tabActiveCircle]}>
-              <BookOpen color={color} size={22} />
+              <BookOpen color={color} size={24} strokeWidth={focused ? 2.5 : 2} />
             </View>
           ),
           headerTitle: t.tabs.lessonsHeader,
@@ -82,7 +85,7 @@ export default function TabsLayout() {
           title: t.tabs.mission,
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.tabIconCircle, focused && styles.tabActiveCircle]}>
-              <Rocket color={color} size={22} />
+              <Rocket color={color} size={24} strokeWidth={focused ? 2.5 : 2} />
             </View>
           ),
           headerTitle: t.tabs.missionHeader,
@@ -94,7 +97,7 @@ export default function TabsLayout() {
           title: t.tabs.profile,
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.tabIconCircle, focused && styles.tabActiveCircle]}>
-              <User color={color} size={22} />
+              <User color={color} size={24} strokeWidth={focused ? 2.5 : 2} />
             </View>
           ),
           headerTitle: t.tabs.profileHeader,
@@ -106,13 +109,13 @@ export default function TabsLayout() {
 
 const styles = StyleSheet.create({
   tabIconCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 52,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
   },
   tabActiveCircle: {
-    backgroundColor: 'rgba(255, 184, 0, 0.14)',
+    backgroundColor: Colors.primaryBg,
   },
 });

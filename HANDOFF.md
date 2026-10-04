@@ -1,31 +1,35 @@
-# HANDOFF — 2026-10-04 23:20
+# HANDOFF — 2026-10-05 02:50
 
 ## Current task status
-Completed implementation of the interactive illustrative Lunar Mission Game ("চন্দ্রাভিযান: রকেটে চাঁদে যাত্রা") and complete overhaul of `app/(tabs)/mission.tsx`, replacing the static vertical icons with a rich, interactive 5-stage space flight simulator.
+Completed local-first architecture migration, Space Destination Hub, animated app logo & branding, Captain Rover offline tutor expansion (114+ FAQs), quiz anti-farming safeguards, inner-screen header consolidation, and merging `feature/local-first-space-hub` into `dev` and then into `main`. 37/37 tests passing, 0 TypeScript compilation errors.
 
 ## Just completed
-- **5-Stage Interactive Space Simulation Game**:
-  1. `AstronautSuitUpGame.tsx`: Airlock preparation room with kid cadet character, interactive equipment dressing (Liquid Cooling Garment, 16-Layer Pressure Suit, PLSS Life Support Backpack, Gold Visor Thermal Helmet, Lunar Traction Boots & EVA Gloves), dynamic visual layering on SVG character, and NASA science facts.
-  2. `RocketFuelingStation.tsx`: Launch gantry tower illustration, dual cryogenic tanks for Liquid Oxygen ($LOX$ @ $-183^\circ\text{C}$) and Liquid Hydrogen ($LH_2$ @ $-253^\circ\text{C}$), hold-to-pump mechanic, pressure gauge balancing, and NASA insight explaining vacuum combustion.
-  3. `CockpitIgnitionDeck.tsx`: Cockpit interior flight deck with windshield view, 3 pre-flight safety switches (Gyro Nav, Cabin Life Support, Telemetry Link), Big Red Ignition button with countdown (3.. 2.. 1.. Liftoff!), screen rumble vibration, atmospheric blastoff, and Escape Velocity ($11.2\text{ km/s}$) NASA science insight.
-  4. `LunarDescentModule.tsx`: Lunar surface approach view, landing site radar selection (Shackleton Crater, Sea of Tranquility, Ocean of Storms), interactive retro-thruster tap-to-brake physics (100 km down to 0 km soft touchdown), and vacuum parachute science insight.
-  5. `MoonwalkCelebration.tsx`: Lunar landscape scene with rising Earth marble, ladder descent, flag planting (Bangladesh & Mohakash Academy), lunar rock sample drilling, telemetry debrief, and automatic +120 XP award synchronized with `useAppStore`.
-- **Mission Hub Page Redesign (`app/(tabs)/mission.tsx`)**:
-  - Replaced meaningless vertical checklist cards with an Illustrated Mission Command Hub.
-  - Added Earth-to-Moon celestial trajectory vector SVG graphic.
-  - Added Cadet Flight Readiness Dossier showing avatar, current rank, and XP.
-  - Added 5 connected flight path stations with instant launch actions.
-- **Universal Bilingual Localization**:
-  - Added complete bilingual translations (`TRANSLATIONS.bn.missionGame` and `TRANSLATIONS.en.missionGame`) in `src/i18n/translations.ts`.
-- **Testing & Quality Assurance**:
-  - Added `tests/missionGame.test.ts` covering bilingual dictionary integrity, equipment count validation, and XP crediting.
-  - All 39 unit tests passing (`npm test`).
-  - Zero TypeScript errors (`npx tsc --noEmit`).
-  - Graphify AST knowledge graph updated (`graphify update .`).
+1. **Local-First Architecture (`src/services/profileStorage.ts`)**:
+   - Replaced complex remote auth/accounts with a clean, on-device local-first storage model.
+   - Preserves user progression (XP, rank, completed lessons, quiz scores, missions) with zero cloud barrier.
+   - Added full "delete local data" reset in settings.
+2. **Space Destination Hub (`src/components/SpaceHub.tsx`, `src/content/spaceDestinations.ts`)**:
+   - Rearchitected Space tab into an interactive planetary mission selector.
+   - Moon landing mission is live and fully playable; Mars, Jupiter, Saturn, and Venus configured with upcoming launch badges.
+3. **Branding & Animated App Logo**:
+   - Built vector `AppLogo.tsx` with animated orbital rings and space shuttle.
+   - Upgraded app launcher icon and splash screen brand assets.
+4. **Shared Inner Page Navigation (`src/components/ScreenHeader.tsx`)**:
+   - Standardized top header bar across lessons, quizzes, and profile pages.
+   - Unified back buttons, titles, subtitles, and right action slots.
+5. **Captain Rover AI Tutor Expansion**:
+   - Expanded offline question bank to 114+ authentic space questions with smart keyword fallback.
+   - Proactive internet connectivity detection when cadet asks an unindexed question.
+6. **Branch Merges**:
+   - Merged `feature/local-first-space-hub` into `dev`.
+   - Merged `dev` into `main`.
+   - Verified 37/37 unit tests and 0 TypeScript compilation errors.
 
 ## Active blockers
 - None.
 
 ## Immediate next steps
-1. Demonstrate the completed interactive game to the user.
-2. If approved, commit on `feature/illustrated-moon-mission-game` and merge into `dev` when ready.
+1. User testing on target physical Android devices.
+2. Production build with EAS when ready (`eas build --platform android`).
+
+

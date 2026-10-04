@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { RankTier, QuizAttemptRecord } from '../content/schema';
-import { authDatabase, UserAccount } from '../services/authDatabase';
+import { profileStorage, SavedProfile } from '../services/profileStorage';
 import { AppLanguage } from '../i18n/translations';
 
 export type CadetArchetype = 'pilot' | 'astronomer' | 'engineer' | 'explorer';
@@ -127,12 +127,8 @@ export interface AppState {
   completedLessonIds: string[];
   quizAttempts: Record<string, QuizAttemptRecord[]>; // lessonId -> attempts
 
-  // Account & Authentication
-  currentUser: UserAccount | null;
-  isGuest: boolean;
-  isAuthenticated: boolean;
-  isAuthLoading: boolean;
-  authError: string | null;
+  // True once saved progress has been read from this device
+  isHydrated: boolean;
 
   // Onboarding & Psychometric Archetype
   hasCompletedOnboarding: boolean;
@@ -155,19 +151,9 @@ export interface AppState {
   getRankProgress: () => { current: number; max: number; percentage: number };
   resetProgress: () => void;
 
-  // Auth & Database Actions
-  initializeSession: () => Promise<boolean>;
-  signUpUser: (params: {
-    username: string;
-    displayName: string;
-    password: string;
-    cadetArchetype?: CadetArchetype;
-    psychometricAnswers?: Record<number, number[]>;
-  }) => Promise<{ success: boolean; error?: string }>;
-  loginUser: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  continueAsGuest: (displayName?: string, archetype?: CadetArchetype, answers?: Record<number, number[]>) => Promise<void>;
-  logoutUser: () => Promise<void>;
-  syncCurrentProgressToDb: () => Promise<void>;
+  // Local persistence
+  loadSavedProgress: () => Promise<void>;
+  deleteLocalData: () => Promise<void>;
 
   // Language & Localization
   language: AppLanguage;
@@ -194,11 +180,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   xp: 0,
   completedLessonIds: [],
   quizAttempts: {},
-  currentUser: null,
-  isGuest: false,
-  isAuthenticated: false,
-  isAuthLoading: false,
-  authError: null,
+  isHydrated: false,
   activeLevelUp: null,
   hasCompletedOnboarding: false,
   cadetArchetype: 'pilot',
@@ -207,7 +189,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   setLanguage: async (lang: AppLanguage) => {
     set({ language: lang });
-    await authDatabase.setStoredLanguage(lang);
+    await profileStorage.setStoredLanguage(lang);
   },
 
   setDisplayName: (name: string) => set({ displayName: name }),
@@ -231,7 +213,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     });
   },
 
-  resetOnboarding: () => set({ hasCompletedOnboarding: false, isAuthenticated: false }),
+  resetOnboarding: () => set({ hasCompletedOnboarding: false }),
 
   addXP: (amount: number) => {
     const currentXP = get().xp;
@@ -253,9 +235,6 @@ export const useAppStore = create<AppState>((set, get) => ({
       rank: newRank,
       ...(levelUpEvent ? { activeLevelUp: levelUpEvent } : {}),
     });
-
-    // Sync to database
-    get().syncCurrentProgressToDb();
   },
 
   completeLesson: (lessonId: string) => {
@@ -277,8 +256,6 @@ export const useAppStore = create<AppState>((set, get) => ({
     });
     if (attempt.xp_earned > 0) {
       addXP(attempt.xp_earned);
-    } else {
-      get().syncCurrentProgressToDb();
     }
   },
 
@@ -304,9 +281,6 @@ export const useAppStore = create<AppState>((set, get) => ({
       xp: 0,
       completedLessonIds: [],
       quizAttempts: {},
-      currentUser: null,
-      isGuest: false,
-      isAuthenticated: false,
       activeLevelUp: null,
       hasCompletedOnboarding: false,
       cadetArchetype: 'pilot',
@@ -314,153 +288,67 @@ export const useAppStore = create<AppState>((set, get) => ({
     });
   },
 
-  // ── Database & Auth Actions ────────────────────────────────────────────────
-  initializeSession: async () => {
-    set({ isAuthLoading: true });
+  // ── Local persistence ──────────────────────────────────────────────────────
+  loadSavedProgress: async () => {
     try {
-      const storedLang = await authDatabase.getStoredLanguage();
+      const storedLang = await profileStorage.getStoredLanguage();
       set({ language: storedLang });
 
-      const sessionUser = await authDatabase.getCurrentSession();
-      if (sessionUser) {
+      const saved = await profileStorage.loadProfile();
+      if (saved) {
         set({
-          currentUser: sessionUser,
-          isGuest: sessionUser.isGuest,
-          isAuthenticated: true,
-          hasCompletedOnboarding: true,
-          displayName: sessionUser.displayName,
-          rank: sessionUser.rank,
-          xp: sessionUser.xp,
-          completedLessonIds: sessionUser.completedLessonIds || [],
-          quizAttempts: sessionUser.quizAttempts || {},
-          cadetArchetype: sessionUser.cadetArchetype || 'pilot',
-          psychometricAnswers: sessionUser.psychometricAnswers || {},
-          isAuthLoading: false,
+          hasCompletedOnboarding: saved.hasCompletedOnboarding,
+          displayName: saved.displayName,
+          rank: saved.rank,
+          xp: saved.xp,
+          completedLessonIds: saved.completedLessonIds || [],
+          quizAttempts: saved.quizAttempts || {},
+          cadetArchetype: saved.cadetArchetype || 'pilot',
+          psychometricAnswers: saved.psychometricAnswers || {},
         });
-        return true;
       }
     } catch {
-      // Ignore
+      // Start fresh if storage is unreadable
     }
-    set({ isAuthLoading: false });
-    return false;
+    set({ isHydrated: true });
   },
 
-  signUpUser: async (params) => {
-    set({ isAuthLoading: true, authError: null });
-    const res = await authDatabase.signUp({
-      username: params.username,
-      displayName: params.displayName,
-      password: params.password,
-      cadetArchetype: params.cadetArchetype || get().cadetArchetype,
-      psychometricAnswers: params.psychometricAnswers || get().psychometricAnswers,
-    });
-
-    if (res.success && res.user) {
-      set({
-        currentUser: res.user,
-        isGuest: false,
-        isAuthenticated: true,
-        hasCompletedOnboarding: true,
-        displayName: res.user.displayName,
-        rank: res.user.rank,
-        xp: res.user.xp,
-        completedLessonIds: res.user.completedLessonIds,
-        quizAttempts: res.user.quizAttempts,
-        cadetArchetype: res.user.cadetArchetype,
-        psychometricAnswers: res.user.psychometricAnswers,
-        isAuthLoading: false,
-        authError: null,
-      });
-      return { success: true };
-    } else {
-      set({ isAuthLoading: false, authError: res.error || 'নিবন্ধন ব্যর্থ হয়েছে।' });
-      return { success: false, error: res.error };
-    }
-  },
-
-  loginUser: async (username, password) => {
-    set({ isAuthLoading: true, authError: null });
-    const res = await authDatabase.login(username, password);
-
-    if (res.success && res.user) {
-      set({
-        currentUser: res.user,
-        isGuest: res.user.isGuest,
-        isAuthenticated: true,
-        hasCompletedOnboarding: true,
-        displayName: res.user.displayName,
-        rank: res.user.rank,
-        xp: res.user.xp,
-        completedLessonIds: res.user.completedLessonIds || [],
-        quizAttempts: res.user.quizAttempts || {},
-        cadetArchetype: res.user.cadetArchetype || 'pilot',
-        psychometricAnswers: res.user.psychometricAnswers || {},
-        isAuthLoading: false,
-        authError: null,
-      });
-      return { success: true };
-    } else {
-      set({ isAuthLoading: false, authError: res.error || 'লগইন ব্যর্থ হয়েছে।' });
-      return { success: false, error: res.error };
-    }
-  },
-
-  continueAsGuest: async (displayName, archetype, answers) => {
-    set({ isAuthLoading: true });
-    const chosenArchetype = archetype || get().cadetArchetype;
-    const chosenAnswers = answers || get().psychometricAnswers;
-    const chosenName = displayName?.trim() || get().displayName || 'অতিথি ক্যাডেট';
-
-    const guestUser = await authDatabase.loginAsGuest({
-      displayName: chosenName,
-      cadetArchetype: chosenArchetype,
-      psychometricAnswers: chosenAnswers,
-    });
-
-    set({
-      currentUser: guestUser,
-      isGuest: true,
-      isAuthenticated: true,
-      hasCompletedOnboarding: true,
-      displayName: guestUser.displayName,
-      rank: guestUser.rank,
-      xp: guestUser.xp,
-      completedLessonIds: [],
-      quizAttempts: {},
-      cadetArchetype: guestUser.cadetArchetype,
-      psychometricAnswers: guestUser.psychometricAnswers,
-      isAuthLoading: false,
-      authError: null,
-    });
-  },
-
-  logoutUser: async () => {
-    await authDatabase.logout();
-    set({
-      currentUser: null,
-      isAuthenticated: false,
-      isGuest: false,
-      hasCompletedOnboarding: false,
-      xp: 0,
-      rank: 'Cadet',
-      completedLessonIds: [],
-      quizAttempts: {},
-      displayName: 'জুনিয়র ক্যাডেট',
-    });
-  },
-
-  syncCurrentProgressToDb: async () => {
-    const user = get().currentUser;
-    if (user) {
-      await authDatabase.updateProgress(user.id, {
-        xp: get().xp,
-        rank: get().rank,
-        completedLessonIds: get().completedLessonIds,
-        quizAttempts: get().quizAttempts,
-        cadetArchetype: get().cadetArchetype,
-        displayName: get().displayName,
-      });
-    }
+  deleteLocalData: async () => {
+    // Clear storage first, then reset state, so the save subscriber has nothing to re-write
+    set({ isHydrated: false });
+    await profileStorage.clearProfile();
+    get().resetProgress();
+    set({ isHydrated: true });
   },
 }));
+
+function pickSavedProfile(state: AppState): SavedProfile {
+  return {
+    displayName: state.displayName,
+    rank: state.rank,
+    xp: state.xp,
+    completedLessonIds: state.completedLessonIds,
+    quizAttempts: state.quizAttempts,
+    cadetArchetype: state.cadetArchetype,
+    psychometricAnswers: state.psychometricAnswers,
+    hasCompletedOnboarding: state.hasCompletedOnboarding,
+  };
+}
+
+// Save to this device whenever saved fields change (only after the first load,
+// so an empty default state never overwrites existing progress).
+useAppStore.subscribe((state, prev) => {
+  if (!state.isHydrated || !prev.isHydrated) return;
+  const changed =
+    state.displayName !== prev.displayName ||
+    state.rank !== prev.rank ||
+    state.xp !== prev.xp ||
+    state.completedLessonIds !== prev.completedLessonIds ||
+    state.quizAttempts !== prev.quizAttempts ||
+    state.cadetArchetype !== prev.cadetArchetype ||
+    state.psychometricAnswers !== prev.psychometricAnswers ||
+    state.hasCompletedOnboarding !== prev.hasCompletedOnboarding;
+  if (changed) {
+    profileStorage.saveProfile(pickSavedProfile(state));
+  }
+});

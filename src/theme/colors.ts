@@ -1,125 +1,152 @@
 /**
- * Mohakash Jr. — "Soft Space" Illustrated Cosmos Palette
- * Warm dark backgrounds that feel like reading an astronomy book at night.
- * Strategic accent colors only on action targets — never ambient decoration.
- * Per-lesson gradient moods for contextual illustration backgrounds.
+ * Mohakash Jr. — "Deep Space" palette
  *
- * Design philosophy: cozy wonder, not clinical cockpit.
+ * One calm dark canvas for the whole app. Bright accents; filled surfaces use
+ * dark text (Colors.textDark). Every text/background pair is >= 4.5:1.
+ *
+ *  - surface ladder: #0B1026 -> #151C42 -> #1F2858
+ *  - primary (nebula blue) = actions, gold = XP & rewards,
+ *    emerald / coral = right / wrong answers only
+ *  - other hues are reserved for archetype badges and lesson moods
  */
 
 export const Colors = {
-  // ─── Warm Cosmic Backgrounds ───────────────────────────────────────
-  // Slightly warm indigos — not cold voids
-  void: '#0F1128',                 // Deep illustrated-book indigo
-  background: '#0F1128',           // Primary screen canvas
-  backgroundSecondary: '#161B3D',  // Card / elevated surface
-  backgroundTertiary: '#1E2450',   // Highlighted surface
+  // ─── Light Surfaces (Daily Learning Screens) ────────────────────────
+  background: '#0B1026',           // Warm cream — primary canvas
+  backgroundSecondary: '#10173A',  // Slightly warmer variant
+  backgroundTertiary: '#1F2858',   // Soft indigo tint (selected states)
 
-  // ─── Single-Surface Card System ────────────────────────────────────
-  // One clean surface per card — no nested bezels, no specular rims
-  surface: '#161B3D',              // Primary card background
-  surfaceShell: '#161B3D',         // Kept for compat — same as surface
-  surfaceCard: '#1A2045',          // Slightly lighter card interior
-  surfaceElevated: '#222A55',      // Interactive / highlighted card
-  surfaceGlass: 'rgba(22, 27, 61, 0.90)',
-  surfaceHighlight: 'rgba(255, 255, 255, 0.06)', // Very subtle highlight
+  // ─── Card Surfaces (Light Mode) ─────────────────────────────────────
+  surface: '#151C42',              // Pure white card
+  surfaceWarm: '#1A2250',          // Warm-tinted card (lesson, story cards)
+  surfaceCard: '#151C42',          // Alias for compat
+  surfaceElevated: '#1F2858',      // Soft blue-tint elevated card
+  surfaceGlass: 'rgba(21,28,66,0.88)', // Translucent glass (modals)
+  surfaceHighlight: 'rgba(140,155,255,0.08)', // Very subtle primary tint
+  surfaceShell: '#151C42',         // Kept for _layout.tsx compat
 
-  // ─── Borders — Minimal, Warm ───────────────────────────────────────
-  // No glow borders. Subtle dividers only where needed.
-  border: 'rgba(255, 255, 255, 0.08)',
-  borderSubtle: 'rgba(255, 255, 255, 0.05)',
-  borderLight: 'rgba(255, 255, 255, 0.12)',
-  borderGlowBlue: '#6B8AFF',      // Kept for compat — now used only on focus
-  borderGlowGold: '#FFC86B',
-  borderGlowEmerald: '#5ED6C0',
-  borderGlowPink: '#E8A0BF',
+  // ─── Borders (Light Mode) ───────────────────────────────────────────
+  border: 'rgba(255,255,255,0.10)',
+  borderSubtle: 'rgba(255,255,255,0.06)',
+  borderLight: 'rgba(255,255,255,0.14)',
+  borderMedium: 'rgba(255,255,255,0.20)',
+  // Legacy compat keys — kept so mission components don't break
+  borderGlowBlue: '#8C9BFF',
+  borderGlowGold: '#FFC94D',
+  borderGlowEmerald: '#5DD39E',
+  borderGlowPink: '#FF7A90',
 
-  // ─── Stardust Blue — Primary Actions ───────────────────────────────
-  primary: '#6B8AFF',
-  primaryLight: '#8DA6FF',
-  primaryDark: '#4A6AE0',
-  primaryBg: 'rgba(107, 138, 255, 0.15)',
+  // ─── Space Dark (Immersive Moments Only) ────────────────────────────
+  // Used by: mission game, atmospheric journey, splash, lesson mood headers
+  spaceDark: '#0D1035',
+  spaceDeep: '#161B3D',
+  spaceMid: '#1E2450',
+  spaceCard: '#1A2045',
+  void: '#0D1035',                 // Legacy alias used in _layout and mission files
 
-  // ─── Moonbeam Gold — Achievement, XP, Rewards ─────────────────────
-  gold: '#FFC86B',
-  goldLight: '#FFD98A',
-  goldDark: '#E0A840',
-  goldBg: 'rgba(255, 200, 107, 0.15)',
-  thermalGold: '#FFC86B',
-  thermalGoldBg: 'rgba(255, 200, 107, 0.15)',
+  // ─── Constellation Blue — Primary Actions ───────────────────────────
+  primary: '#8C9BFF',
+  primaryLight: '#B4BEFF',
+  primaryDark: '#5F6FE0',
+  primaryBg: 'rgba(140,155,255,0.16)',
 
-  // ─── Aurora Teal — Success, Correct Answers ────────────────────────
-  emerald: '#5ED6C0',
-  emeraldLight: '#7EE8D4',
-  emeraldDark: '#3EB8A0',
-  emeraldBg: 'rgba(94, 214, 192, 0.15)',
-  telemetryGreen: '#5ED6C0',
-  telemetryGreenBg: 'rgba(94, 214, 192, 0.15)',
+  // ─── Solar Flare Gold — XP, Achievement, Rewards ────────────────────
+  gold: '#FFC94D',
+  goldLight: '#FFE08A',
+  goldDark: '#D99A1E',
+  goldBg: 'rgba(255,201,77,0.14)',
+  thermalGold: '#FFC94D',          // Legacy alias
+  thermalGoldBg: 'rgba(255,201,77,0.14)',
 
-  // ─── Coral Nebula — Gentle Errors, Retries ────────────────────────
-  coral: '#FF8A80',
-  coralLight: '#FFA498',
-  coralDark: '#E06860',
-  coralBg: 'rgba(255, 138, 128, 0.15)',
-  hazardRed: '#FF8A80',
-  hazardRedBg: 'rgba(255, 138, 128, 0.15)',
+  // ─── Aurora Emerald — Correct Answers, Success ──────────────────────
+  emerald: '#5DD39E',
+  emeraldLight: '#8AE8BF',
+  emeraldDark: '#2FA173',
+  emeraldBg: 'rgba(93,211,158,0.14)',
+  telemetryGreen: '#5DD39E',       // Legacy alias
+  telemetryGreenBg: 'rgba(93,211,158,0.14)',
 
-  // ─── Soft Pink — Delight, Mascot ──────────────────────────────────
-  pink: '#E8A0BF',
-  pinkLight: '#F0B8D0',
-  pinkDark: '#C080A0',
-  pinkBg: 'rgba(232, 160, 191, 0.15)',
+  // ─── Sunrise Coral — Gentle Errors, Retries ─────────────────────────
+  coral: '#FF7A90',
+  coralLight: '#FFA3B3',
+  coralDark: '#D9546C',
+  coralBg: 'rgba(255,122,144,0.14)',
+  hazardRed: '#FF7A90',            // Legacy alias
+  hazardRedBg: 'rgba(255,122,144,0.14)',
 
-  // ─── Lilac Orbit — Special, Archetypes ────────────────────────────
-  purple: '#B48EFF',
-  purpleLight: '#C8A8FF',
-  purpleDark: '#9070E0',
-  purpleBg: 'rgba(180, 142, 255, 0.15)',
-  plasmaViolet: '#B48EFF',
-  plasmaVioletBg: 'rgba(180, 142, 255, 0.15)',
+  // ─── Soft Violet — Delight, Alien Explorer Archetype ────────────────
+  pink: '#E08BFF',
+  pinkLight: '#EDB0FF',
+  pinkDark: '#B85FD9',
+  pinkBg: 'rgba(224,139,255,0.14)',
 
-  // ─── Soft Cyan — Info, Links ──────────────────────────────────────
-  cyan: '#7EC8E3',
-  cyanLight: '#98D8F0',
-  cyanDark: '#5AA8C8',
-  cyanBg: 'rgba(126, 200, 227, 0.12)',
-  hudCyan: '#7EC8E3',
-  hudCyanBg: 'rgba(126, 200, 227, 0.12)',
+  // ─── Deep Purple — Special, Stargazer Archetype ─────────────────────
+  purple: '#A78BFA',
+  purpleLight: '#C4B0FF',
+  purpleDark: '#7C5FD6',
+  purpleBg: 'rgba(167,139,250,0.16)',
+  plasmaViolet: '#A78BFA',         // Legacy alias
+  plasmaVioletBg: 'rgba(167,139,250,0.16)',
 
-  // ─── Warm Amber — Warnings ────────────────────────────────────────
-  reentryAmber: '#F0B060',
-  reentryAmberBg: 'rgba(240, 176, 96, 0.15)',
+  // ─── Ocean Cyan — Space Engineer Archetype, Info ────────────────────
+  cyan: '#4CC9E0',
+  cyanLight: '#8BE0F0',
+  cyanDark: '#2A9DB5',
+  cyanBg: 'rgba(76,201,224,0.14)',
+  hudCyan: '#4CC9E0',              // Legacy alias
+  hudCyanBg: 'rgba(76,201,224,0.14)',
 
-  // ─── Typography — Warm Whites ─────────────────────────────────────
-  text: '#F5F3F0',                 // Warm snow white
-  textSecondary: '#C4BFB8',        // Warm silver
-  textMuted: '#9B95A8',            // Lavender mist
-  textDark: '#0F1128',             // For light button faces
+  // ─── Warm Amber — Warnings, Rocket Pilot Archetype ──────────────────
+  reentryAmber: '#FF9A4D',
+  reentryAmberBg: 'rgba(255,154,77,0.14)',
 
-  // ─── Status & Feedback ────────────────────────────────────────────
-  correct: '#5ED6C0',
-  correctBg: 'rgba(94, 214, 192, 0.18)',
-  incorrect: '#FF8A80',
-  incorrectBg: 'rgba(255, 138, 128, 0.18)',
-  info: '#7EC8E3',
-  infoBg: 'rgba(126, 200, 227, 0.15)',
+  // ─── Typography — Light & Dark Variants ─────────────────────────────
+  // On light backgrounds (most screens)
+  text: '#F2F4FF',                 // Warm dark navy — primary text
+  textSecondary: '#B8BEDD',        // Secondary text
+  textMuted: '#8F97BF',            // Muted hints, labels
+  textDark: '#0B1026',             // On light button faces (dark text)
 
-  // ─── Space Ranks ──────────────────────────────────────────────────
-  rankCadet: '#6B8AFF',
-  rankAstronaut: '#5ED6C0',
-  rankSpecialist: '#B48EFF',
-  rankCommander: '#FFC86B',
+  // On space-dark backgrounds (mission, splash)
+  textOnDark: '#F2F4FF',           // Warm snow white
+  textOnDarkMuted: '#B8BEDD',      // Warm silver
+
+  // ─── Status & Feedback ──────────────────────────────────────────────
+  correct: '#5DD39E',
+  correctBg: 'rgba(93,211,158,0.16)',
+  incorrect: '#FF7A90',
+  incorrectBg: 'rgba(255,122,144,0.16)',
+  info: '#4CC9E0',
+  infoBg: 'rgba(76,201,224,0.16)',
+
+  // ─── Space Ranks ────────────────────────────────────────────────────
+  rankCadet: '#8C9BFF',
+  rankAstronaut: '#5DD39E',
+  rankSpecialist: '#A78BFA',
+  rankCommander: '#FFC94D',
 };
 
 // ─── Per-Lesson Gradient Moods ──────────────────────────────────────
-// Used for illustration headers and contextual background tints
+// Used for illustration headers, mission backgrounds, contextual tints
+// These stay space-dark — they're immersive illustration backgrounds
 export const LessonMoods = {
-  moon:  { from: '#1a1f4e', via: '#2d3580', to: '#4a5aaf' },
-  mars:  { from: '#2a1520', via: '#5c2530', to: '#a04050' },
-  iss:   { from: '#0f1a30', via: '#1a3050', to: '#2a5080' },
-  jwst:  { from: '#1a0f30', via: '#30184e', to: '#5a28a0' },
-  earth: { from: '#0f2018', via: '#1a4030', to: '#2a6050' },
-  sun:   { from: '#2a1a0f', via: '#4e3018', to: '#805028' },
-  stars: { from: '#0f0f28', via: '#1a1a48', to: '#2828a0' },
-  rocket:{ from: '#1a1028', via: '#30184e', to: '#5a2080' },
+  moon:   { from: '#1a1f4e', via: '#2d3580', to: '#4a5aaf' },
+  mars:   { from: '#2a1520', via: '#5c2530', to: '#a04050' },
+  iss:    { from: '#0f1a30', via: '#1a3050', to: '#2a5080' },
+  jwst:   { from: '#1a0f30', via: '#30184e', to: '#5a28a0' },
+  earth:  { from: '#0f2018', via: '#1a4030', to: '#2a6050' },
+  sun:    { from: '#2a1a0f', via: '#4e3018', to: '#805028' },
+  stars:  { from: '#0f0f28', via: '#1a1a48', to: '#2828a0' },
+  rocket: { from: '#1a1028', via: '#30184e', to: '#5a2080' },
+} as const;
+
+// ─── Atmospheric Layer Colors (for Mission Atmospheric Journey) ──────
+export const AtmosphereColors = {
+  ground:       '#87CEEB',   // Sky blue — ground / launch pad
+  troposphere:  '#4A90D9',   // Mid blue — 0–12 km
+  stratosphere: '#1A3A6E',   // Deep blue — 12–50 km
+  mesosphere:   '#0D1B3E',   // Dark navy-blue — 50–80 km
+  thermosphere: '#060B1A',   // Near-black with aurora — 80–700 km
+  exosphere:    '#020408',   // Near pure black — 700–10,000 km
+  deepSpace:    '#000000',   // Black — beyond exosphere
 } as const;

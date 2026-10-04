@@ -290,7 +290,7 @@ export const CockpitIgnitionDeck: React.FC<CockpitIgnitionDeckProps> = ({
           </View>
           <View style={styles.switchDetails}>
             <Text style={styles.switchTitle}>{t.switch1}</Text>
-            <Text style={styles.switchSub}>{switches.gyro ? 'সক্রিয় ✓' : 'অফ'}</Text>
+            <Text style={styles.switchSub}>{switches.gyro ? 'সক্রিয়' : 'অফ'}</Text>
           </View>
           {switches.gyro ? (
             <ToggleRight size={28} color={Colors.cyan} />
@@ -315,7 +315,7 @@ export const CockpitIgnitionDeck: React.FC<CockpitIgnitionDeckProps> = ({
           </View>
           <View style={styles.switchDetails}>
             <Text style={styles.switchTitle}>{t.switch2}</Text>
-            <Text style={styles.switchSub}>{switches.lifeSupport ? 'কেবিন প্রেশারাইজড ✓' : 'অফ'}</Text>
+            <Text style={styles.switchSub}>{switches.lifeSupport ? 'কেবিন প্রেশারাইজড' : 'অফ'}</Text>
           </View>
           {switches.lifeSupport ? (
             <ToggleRight size={28} color={Colors.emerald} />
@@ -340,7 +340,7 @@ export const CockpitIgnitionDeck: React.FC<CockpitIgnitionDeckProps> = ({
           </View>
           <View style={styles.switchDetails}>
             <Text style={styles.switchTitle}>{t.switch3}</Text>
-            <Text style={styles.switchSub}>{switches.telemetry ? 'সিগন্যাল লিঙ্কড ✓' : 'অফ'}</Text>
+            <Text style={styles.switchSub}>{switches.telemetry ? 'সিগন্যাল লিঙ্কড' : 'অফ'}</Text>
           </View>
           {switches.telemetry ? (
             <ToggleRight size={28} color={Colors.gold} />
@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
   stageTagText: {
     color: '#FF6B35',
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   headerBlock: {
     marginBottom: 14,
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
   title: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 4,
   },
   subtitle: {
@@ -496,7 +496,7 @@ const styles = StyleSheet.create({
   launchConfirmedText: {
     color: Colors.emerald,
     fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   countdownRow: {
     flexDirection: 'row',
@@ -506,7 +506,7 @@ const styles = StyleSheet.create({
   countdownText: {
     color: '#FF6B35',
     fontSize: Typography.size.body,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   switchesContainer: {
     gap: 10,
@@ -540,7 +540,7 @@ const styles = StyleSheet.create({
   switchTitle: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 2,
   },
   switchSub: {
@@ -586,7 +586,7 @@ const styles = StyleSheet.create({
   ignitionButtonText: {
     color: '#FFFFFF',
     fontSize: Typography.size.body,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginTop: 6,
   },
   ignitionButtonSub: {
@@ -608,8 +608,7 @@ const styles = StyleSheet.create({
   factTitle: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
-    letterSpacing: 0.5,
+    fontFamily: Typography.family.heading,
   },
   factContent: {
     color: Colors.text,

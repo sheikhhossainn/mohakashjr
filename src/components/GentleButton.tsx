@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   StyleSheet,
@@ -7,10 +7,11 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
-  Animated,
 } from 'react-native';
+import { PressScaleView } from './PressScaleView';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
+import { tapHaptic } from '../utils/haptics';
 
 export interface GentleButtonProps {
   title: string;
@@ -25,9 +26,13 @@ export interface GentleButtonProps {
 }
 
 /**
- * GentleButton — Calm, tactile action button with natural spring dynamics.
- * Eliminates aggressive 3D "extrusion lips" in favor of soft surfaces
- * and responsive micro-spring physics.
+ * GentleButton 2.0 — Duolingo-inspired clay button with warm palette.
+ *
+ * Visual design:
+ * - Solid fill colors (no glass/dark-void)
+ * - 3px bottom "clay shadow" for physical depth (Duolingo pattern)
+ * - Spring scale on press — feels tactile and alive
+ * - Minimum 48pt touch target for children's hands
  */
 export const GentleButton: React.FC<GentleButtonProps> = ({
   title,
@@ -40,47 +45,21 @@ export const GentleButton: React.FC<GentleButtonProps> = ({
   textStyle,
   fullWidth = false,
 }) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const opacityAnim = useRef(new Animated.Value(1)).current;
+  const [pressed, setPressed] = useState(false);
 
   const handlePressIn = () => {
     if (disabled) return;
-    Animated.parallel([
-      Animated.timing(scaleAnim, {
-        toValue: 0.97,
-        duration: 90,
-        useNativeDriver: true,
-      }),
-      Animated.timing(opacityAnim, {
-        toValue: 0.92,
-        duration: 90,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    tapHaptic();
+    setPressed(true);
   };
 
-  const handlePressOut = () => {
-    if (disabled) return;
-    Animated.parallel([
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        friction: 5,
-        tension: 50,
-        useNativeDriver: true,
-      }),
-      Animated.timing(opacityAnim, {
-        toValue: 1,
-        duration: 120,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
+  const handlePressOut = () => setPressed(false);
 
   const getTheme = () => {
     if (disabled) {
       return {
-        bg: 'rgba(255, 255, 255, 0.06)',
-        border: 'transparent',
+        bg: Colors.surfaceWarm,
+        shadow: Colors.surface,
         text: Colors.textMuted,
         iconColor: Colors.textMuted,
       };
@@ -90,56 +69,56 @@ export const GentleButton: React.FC<GentleButtonProps> = ({
       case 'gold':
         return {
           bg: Colors.gold,
-          border: 'transparent',
-          text: Colors.textDark,
-          iconColor: Colors.textDark,
+          shadow: Colors.goldDark,
+          text: '#1A1A2E',
+          iconColor: '#1A1A2E',
         };
       case 'emerald':
         return {
           bg: Colors.emerald,
-          border: 'transparent',
+          shadow: Colors.emeraldDark,
           text: Colors.textDark,
           iconColor: Colors.textDark,
         };
       case 'coral':
         return {
           bg: Colors.coral,
-          border: 'transparent',
-          text: '#FFFFFF',
-          iconColor: '#FFFFFF',
+          shadow: Colors.coralDark,
+          text: Colors.textDark,
+          iconColor: Colors.textDark,
         };
       case 'purple':
         return {
           bg: Colors.purple,
-          border: 'transparent',
-          text: '#FFFFFF',
-          iconColor: '#FFFFFF',
+          shadow: Colors.purpleDark,
+          text: Colors.textDark,
+          iconColor: Colors.textDark,
         };
       case 'pink':
         return {
           bg: Colors.pink,
-          border: 'transparent',
+          shadow: Colors.pinkDark,
           text: Colors.textDark,
           iconColor: Colors.textDark,
         };
       case 'secondary':
         return {
           bg: Colors.surfaceElevated,
-          border: 'rgba(255, 255, 255, 0.08)',
-          text: Colors.text,
-          iconColor: Colors.text,
+          shadow: Colors.borderMedium,
+          text: Colors.primary,
+          iconColor: Colors.primary,
         };
       case 'outline':
         return {
-          bg: 'transparent',
-          border: 'rgba(255, 255, 255, 0.2)',
-          text: Colors.text,
-          iconColor: Colors.text,
+          bg: Colors.surface,
+          shadow: Colors.borderMedium,
+          text: Colors.primary,
+          iconColor: Colors.primary,
         };
       case 'ghost':
         return {
           bg: 'transparent',
-          border: 'transparent',
+          shadow: 'transparent',
           text: Colors.textSecondary,
           iconColor: Colors.textSecondary,
         };
@@ -147,9 +126,9 @@ export const GentleButton: React.FC<GentleButtonProps> = ({
       default:
         return {
           bg: Colors.primary,
-          border: 'transparent',
-          text: '#FFFFFF',
-          iconColor: '#FFFFFF',
+          shadow: Colors.primaryDark,
+          text: Colors.textDark,
+          iconColor: Colors.textDark,
         };
     }
   };
@@ -163,8 +142,8 @@ export const GentleButton: React.FC<GentleButtonProps> = ({
           paddingVertical: 10,
           paddingHorizontal: 16,
           borderRadius: 14,
-          fontSize: Typography.size.caption,
-          minHeight: 40,
+          fontSize: Typography.size.bodySmall,
+          minHeight: 48,
         };
       case 'large':
         return {
@@ -181,7 +160,7 @@ export const GentleButton: React.FC<GentleButtonProps> = ({
           paddingHorizontal: 22,
           borderRadius: 16,
           fontSize: Typography.size.bodySmall,
-          minHeight: 48,
+          minHeight: 52,
         };
     }
   };
@@ -189,19 +168,33 @@ export const GentleButton: React.FC<GentleButtonProps> = ({
   const sizing = getSizing();
 
   return (
-    <Animated.View
+    <PressScaleView
+      pressed={pressed}
+      sink={2}
       style={[
-        {
-          transform: [{ scale: scaleAnim }],
-          opacity: opacityAnim,
-          width: fullWidth ? '100%' : undefined,
-        },
+        { width: fullWidth ? '100%' : undefined },
         style,
       ]}
     >
+      {/* Clay shadow layer — sits behind the button, gives 3D depth */}
+      {theme.shadow !== 'transparent' && (
+        <View
+          style={[
+            styles.clayLayer,
+            {
+              backgroundColor: theme.shadow,
+              borderRadius: sizing.borderRadius,
+              bottom: -3,
+            },
+          ]}
+        />
+      )}
       <Pressable
         onPress={onPress}
         disabled={disabled}
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        accessibilityState={{ disabled }}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
@@ -209,8 +202,8 @@ export const GentleButton: React.FC<GentleButtonProps> = ({
           styles.button,
           {
             backgroundColor: theme.bg,
-            borderColor: theme.border,
-            borderWidth: theme.border !== 'transparent' ? 1 : 0,
+            borderColor: variant === 'outline' ? Colors.borderMedium : 'transparent',
+            borderWidth: variant === 'outline' ? 1.5 : 0,
             borderRadius: sizing.borderRadius,
             paddingVertical: sizing.paddingVertical,
             paddingHorizontal: sizing.paddingHorizontal,
@@ -227,7 +220,7 @@ export const GentleButton: React.FC<GentleButtonProps> = ({
               {
                 color: theme.text,
                 fontSize: sizing.fontSize,
-                fontFamily: Typography.family.hindSemiBold,
+                fontFamily: Typography.family.headingSemi,
               },
               textStyle,
             ]}
@@ -236,7 +229,7 @@ export const GentleButton: React.FC<GentleButtonProps> = ({
           </Text>
         </View>
       </Pressable>
-    </Animated.View>
+    </PressScaleView>
   );
 };
 
@@ -244,11 +237,16 @@ const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.18,
-    shadowRadius: 6,
-    elevation: 2,
+    position: 'relative',
+    zIndex: 1,
+  },
+  // The clay shadow layer — creates Duolingo-style physical depth
+  clayLayer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    zIndex: 0,
   },
   contentRow: {
     flexDirection: 'row',
@@ -263,6 +261,5 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: Typography.weight.bold,
     textAlign: 'center',
-    letterSpacing: 0.2,
   },
 });

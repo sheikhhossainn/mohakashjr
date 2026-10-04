@@ -43,16 +43,82 @@ export const AstronautSuitUpGame: React.FC<AstronautSuitUpGameProps> = ({
   });
 
   const [activeItemId, setActiveItemId] = useState<SuitItemId>('cooling');
+  const [justEquippedName, setJustEquippedName] = useState<string | null>(null);
+
+  // Animation values
+  const mirrorScaleAnim = React.useRef(new Animated.Value(1)).current;
+  const popupFadeAnim = React.useRef(new Animated.Value(0)).current;
+  const popupSlideAnim = React.useRef(new Animated.Value(10)).current;
+  const auraGlowAnim = React.useRef(new Animated.Value(0.2)).current;
 
   const equippedCount = Object.values(equipped).filter(Boolean).length;
   const isAllEquipped = equippedCount === 5;
 
   const toggleItem = (id: SuitItemId) => {
     setActiveItemId(id);
+    const willEquip = !equipped[id];
     setEquipped((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [id]: willEquip,
     }));
+
+    if (willEquip) {
+      const itemDef = suitItemsList.find((i) => i.id === id);
+      setJustEquippedName(itemDef?.title ?? null);
+
+      // 1. Spring bounce on the cadet mirror
+      Animated.sequence([
+        Animated.timing(mirrorScaleAnim, {
+          toValue: 1.06,
+          duration: 120,
+          useNativeDriver: true,
+        }),
+        Animated.spring(mirrorScaleAnim, {
+          toValue: 1,
+          friction: 4,
+          tension: 50,
+          useNativeDriver: true,
+        }),
+      ]).start();
+
+      // 2. Pulse aura glow
+      Animated.sequence([
+        Animated.timing(auraGlowAnim, {
+          toValue: 0.9,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(auraGlowAnim, {
+          toValue: 0.25,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]).start();
+
+      // 3. Float-in equipped badge popup
+      popupFadeAnim.setValue(0);
+      popupSlideAnim.setValue(12);
+      Animated.parallel([
+        Animated.timing(popupFadeAnim, {
+          toValue: 1,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+        Animated.timing(popupSlideAnim, {
+          toValue: 0,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        setTimeout(() => {
+          Animated.timing(popupFadeAnim, {
+            toValue: 0,
+            duration: 350,
+            useNativeDriver: true,
+          }).start();
+        }, 1400);
+      });
+    }
   };
 
   const suitItemsList: {
@@ -155,8 +221,31 @@ export const AstronautSuitUpGame: React.FC<AstronautSuitUpGameProps> = ({
           )}
         </View>
 
+        {/* Animated Equip Toast Popup */}
+        {justEquippedName && (
+          <Animated.View
+            style={[
+              styles.equipPopupBadge,
+              {
+                opacity: popupFadeAnim,
+                transform: [{ translateY: popupSlideAnim }],
+              },
+            ]}
+          >
+            <Sparkles size={14} color={Colors.gold} />
+            <Text style={styles.equipPopupText}>
+              {language === 'en' ? `Equipped: ${justEquippedName}!` : `সজ্জিত: ${justEquippedName}!`}
+            </Text>
+          </Animated.View>
+        )}
+
         {/* Central Illustrated Cadet Dressing Mirror */}
-        <View style={styles.cadetMirrorBox}>
+        <Animated.View
+          style={[
+            styles.cadetMirrorBox,
+            { transform: [{ scale: mirrorScaleAnim }] },
+          ]}
+        >
           <Svg width={180} height={230} viewBox="0 0 180 230">
             <Defs>
               <LinearGradient id="mirrorGlow" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -301,14 +390,14 @@ export const AstronautSuitUpGame: React.FC<AstronautSuitUpGameProps> = ({
               </G>
             )}
           </Svg>
-        </View>
+        </Animated.View>
 
         {/* Dynamic Status Callout */}
         <View style={styles.statusCallout}>
           <Text style={styles.statusCalloutText}>
             {isAllEquipped
               ? t.allReady
-              : `${activeItem.title} ${equipped[activeItemId] ? 'পরিধান করা হয়েছে ✓' : 'পরিধান করতে ট্যাপ করো'}`}
+              : `${activeItem.title} ${equipped[activeItemId] ? 'পরিধান করা হয়েছে' : 'পরিধান করতে ট্যাপ করো'}`}
           </Text>
         </View>
       </StoryCard>
@@ -435,7 +524,7 @@ const styles = StyleSheet.create({
   stageTagText: {
     color: Colors.primaryLight,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   headerBlock: {
     marginBottom: 14,
@@ -443,7 +532,7 @@ const styles = StyleSheet.create({
   title: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 4,
   },
   subtitle: {
@@ -469,7 +558,7 @@ const styles = StyleSheet.create({
   progressLabel: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   progressTrack: {
     flex: 1,
@@ -495,7 +584,24 @@ const styles = StyleSheet.create({
   readyBadgeText: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
+  },
+  equipPopupBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(245, 159, 0, 0.18)',
+    borderWidth: 1,
+    borderColor: 'rgba(245, 159, 0, 0.4)',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 14,
+    marginBottom: 6,
+  },
+  equipPopupText: {
+    color: Colors.gold,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.heading,
   },
   cadetMirrorBox: {
     alignItems: 'center',
@@ -548,7 +654,7 @@ const styles = StyleSheet.create({
   itemTitle: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 2,
   },
   itemDesc: {
@@ -572,8 +678,7 @@ const styles = StyleSheet.create({
   factTitle: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
-    letterSpacing: 0.5,
+    fontFamily: Typography.family.heading,
   },
   factContent: {
     color: Colors.text,

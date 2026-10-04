@@ -153,9 +153,11 @@ const styles = StyleSheet.create({
   },
   capsuleShell: {
     height: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: Colors.surfaceWarm,
     borderRadius: 6,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   compactShell: {
     height: 8,

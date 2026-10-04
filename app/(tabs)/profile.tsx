@@ -1,17 +1,18 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
+import { Radius, Space } from '../../src/theme/layout';
 import { StoryCard } from '../../src/components/StoryCard';
 import { XPProgressBar } from '../../src/components/XPProgressBar';
 import { AstronautAvatar } from '../../src/components/AstronautAvatar';
 import { SpaceChoiceBadge } from '../../src/components/SpaceChoiceBadge';
 import { GentleButton } from '../../src/components/GentleButton';
+import { LanguageSwitch } from '../../src/components/LanguageSwitch';
 import { useAppStore, RANK_THRESHOLDS, ARCHETYPES } from '../../src/state/useAppStore';
 import {
   CheckCircle2,
-  RotateCcw,
   Sparkles,
   BookOpen,
   Target,
@@ -19,10 +20,8 @@ import {
   Star,
   Award,
   Lock,
-  ShieldCheck,
-  UserPlus,
-  LogOut,
-  User,
+  HardDrive,
+  Trash2,
   Languages,
 } from 'lucide-react-native';
 import { getTranslation } from '../../src/i18n/translations';
@@ -35,21 +34,14 @@ export default function ProfileScreen() {
     xp,
     completedLessonIds,
     quizAttempts,
-    resetProgress,
+    deleteLocalData,
     cadetArchetype,
-    currentUser,
-    isGuest,
-    logoutUser,
     language,
-    setLanguage,
   } = useAppStore();
 
   const t = getTranslation(language);
 
-  const handleSwitchAccount = async () => {
-    await logoutUser();
-    router.replace('/auth' as any);
-  };
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const threshold = RANK_THRESHOLDS[rank];
   const archetypeInfo = ARCHETYPES[cadetArchetype] || ARCHETYPES.pilot;
@@ -121,15 +113,10 @@ export default function ProfileScreen() {
     },
   ];
 
-  const handleConfirmReset = () => {
-    Alert.alert(
-      'অগ্রগতি রিসেট',
-      'তুমি কি সত্যি তোমার সমস্ত মহাকাশ অগ্রগতি নতুন করে শুরু করতে চাও?',
-      [
-        { text: 'না', style: 'cancel' },
-        { text: 'হ্যাঁ, রিসেট করো', style: 'destructive', onPress: () => resetProgress() },
-      ]
-    );
+  const handleDeleteData = async () => {
+    setConfirmingDelete(false);
+    await deleteLocalData();
+    router.replace('/splash');
   };
 
   return (
@@ -138,77 +125,28 @@ export default function ProfileScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* ── Language Settings Card ──────────────────────── */}
+      {/* ── Language ──────────────────────────────────────── */}
       <View style={styles.langSettingsCard}>
-        <View style={styles.langSettingsHeader}>
-          <View style={styles.langSettingsTitleRow}>
-            <Languages size={16} color={Colors.cyan} />
-            <Text style={styles.langSettingsTitle}>{t.profile.langSectionTitle}</Text>
-          </View>
-          <View style={styles.langActiveBadge}>
-            <Text style={styles.langActiveBadgeText}>
-              {language === 'bn' ? 'বাংলা সক্রিয় 🇧🇩' : 'English Active 🇺🇸'}
-            </Text>
-          </View>
+        <View style={styles.langSettingsTitleRow}>
+          <Languages size={20} color={Colors.primary} />
+          <Text style={styles.langSettingsTitle}>{language === 'en' ? 'Language' : 'ভাষা'}</Text>
         </View>
 
-        <View style={styles.langSegmentRow}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.langSegmentBtn,
-              language === 'bn' && styles.langSegmentBtnActive,
-              pressed && styles.langSegmentBtnPressed,
-            ]}
-            onPress={() => setLanguage('bn')}
-          >
-            <Text style={styles.langSegmentFlag}>🇧🇩</Text>
-            <Text style={[
-              styles.langSegmentText,
-              language === 'bn' && styles.langSegmentTextActive,
-            ]}>
-              বাংলা (Bangla)
-            </Text>
-            {language === 'bn' && (
-              <CheckCircle2 size={14} color={Colors.cyan} style={{ marginLeft: 4 }} />
-            )}
-          </Pressable>
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.langSegmentBtn,
-              language === 'en' && styles.langSegmentBtnActive,
-              pressed && styles.langSegmentBtnPressed,
-            ]}
-            onPress={() => setLanguage('en')}
-          >
-            <Text style={styles.langSegmentFlag}>🇺🇸</Text>
-            <Text style={[
-              styles.langSegmentText,
-              language === 'en' && styles.langSegmentTextActive,
-            ]}>
-              English
-            </Text>
-            {language === 'en' && (
-              <CheckCircle2 size={14} color={Colors.cyan} style={{ marginLeft: 4 }} />
-            )}
-          </Pressable>
-        </View>
+        <LanguageSwitch />
       </View>
 
       {/* Astronaut ID Badge Card */}
-      <StoryCard accent={isGuest ? 'gold' : 'primary'} style={styles.profileCard}>
+      <StoryCard accent="primary" style={styles.profileCard}>
         <View style={styles.dossierHeader}>
-          <View style={[styles.idChip, isGuest && styles.idChipGuest]}>
-            <Text style={[styles.idChipText, isGuest && styles.idChipTextGuest]}>
-              {isGuest
-                ? t.profile.visitorPassTitle
-                : `@${currentUser?.username || 'cadet'} · ${language === 'en' ? 'Official Cadet ID 🛰️' : 'অফিসিয়াল আইডি 🛰️'}`}
+          <View style={styles.idChip}>
+            <Text style={styles.idChipText} numberOfLines={1}>
+              {t.profile.localIdTitle}
             </Text>
           </View>
-          <View style={[styles.activePill, isGuest && styles.activePillGuest]}>
-            <View style={[styles.activeDot, isGuest && styles.activeDotGuest]} />
-            <Text style={[styles.activePillText, isGuest && styles.activePillTextGuest]}>
-              {isGuest ? t.common.guestBadge : t.common.verifiedBadge}
+          <View style={styles.activePill}>
+            <HardDrive size={12} color={Colors.emerald} />
+            <Text style={styles.activePillText} numberOfLines={1}>
+              {t.profile.savedOnDevice}
             </Text>
           </View>
         </View>
@@ -243,78 +181,6 @@ export default function ProfileScreen() {
           </Text>
         </View>
       </StoryCard>
-
-      {/* Account Status / Upgrade Prompt */}
-      {isGuest ? (
-        <View style={styles.guestAlertBanner}>
-          <View style={styles.guestAlertHeader}>
-            <View style={styles.guestAlertIconBox}>
-              <UserPlus size={18} color={Colors.gold} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.guestAlertTitle}>{t.profile.guestAlertTitle}</Text>
-              <Text style={styles.guestAlertSub}>
-                {language === 'en'
-                  ? `You are currently in Guest Mode. Register an account to permanently preserve your ${xp} XP and progress.`
-                  : `বর্তমানে তুমি অতিথি মোডে আছো। তোমার ${xp} XP ও সমাপ্ত পাঠগুলো সংরক্ষণ করতে একটি স্থায়ী অ্যাকাউন্ট খোলো।`}
-              </Text>
-            </View>
-          </View>
-          <View style={{ marginTop: 10 }}>
-            <GentleButton
-              title={t.profile.guestUpgradeBtn}
-              variant="primary"
-              size="normal"
-              onPress={() => router.push('/auth' as any)}
-            />
-          </View>
-        </View>
-      ) : (
-        <View style={styles.accountVerifiedBanner}>
-          <ShieldCheck size={16} color={Colors.emerald} />
-          <Text style={styles.accountVerifiedText}>
-            {language === 'en'
-              ? `ID: @${currentUser?.username} · ${t.profile.accountVerifiedSub}`
-              : `আইডি: @${currentUser?.username} · ${t.profile.accountVerifiedSub}`}
-          </Text>
-        </View>
-      )}
-
-      {/* Account Action Buttons */}
-      <View style={styles.accountActionCard}>
-        <View style={styles.accountActionTextCol}>
-          <Text style={styles.accountActionTitle}>
-            {isGuest ? t.profile.accountManagementGuestTitle : t.profile.accountManagementTitle}
-          </Text>
-          <Text style={styles.accountActionSub}>
-            {isGuest ? t.profile.accountManagementGuestSub : t.profile.accountManagementSub}
-          </Text>
-        </View>
-        <GentleButton
-          title={isGuest ? t.common.login : t.common.logout}
-          variant="outline"
-          size="normal"
-          onPress={handleSwitchAccount}
-        />
-      </View>
-
-      {/* Experience & Onboarding Replay Shortcuts */}
-      <View style={styles.shortcutsRow}>
-        <GentleButton
-          title={t.profile.shortcutsOrientation}
-          onPress={() => router.push('/onboarding')}
-          variant="outline"
-          size="normal"
-          style={styles.shortcutBtn}
-        />
-        <GentleButton
-          title={t.profile.shortcutsMars}
-          onPress={() => router.push('/splash')}
-          variant="outline"
-          size="normal"
-          style={styles.shortcutBtn}
-        />
-      </View>
 
       {/* Rank Suit Progression Tiers */}
       <Text style={styles.sectionHeading}>{t.profile.suitSectionTitle}</Text>
@@ -397,16 +263,50 @@ export default function ProfileScreen() {
         ))}
       </View>
 
-      {/* Danger Zone / Reset */}
-      <View style={styles.resetWrap}>
-        <GentleButton
-          title={t.profile.resetBtn}
-          onPress={handleConfirmReset}
-          variant="outline"
-          size="normal"
-          icon={<RotateCcw size={15} color={Colors.textSecondary} />}
-          textStyle={{ color: Colors.textSecondary }}
-        />
+      {/* My Data — everything lives on this device */}
+      <View style={styles.dataCard}>
+        <View style={styles.dataHeader}>
+          <View style={styles.dataIconBox}>
+            <HardDrive size={18} color={Colors.primaryLight} />
+          </View>
+          <View style={styles.dataTextCol}>
+            <Text style={styles.dataTitle}>{t.profile.dataSectionTitle}</Text>
+            <Text style={styles.dataSub}>{t.profile.dataSectionSub}</Text>
+          </View>
+        </View>
+
+        {confirmingDelete ? (
+          <View style={styles.confirmBox}>
+            <Text style={styles.confirmTitle}>{t.profile.deleteDataTitle}</Text>
+            <Text style={styles.confirmMessage}>{t.profile.deleteDataMessage}</Text>
+            <View style={styles.confirmRow}>
+              <GentleButton
+                title={t.profile.deleteDataCancel}
+                onPress={() => setConfirmingDelete(false)}
+                variant="outline"
+                size="normal"
+                style={styles.confirmBtn}
+              />
+              <GentleButton
+                title={t.profile.deleteDataConfirm}
+                onPress={handleDeleteData}
+                variant="coral"
+                size="normal"
+                style={styles.confirmBtn}
+              />
+            </View>
+          </View>
+        ) : (
+          <GentleButton
+            title={t.profile.deleteDataBtn}
+            onPress={() => setConfirmingDelete(true)}
+            variant="outline"
+            size="normal"
+            fullWidth
+            icon={<Trash2 size={16} color={Colors.coral} />}
+            textStyle={{ color: Colors.coral }}
+          />
+        )}
       </View>
     </ScrollView>
   );
@@ -431,9 +331,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 8,
     marginBottom: 16,
   },
   idChip: {
+    flexShrink: 1,
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -442,9 +344,10 @@ const styles = StyleSheet.create({
   idChipText: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   activePill: {
+    flexShrink: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
@@ -460,9 +363,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.emerald,
   },
   activePillText: {
+    flexShrink: 1,
     color: Colors.emerald,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   avatarSection: {
     alignItems: 'center',
@@ -471,7 +375,7 @@ const styles = StyleSheet.create({
   nameText: {
     color: Colors.text,
     fontSize: Typography.size.h1,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginTop: 10,
     marginBottom: 6,
   },
@@ -489,7 +393,7 @@ const styles = StyleSheet.create({
   rankPillText: {
     color: Colors.gold,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   archetypeDossierBox: {
     backgroundColor: 'rgba(255, 255, 255, 0.04)',
@@ -505,13 +409,12 @@ const styles = StyleSheet.create({
   },
   archetypeTitle: {
     fontSize: Typography.size.h3,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   archetypeMotto: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
     fontFamily: Typography.family.notoRegular,
-    fontStyle: 'italic',
   },
   archetypeDescText: {
     color: Colors.textSecondary,
@@ -519,115 +422,10 @@ const styles = StyleSheet.create({
     lineHeight: Typography.lineHeight.caption,
     fontFamily: Typography.family.notoRegular,
   },
-  idChipGuest: {
-    backgroundColor: 'rgba(255, 184, 0, 0.15)',
-    borderColor: 'rgba(255, 184, 0, 0.35)',
-  },
-  idChipTextGuest: {
-    color: Colors.gold,
-  },
-  activePillGuest: {
-    backgroundColor: 'rgba(255, 184, 0, 0.15)',
-  },
-  activeDotGuest: {
-    backgroundColor: Colors.gold,
-  },
-  activePillTextGuest: {
-    color: Colors.gold,
-  },
-  guestAlertBanner: {
-    backgroundColor: 'rgba(255, 184, 0, 0.10)',
-    borderRadius: 18,
-    borderWidth: 1.5,
-    borderBottomWidth: 3.5,
-    borderColor: 'rgba(255, 184, 0, 0.35)',
-    borderBottomColor: 'rgba(0, 0, 0, 0.35)',
-    padding: 14,
-    marginBottom: 12,
-  },
-  guestAlertHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-  },
-  guestAlertIconBox: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255, 184, 0, 0.22)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 2,
-  },
-  guestAlertTitle: {
-    color: Colors.gold,
-    fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.heavy,
-    marginBottom: 3,
-  },
-  guestAlertSub: {
-    color: Colors.textSecondary,
-    fontSize: Typography.size.micro,
-    lineHeight: Typography.lineHeight.caption,
-  },
-  accountVerifiedBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.28)',
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-    marginBottom: 12,
-  },
-  accountVerifiedText: {
-    color: Colors.emerald,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
-    flex: 1,
-  },
-  accountActionCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: 'rgba(14, 18, 60, 0.88)',
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderBottomWidth: 3,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-    borderBottomColor: 'rgba(0,0,0,0.3)',
-    padding: 12,
-    marginBottom: 12,
-    gap: 10,
-  },
-  accountActionTextCol: {
-    flex: 1,
-  },
-  accountActionTitle: {
-    color: Colors.text,
-    fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
-    marginBottom: 2,
-  },
-  accountActionSub: {
-    color: Colors.textMuted,
-    fontSize: 11,
-    lineHeight: 14,
-  },
-  shortcutsRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 20,
-  },
-  shortcutBtn: {
-    flex: 1,
-  },
   sectionHeading: {
     color: Colors.text,
     fontSize: Typography.size.h3,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 12,
     marginTop: 4,
   },
@@ -652,7 +450,7 @@ const styles = StyleSheet.create({
   suitTitle: {
     color: Colors.text,
     fontSize: Typography.size.caption,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     textAlign: 'center',
     marginBottom: 6,
   },
@@ -693,7 +491,7 @@ const styles = StyleSheet.create({
   statNumber: {
     color: Colors.text,
     fontSize: Typography.size.h1,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 2,
   },
   statLabel: {
@@ -734,7 +532,7 @@ const styles = StyleSheet.create({
   badgeTitle: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 2,
   },
   badgeDesc: {
@@ -743,91 +541,93 @@ const styles = StyleSheet.create({
     fontFamily: Typography.family.notoRegular,
   },
   badgeCheck: {},
-  resetWrap: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
   langSettingsCard: {
-    backgroundColor: 'rgba(14, 18, 60, 0.88)',
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: 'rgba(0, 240, 255, 0.35)',
-    borderBottomWidth: 4,
-    borderBottomColor: 'rgba(0, 240, 255, 0.50)',
-    padding: 16,
-    marginBottom: 16,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  langSettingsHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 12,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.md,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: Space.lg,
+    marginBottom: Space.lg,
+    gap: Space.md,
   },
   langSettingsTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: Space.sm,
   },
   langSettingsTitle: {
     color: Colors.text,
-    fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
+    fontSize: Typography.size.h3,
+    lineHeight: Typography.lineHeight.h3,
+    fontFamily: Typography.family.heading,
   },
-  langActiveBadge: {
-    backgroundColor: 'rgba(0, 240, 255, 0.12)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
+  dataCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.md,
     borderWidth: 1,
-    borderColor: 'rgba(0, 240, 255, 0.25)',
-  },
-  langActiveBadgeText: {
-    color: Colors.cyan,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
-  },
-  langSegmentRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  langSegmentBtn: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-  },
-  langSegmentBtnActive: {
-    backgroundColor: 'rgba(0, 240, 255, 0.14)',
-    borderColor: Colors.cyan,
     borderBottomWidth: 3,
-    borderBottomColor: Colors.cyan,
+    borderColor: Colors.border,
+    borderBottomColor: Colors.borderMedium,
+    padding: Space.lg,
+    marginTop: 10,
+    marginBottom: 20,
+    gap: Space.lg,
   },
-  langSegmentBtnPressed: {
-    opacity: 0.8,
-    transform: [{ scale: 0.98 }],
+  dataHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: Space.md,
   },
-  langSegmentFlag: {
-    fontSize: 14,
+  dataIconBox: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: Colors.primaryBg,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  langSegmentText: {
-    color: Colors.textSecondary,
-    fontSize: Typography.size.bodySmall,
-    fontWeight: Typography.weight.medium,
+  dataTextCol: {
+    flex: 1,
   },
-  langSegmentTextActive: {
+  dataTitle: {
     color: Colors.text,
-    fontWeight: Typography.weight.bold,
+    fontSize: Typography.size.bodySmall,
+    lineHeight: Typography.lineHeight.bodySmall,
+    fontFamily: Typography.family.heading,
+    marginBottom: 2,
+  },
+  dataSub: {
+    color: Colors.textMuted,
+    fontSize: Typography.size.caption,
+    lineHeight: Typography.lineHeight.caption,
+    fontFamily: Typography.family.notoRegular,
+  },
+  confirmBox: {
+    backgroundColor: Colors.coralBg,
+    borderRadius: Radius.sm + 4,
+    borderWidth: 1,
+    borderColor: Colors.coral,
+    padding: Space.md,
+    gap: Space.sm,
+  },
+  confirmTitle: {
+    color: Colors.coral,
+    fontSize: Typography.size.bodySmall,
+    lineHeight: Typography.lineHeight.bodySmall,
+    fontFamily: Typography.family.heading,
+  },
+  confirmMessage: {
+    color: Colors.textSecondary,
+    fontSize: Typography.size.caption,
+    lineHeight: Typography.lineHeight.caption,
+    fontFamily: Typography.family.notoRegular,
+  },
+  confirmRow: {
+    flexDirection: 'row',
+    gap: Space.md,
+    marginTop: Space.xs,
+  },
+  confirmBtn: {
+    flex: 1,
   },
 });

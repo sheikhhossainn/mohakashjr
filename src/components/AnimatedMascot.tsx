@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Animated, StyleSheet, Easing } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Animated, StyleSheet, Easing, AccessibilityInfo } from 'react-native';
 import Svg, { Circle, Rect, Path, Ellipse, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { Colors } from '../theme/colors';
 
@@ -16,7 +16,18 @@ export const AnimatedMascot: React.FC<AnimatedMascotProps> = ({
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const waveAnim = useRef(new Animated.Value(0)).current;
 
+  const [reduceMotion, setReduceMotion] = useState(false);
+
   useEffect(() => {
+    AccessibilityInfo.isReduceMotionEnabled?.()
+      .then(setReduceMotion)
+      .catch(() => {});
+    const sub = AccessibilityInfo.addEventListener?.('reduceMotionChanged', setReduceMotion);
+    return () => sub?.remove?.();
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion) return; // keep the mascot still for motion-sensitive kids
     // 1. Continuous Zero-G Floating Bobbing
     const floating = Animated.loop(
       Animated.sequence([
@@ -53,21 +64,19 @@ export const AnimatedMascot: React.FC<AnimatedMascotProps> = ({
       ])
     );
 
-    // 3. Waving Arm
+    // 3. Waving Arm — raise slowly, two gentle waves, lower slowly, then rest
+    const ease = Easing.inOut(Easing.sin);
+    const swing = (toValue: number, duration: number) =>
+      Animated.timing(waveAnim, { toValue, duration, easing: ease, useNativeDriver: true });
     const waving = Animated.loop(
       Animated.sequence([
-        Animated.timing(waveAnim, {
-          toValue: 1,
-          duration: 400,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(waveAnim, {
-          toValue: 0,
-          duration: 400,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
+        swing(1, 1600),
+        swing(0.55, 1100),
+        swing(1, 1100),
+        swing(0.55, 1100),
+        swing(1, 1100),
+        swing(0, 1800),
+        Animated.delay(2200),
       ])
     );
 
@@ -82,7 +91,7 @@ export const AnimatedMascot: React.FC<AnimatedMascotProps> = ({
       tilting.stop();
       waving.stop();
     };
-  }, [mood]);
+  }, [mood, reduceMotion]);
 
   const spin = rotateAnim.interpolate({
     inputRange: [-1, 1],
@@ -91,8 +100,11 @@ export const AnimatedMascot: React.FC<AnimatedMascotProps> = ({
 
   const wave = waveAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '-22deg'],
+    outputRange: ['0deg', '-16deg'],
   });
+
+  const shoulderDx = (34 * size) / 120 - size / 2;
+  const shoulderDy = (64 * size) / 120 - size / 2;
 
   return (
     <Animated.View
@@ -212,21 +224,6 @@ export const AnimatedMascot: React.FC<AnimatedMascotProps> = ({
         <Path d="M 60 14 L 60 6" stroke="#94A3B8" strokeWidth="3" strokeLinecap="round" />
         <Circle cx="60" cy="5" r="4.5" fill={Colors.gold} stroke="#D97706" strokeWidth="1.5" />
 
-        {/* Left Arm / Waving Glove */}
-        <Animated.View style={{ transform: [{ rotate: wave }] }}>
-          <Ellipse
-            cx="28"
-            cy="68"
-            rx="8"
-            ry="11"
-            fill="url(#suitShade)"
-            stroke="#CBD5E1"
-            strokeWidth="3"
-            transform="rotate(25 28 68)"
-          />
-          <Circle cx="24" cy="62" r="5" fill={Colors.cyan} />
-        </Animated.View>
-
         {/* Right Arm */}
         <Ellipse
           cx="92"
@@ -240,6 +237,45 @@ export const AnimatedMascot: React.FC<AnimatedMascotProps> = ({
         />
         <Circle cx="96" cy="65" r="5" fill={Colors.cyan} />
       </Svg>
+
+      {/* Left arm lives in its own layer: Animated.View can't be nested inside <Svg>,
+          so it overlays the body and rotates around the shoulder. */}
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            // rotate around the shoulder (not the layer centre) without transformOrigin
+            transform: [
+              { translateX: shoulderDx },
+              { translateY: shoulderDy },
+              { rotate: wave },
+              { translateX: -shoulderDx },
+              { translateY: -shoulderDy },
+            ],
+          },
+        ]}
+      >
+        <Svg width={size} height={size} viewBox="0 0 120 120">
+          <Defs>
+            <LinearGradient id="armShade" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0%" stopColor="#FFFFFF" stopOpacity="1" />
+              <Stop offset="100%" stopColor="#D9E2EC" stopOpacity="1" />
+            </LinearGradient>
+          </Defs>
+          <Ellipse
+            cx="28"
+            cy="68"
+            rx="8"
+            ry="11"
+            fill="url(#armShade)"
+            stroke="#CBD5E1"
+            strokeWidth="3"
+            transform="rotate(25 28 68)"
+          />
+          <Circle cx="24" cy="62" r="5" fill={Colors.cyan} />
+        </Svg>
+      </Animated.View>
     </Animated.View>
   );
 };

@@ -8,6 +8,7 @@ import { GentleButton } from '../../src/components/GentleButton';
 import { MascotReaction } from '../../src/components/MascotReaction';
 import { AstronautAvatar } from '../../src/components/AstronautAvatar';
 import { MoonLandingMission, MissionStage } from '../../src/components/mission';
+import { SpaceHub } from '../../src/components/SpaceHub';
 import { useAppStore } from '../../src/state/useAppStore';
 import { getTranslation } from '../../src/i18n/translations';
 import {
@@ -20,8 +21,12 @@ import {
   Play,
   Sparkles,
   ChevronRight,
+  ChevronLeft,
   UserCheck,
 } from 'lucide-react-native';
+
+import { useNavigation } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function MissionScreen() {
   const language = useAppStore((state) => state.language);
@@ -31,9 +36,35 @@ export default function MissionScreen() {
 
   const t = getTranslation(language).missionGame;
   const rankTitles = getTranslation(language).ranks;
+  const hubT = getTranslation(language).spaceHub;
 
+  const [screen, setScreen] = useState<'hub' | 'moon'>('hub');
   const [isMissionActive, setIsMissionActive] = useState(false);
   const [missionStartStage, setMissionStartStage] = useState<MissionStage>('suit_up');
+
+  const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerShown: !isMissionActive,
+      tabBarStyle: isMissionActive
+        ? { display: 'none' }
+        : {
+            backgroundColor: Colors.surface,
+            borderTopColor: Colors.border,
+            borderTopWidth: 1,
+            height: 60 + Math.max(insets.bottom, 8),
+            paddingBottom: Math.max(insets.bottom, 8) + 2,
+            paddingTop: 8,
+            shadowColor: Colors.text,
+            shadowOffset: { width: 0, height: -2 },
+            shadowOpacity: 0.05,
+            shadowRadius: 8,
+            elevation: 4,
+          },
+    });
+  }, [isMissionActive, navigation, insets.bottom]);
 
   const startMissionAtStage = (stage: MissionStage) => {
     setMissionStartStage(stage);
@@ -43,9 +74,22 @@ export default function MissionScreen() {
   // If cadet has launched the mission, show the full multi-stage simulation game
   if (isMissionActive) {
     return (
-      <MoonLandingMission
-        initialStage={missionStartStage}
-        onExitMission={() => setIsMissionActive(false)}
+      <View style={[styles.activeMissionContainer, { paddingTop: insets.top }]}>
+        <MoonLandingMission
+          initialStage={missionStartStage}
+          onExitMission={() => setIsMissionActive(false)}
+        />
+      </View>
+    );
+  }
+
+  if (screen === 'hub') {
+    return (
+      <SpaceHub
+        language={language}
+        onOpenDestination={(id) => {
+          if (id === 'moon') setScreen('moon');
+        }}
       />
     );
   }
@@ -88,8 +132,17 @@ export default function MissionScreen() {
       badge: '১১.২ কিমি/সে',
     },
     {
-      stage: 'lunar_descent',
+      stage: 'atmospheric_flight',
       number: '০৪',
+      title: t.atmosphericFlight?.heading ?? '৪. বায়ুমণ্ডল অতিক্রম ও আইএসএস',
+      subtitle: t.stages.atmospheric_flight,
+      icon: Rocket,
+      accent: 'cyan',
+      badge: '৬টি স্তর + ISS',
+    },
+    {
+      stage: 'lunar_descent',
+      number: '০৫',
       title: t.descent.heading,
       subtitle: t.stages.lunar_descent,
       icon: Compass,
@@ -98,7 +151,7 @@ export default function MissionScreen() {
     },
     {
       stage: 'moonwalk',
-      number: '০৫',
+      number: '০৬',
       title: t.moonwalk.heading,
       subtitle: t.stages.moonwalk,
       icon: Award,
@@ -113,6 +166,17 @@ export default function MissionScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
+      <Pressable
+        onPress={() => setScreen('hub')}
+        style={styles.backRow}
+        accessibilityRole="button"
+        accessibilityLabel={hubT.backToHub}
+        hitSlop={8}
+      >
+        <ChevronLeft size={20} color={Colors.primaryLight} />
+        <Text style={styles.backText}>{hubT.backToHub}</Text>
+      </Pressable>
+
       {/* Hero Mission Control Briefing Card */}
       <StoryCard accent="primary" style={styles.heroCard}>
         <View style={styles.tagRow}>
@@ -300,12 +364,27 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
   },
+  backRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    gap: 4,
+    minHeight: 40,
+    marginBottom: 6,
+  },
+  backText: {
+    color: Colors.primaryLight,
+    fontSize: Typography.size.bodySmall,
+    lineHeight: Typography.lineHeight.caption,
+    fontFamily: Typography.family.headingSemi,
+  },
   heroCard: {
     marginBottom: 14,
   },
   tagRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: 8,
     alignItems: 'center',
     marginBottom: 10,
   },
@@ -321,7 +400,7 @@ const styles = StyleSheet.create({
   missionTagText: {
     color: Colors.primaryLight,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   statusLiveBadge: {
     flexDirection: 'row',
@@ -341,12 +420,12 @@ const styles = StyleSheet.create({
   statusLiveText: {
     color: Colors.emerald,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   heroTitle: {
     color: Colors.text,
     fontSize: Typography.size.hero,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
     marginBottom: 6,
   },
   heroDescription: {
@@ -390,12 +469,12 @@ const styles = StyleSheet.create({
   dossierBadgeText: {
     color: Colors.emerald,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindSemiBold,
+    fontFamily: Typography.family.headingSemi,
   },
   cadetNameText: {
     color: Colors.text,
     fontSize: Typography.size.body,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   cadetRankText: {
     color: Colors.textSecondary,
@@ -413,7 +492,7 @@ const styles = StyleSheet.create({
   sectionHeading: {
     color: Colors.text,
     fontSize: Typography.size.h3,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   sectionCode: {
     color: Colors.textMuted,
@@ -452,7 +531,7 @@ const styles = StyleSheet.create({
   stationStepNum: {
     color: Colors.textMuted,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   stationDetails: {
     flex: 1,
@@ -466,7 +545,7 @@ const styles = StyleSheet.create({
   stationSubTag: {
     color: Colors.gold,
     fontSize: Typography.size.micro,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   stationBadge: {
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
@@ -476,13 +555,13 @@ const styles = StyleSheet.create({
   },
   stationBadgeText: {
     color: Colors.textSecondary,
-    fontSize: 10,
+    fontSize: 12,
     fontFamily: Typography.family.notoRegular,
   },
   stationTitle: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
-    fontFamily: Typography.family.hindBold,
+    fontFamily: Typography.family.heading,
   },
   chevronBox: {
     paddingRight: 4,
@@ -494,5 +573,9 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.85,
     transform: [{ scale: 0.99 }],
+  },
+  activeMissionContainer: {
+    flex: 1,
+    backgroundColor: Colors.background,
   },
 });

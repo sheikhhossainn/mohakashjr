@@ -14,6 +14,10 @@ import { getQuizQuestionsByLessonId, getPlacementQuiz } from '../src/services/qu
 import { ASTRONAUT_MENTOR_SYSTEM_PROMPT, AI_TUTOR_CONFIG } from '../src/content/aiTutorPrompt';
 import { CurriculumSeedData } from '../src/content/schema';
 
+// Bengali য় ড় ঢ় may be stored as one letter or base + nukta; compare them as equal
+const nf = (t: string) =>
+  t.replace(/য়/g, 'য়').replace(/ড়/g, 'ড়').replace(/ঢ়/g, 'ঢ়');
+
 test('Curriculum: Exactly 8 Lessons (4 Cadet + 4 Astronaut) with rich NASA content', async () => {
   const allLessons = await getLessons();
   assert.strictEqual(allLessons.length, 8, 'Should have exactly 8 lessons');
@@ -83,10 +87,10 @@ test('Quizzes: 3 questions per lesson (24 total) + 5 placement questions (29 tot
   assert.strictEqual(totalLessonQuestions, 24, 'Total per-lesson questions must equal 24');
 });
 
-test('Offline Tutor: 30 common space Q&As in Bangla with keyword matching', () => {
+test('Offline Tutor: 100+ space Q&As in Bangla with keyword matching', () => {
   const allQA = getAllOfflineQuestions();
-  assert.ok(allQA.length >= 25, 'Must have at least 25 offline questions');
-  assert.strictEqual(allQA.length, 30, 'Should have 30 curated offline questions');
+  assert.ok(allQA.length >= 100, 'Must have at least 100 offline questions');
+  assert.strictEqual(new Set(allQA.map((q) => q.id)).size, allQA.length, 'Question ids must be unique');
 
   // Test keyword matching for Moon water
   const moonWaterResult = findOfflineAnswer('চাঁদে কি পানি বা বরফ আছে?');
@@ -98,12 +102,12 @@ test('Offline Tutor: 30 common space Q&As in Bangla with keyword matching', () =
   const toiletResult = findOfflineAnswer('মহাকাশে নভোচারীরা বাথরুমে কীভাবে যান?');
   assert.ok(toiletResult.item !== null);
   assert.strictEqual(toiletResult.item?.id, 'faq-02');
-  assert.ok(toiletResult.answer_bn.includes('টয়লেট'));
+  assert.ok(nf(toiletResult.answer_bn).includes(nf('টয়লেট')));
 
   // Test keyword matching for JWST
   const jwstResult = findOfflineAnswer('জেমস ওয়েব স্পেস টেলিস্কোপ');
   assert.ok(jwstResult.item !== null);
-  assert.ok(jwstResult.answer_bn.includes('জেমস ওয়েব'));
+  assert.ok(nf(jwstResult.answer_bn).includes(nf('জেমস ওয়েব')));
 
   // Test category filtering
   const moonCategory = getOfflineQuestionsByCategory('moon');
@@ -137,4 +141,29 @@ test('seed.json: Packaged deliverable validation', () => {
   assert.strictEqual(data.placement_quiz.length, 5);
   assert.strictEqual(data.offline_qa.length, 30);
   assert.strictEqual(data.ai_tutor_config.mentor_name, 'ক্যাপ্টেন রোভার');
+});
+
+test('Space destinations: Moon is live, all other planets are coming soon', async () => {
+  const { SPACE_DESTINATIONS } = await import('../src/content/spaceDestinations');
+  const ids = SPACE_DESTINATIONS.map((d) => d.id);
+  assert.deepStrictEqual(ids, ['moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune']);
+  for (const d of SPACE_DESTINATIONS) {
+    assert.strictEqual(d.comingSoon, d.id !== 'moon');
+    assert.ok(d.summary_bn.length > 0 && d.summary_en.length > 0);
+    assert.ok(d.name_bn.length > 0 && d.name_en.length > 0);
+  }
+});
+
+test('Offline Tutor: every question and every quick-reply chip leads to a real answer', () => {
+  for (const item of getAllOfflineQuestions()) {
+    assert.strictEqual(
+      findOfflineAnswer(item.question_bn).item?.id,
+      item.id,
+      `Question of ${item.id} should resolve to itself`
+    );
+    assert.ok((item.quick_replies_bn || []).length >= 2, `${item.id} needs follow-up chips`);
+    for (const chip of item.quick_replies_bn || []) {
+      assert.ok(findOfflineAnswer(chip).item, `Chip "${chip}" of ${item.id} must resolve to an answer`);
+    }
+  }
 });
