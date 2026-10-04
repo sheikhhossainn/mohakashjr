@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { RankTier, QuizAttemptRecord } from '../content/schema';
+import { authDatabase, UserAccount } from '../services/authDatabase';
 
 export type CadetArchetype = 'pilot' | 'astronomer' | 'engineer' | 'explorer';
 
@@ -105,6 +106,13 @@ export interface AppState {
   completedLessonIds: string[];
   quizAttempts: Record<string, QuizAttemptRecord[]>; // lessonId -> attempts
 
+  // Account & Authentication
+  currentUser: UserAccount | null;
+  isGuest: boolean;
+  isAuthenticated: boolean;
+  isAuthLoading: boolean;
+  authError: string | null;
+
   // Onboarding & Psychometric Archetype
   hasCompletedOnboarding: boolean;
   cadetArchetype: CadetArchetype;
@@ -125,6 +133,20 @@ export interface AppState {
   dismissLevelUp: () => void;
   getRankProgress: () => { current: number; max: number; percentage: number };
   resetProgress: () => void;
+
+  // Auth & Database Actions
+  initializeSession: () => Promise<boolean>;
+  signUpUser: (params: {
+    username: string;
+    displayName: string;
+    password: string;
+    cadetArchetype?: CadetArchetype;
+    psychometricAnswers?: Record<number, number[]>;
+  }) => Promise<{ success: boolean; error?: string }>;
+  loginUser: (username: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  continueAsGuest: (displayName?: string, archetype?: CadetArchetype, answers?: Record<number, number[]>) => Promise<void>;
+  logoutUser: () => Promise<void>;
+  syncCurrentProgressToDb: () => Promise<void>;
 }
 
 export const RANK_THRESHOLDS: Record<RankTier, { min: number; max: number; label_bn: string }> = {
@@ -147,6 +169,11 @@ export const useAppStore = create<AppState>((set, get) => ({
   xp: 0,
   completedLessonIds: [],
   quizAttempts: {},
+  currentUser: null,
+  isGuest: false,
+  isAuthenticated: false,
+  isAuthLoading: false,
+  authError: null,
   activeLevelUp: null,
   hasCompletedOnboarding: false,
   cadetArchetype: 'pilot',
@@ -157,9 +184,10 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   completeCadetOrientation: (name: string, answers: Record<number, number[]>) => {
     const archetype = calculateArchetype(answers);
+    const chosenName = name && name.trim().length > 0 ? name.trim() : 'জুনিয়র ক্যাডেট';
     set({
       hasCompletedOnboarding: true,
-      displayName: name && name.trim().length > 0 ? name.trim() : 'জুনিয়র ক্যাডেট',
+      displayName: chosenName,
       cadetArchetype: archetype,
       psychometricAnswers: answers,
     });
@@ -172,7 +200,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     });
   },
 
-  resetOnboarding: () => set({ hasCompletedOnboarding: false }),
+  resetOnboarding: () => set({ hasCompletedOnboarding: false, isAuthenticated: false }),
 
   addXP: (amount: number) => {
     const currentXP = get().xp;
@@ -194,6 +222,9 @@ export const useAppStore = create<AppState>((set, get) => ({
       rank: newRank,
       ...(levelUpEvent ? { activeLevelUp: levelUpEvent } : {}),
     });
+
+    // Sync to database
+    get().syncCurrentProgressToDb();
   },
 
   completeLesson: (lessonId: string) => {
@@ -215,6 +246,8 @@ export const useAppStore = create<AppState>((set, get) => ({
     });
     if (attempt.xp_earned > 0) {
       addXP(attempt.xp_earned);
+    } else {
+      get().syncCurrentProgressToDb();
     }
   },
 
@@ -240,10 +273,160 @@ export const useAppStore = create<AppState>((set, get) => ({
       xp: 0,
       completedLessonIds: [],
       quizAttempts: {},
+      currentUser: null,
+      isGuest: false,
+      isAuthenticated: false,
       activeLevelUp: null,
       hasCompletedOnboarding: false,
       cadetArchetype: 'pilot',
       psychometricAnswers: {},
     });
+  },
+
+  // ── Database & Auth Actions ────────────────────────────────────────────────
+  initializeSession: async () => {
+    set({ isAuthLoading: true });
+    try {
+      const sessionUser = await authDatabase.getCurrentSession();
+      if (sessionUser) {
+        set({
+          currentUser: sessionUser,
+          isGuest: sessionUser.isGuest,
+          isAuthenticated: true,
+          hasCompletedOnboarding: true,
+          displayName: sessionUser.displayName,
+          rank: sessionUser.rank,
+          xp: sessionUser.xp,
+          completedLessonIds: sessionUser.completedLessonIds || [],
+          quizAttempts: sessionUser.quizAttempts || {},
+          cadetArchetype: sessionUser.cadetArchetype || 'pilot',
+          psychometricAnswers: sessionUser.psychometricAnswers || {},
+          isAuthLoading: false,
+        });
+        return true;
+      }
+    } catch {
+      // Ignore
+    }
+    set({ isAuthLoading: false });
+    return false;
+  },
+
+  signUpUser: async (params) => {
+    set({ isAuthLoading: true, authError: null });
+    const res = await authDatabase.signUp({
+      username: params.username,
+      displayName: params.displayName,
+      password: params.password,
+      cadetArchetype: params.cadetArchetype || get().cadetArchetype,
+      psychometricAnswers: params.psychometricAnswers || get().psychometricAnswers,
+    });
+
+    if (res.success && res.user) {
+      set({
+        currentUser: res.user,
+        isGuest: false,
+        isAuthenticated: true,
+        hasCompletedOnboarding: true,
+        displayName: res.user.displayName,
+        rank: res.user.rank,
+        xp: res.user.xp,
+        completedLessonIds: res.user.completedLessonIds,
+        quizAttempts: res.user.quizAttempts,
+        cadetArchetype: res.user.cadetArchetype,
+        psychometricAnswers: res.user.psychometricAnswers,
+        isAuthLoading: false,
+        authError: null,
+      });
+      return { success: true };
+    } else {
+      set({ isAuthLoading: false, authError: res.error || 'নিবন্ধন ব্যর্থ হয়েছে।' });
+      return { success: false, error: res.error };
+    }
+  },
+
+  loginUser: async (username, password) => {
+    set({ isAuthLoading: true, authError: null });
+    const res = await authDatabase.login(username, password);
+
+    if (res.success && res.user) {
+      set({
+        currentUser: res.user,
+        isGuest: res.user.isGuest,
+        isAuthenticated: true,
+        hasCompletedOnboarding: true,
+        displayName: res.user.displayName,
+        rank: res.user.rank,
+        xp: res.user.xp,
+        completedLessonIds: res.user.completedLessonIds || [],
+        quizAttempts: res.user.quizAttempts || {},
+        cadetArchetype: res.user.cadetArchetype || 'pilot',
+        psychometricAnswers: res.user.psychometricAnswers || {},
+        isAuthLoading: false,
+        authError: null,
+      });
+      return { success: true };
+    } else {
+      set({ isAuthLoading: false, authError: res.error || 'লগইন ব্যর্থ হয়েছে।' });
+      return { success: false, error: res.error };
+    }
+  },
+
+  continueAsGuest: async (displayName, archetype, answers) => {
+    set({ isAuthLoading: true });
+    const chosenArchetype = archetype || get().cadetArchetype;
+    const chosenAnswers = answers || get().psychometricAnswers;
+    const chosenName = displayName?.trim() || get().displayName || 'অতিথি ক্যাডেট';
+
+    const guestUser = await authDatabase.loginAsGuest({
+      displayName: chosenName,
+      cadetArchetype: chosenArchetype,
+      psychometricAnswers: chosenAnswers,
+    });
+
+    set({
+      currentUser: guestUser,
+      isGuest: true,
+      isAuthenticated: true,
+      hasCompletedOnboarding: true,
+      displayName: guestUser.displayName,
+      rank: guestUser.rank,
+      xp: guestUser.xp,
+      completedLessonIds: [],
+      quizAttempts: {},
+      cadetArchetype: guestUser.cadetArchetype,
+      psychometricAnswers: guestUser.psychometricAnswers,
+      isAuthLoading: false,
+      authError: null,
+    });
+  },
+
+  logoutUser: async () => {
+    await authDatabase.logout();
+    set({
+      currentUser: null,
+      isAuthenticated: false,
+      isGuest: false,
+      hasCompletedOnboarding: false,
+      xp: 0,
+      rank: 'Cadet',
+      completedLessonIds: [],
+      quizAttempts: {},
+      displayName: 'জুনিয়র ক্যাডেট',
+    });
+  },
+
+  syncCurrentProgressToDb: async () => {
+    const user = get().currentUser;
+    if (user) {
+      await authDatabase.updateProgress(user.id, {
+        xp: get().xp,
+        rank: get().rank,
+        completedLessonIds: get().completedLessonIds,
+        quizAttempts: get().quizAttempts,
+        cadetArchetype: get().cadetArchetype,
+        displayName: get().displayName,
+      });
+    }
   },
 }));

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,9 @@ import {
   TextInput,
   Pressable,
   ScrollView,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Colors } from '../src/theme/colors';
@@ -17,7 +20,27 @@ import { AstronautAvatar } from '../src/components/AstronautAvatar';
 import { SpaceChoiceBadge } from '../src/components/SpaceChoiceBadge';
 import { ConfettiEffect } from '../src/components/ConfettiEffect';
 import { useAppStore, ARCHETYPES, calculateArchetype, CadetArchetype } from '../src/state/useAppStore';
-import { Sparkles, ArrowRight, ArrowLeft, Check, Star, Award, Compass, Zap, CheckSquare2 } from 'lucide-react-native';
+import { authDatabase, UserAccount } from '../src/services/authDatabase';
+import {
+  Sparkles,
+  ArrowRight,
+  ArrowLeft,
+  Check,
+  Star,
+  Award,
+  Compass,
+  Zap,
+  CheckSquare2,
+  User,
+  KeyRound,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  Rocket,
+  ShieldCheck,
+  Users,
+  CheckCircle2,
+} from 'lucide-react-native';
 
 interface PsychometricOption {
   title_bn: string;
@@ -98,26 +121,26 @@ const QUESTIONS: PsychometricQuestion[] = [
     stepNumber: 3,
     tag: 'কৌতূহল ০৩: মহাজাগতিক বিস্ময় ও রোমাঞ্চ',
     topicTitle_bn: 'ভবিষ্যতের মহাকাশ লক্ষ্য 🌟',
-    scenario_bn: 'বড় হয়ে বিজ্ঞানী বা নভোচারী হলে, মহাকাশের কোন রোমাঞ্চকর রহস্যটি তুমি সবার আগে সমাধান করতে চাও?',
+    scenario_bn: 'ভবিষ্যতে মানবজাতির সবচেয়ে বড় মহাকাশ জয়ের কোন ঐতিহাসিক মুহূর্তে তুমি প্রথম উপস্থিত থাকতে চাও?',
     options: [
       {
-        title_bn: 'আলোর গতিতে অন্য তারায় যাওয়া',
-        subtitle_bn: 'সবার চেয়ে দ্রুততম গতিতে অন্য সৌরজগতে পৌঁছে বিশ্বরেকর্ড গড়া!',
+        title_bn: 'আলোর গতিতে অন্য নক্ষত্রে যাত্রা',
+        subtitle_bn: 'সৌরজগত ছাড়িয়ে আলোর গতিতে হাইপারড্রাইভ রকেট নিয়ে মানবজাতির প্রথম নক্ষত্রযাত্রী হওয়া!',
         type: 'pilot',
       },
       {
-        title_bn: 'ব্ল্যাকহোল ও সৃষ্টির রহস্য',
-        subtitle_bn: 'রহস্যময় ব্ল্যাকহোলের শেষ সীমানা ও তারার জন্মরহস্য উন্মোচন করা!',
+        title_bn: 'মহাবিশ্বের প্রথম ব্ল্যাকহোলের ছবি তোলা',
+        subtitle_bn: 'মহাকর্ষের গভীর রহস্য ভেদ করে ব্ল্যাকহোল আর কোয়াসারের গোপন রহস্যের ছবি মানুষের সামনে আনা!',
         type: 'astronomer',
       },
       {
-        title_bn: 'চাঁদ ও মঙ্গলে মানুষের শহর',
-        subtitle_bn: 'রোবট আর থ্রিডি প্রিন্টার দিয়ে অন্য গ্রহে সুরক্ষিত মহাকাশ শহর তৈরি করা!',
+        title_bn: 'চাঁদে মানুষের প্রথম শহর তৈরি',
+        subtitle_bn: 'চাঁদের মাটির নিচে রোবট দিয়ে স্বয়ংক্রিয় বায়ো-ডোম স্পেস কলোনি ও রকেট স্টেশন গড়ে তোলা!',
         type: 'engineer',
       },
       {
-        title_bn: 'অন্য গ্রহে বন্ধু বা এলিয়েন খোঁজা',
-        subtitle_bn: 'বহু দূর কোনো গ্রহে বন্ধুভাবাপন্ন এলিয়েন প্রাণ আছে কি না খুঁজে বের করা!',
+        title_bn: 'মঙ্গল গ্রহে জীবনের প্রথম চিহ্ন খোঁজা',
+        subtitle_bn: 'লাল গ্রহ মঙ্গলের প্রাচীন হ্রদের তলদেশে ড্রিল করে ভিনগ্রহের প্রথম জীবাশ্ম আবিষ্কার করা!',
         type: 'explorer',
       },
     ],
@@ -126,12 +149,32 @@ const QUESTIONS: PsychometricQuestion[] = [
 
 export default function OnboardingScreen() {
   const router = useRouter();
-  const { completeCadetOrientation } = useAppStore();
+  const {
+    completeCadetOrientation,
+    signUpUser,
+    loginUser,
+    continueAsGuest,
+    isAuthLoading,
+    authError,
+  } = useAppStore();
 
-  const [step, setStep] = useState(0); // 0: Welcome, 1: Q1, 2: Q2, 3: Q3, 4: Result/Reveal
-  // No options selected by default as requested!
+  const [step, setStep] = useState(0); // 0: Welcome, 1: Q1, 2: Q2, 3: Q3, 4: Result/Reveal, 5: Auth/Account Station
   const [answers, setAnswers] = useState<Record<number, number[]>>({});
   const [cadetName, setCadetName] = useState('সোহান');
+
+  // Auth Station States (Step 5)
+  const [authMode, setAuthMode] = useState<'signup' | 'login' | 'guest'>('signup');
+  const [username, setUsername] = useState('cadet_' + Math.floor(100 + Math.random() * 900));
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [localAuthError, setLocalAuthError] = useState<string | null>(null);
+  const [savedUsers, setSavedUsers] = useState<UserAccount[]>([]);
+
+  useEffect(() => {
+    authDatabase.getAllUsers().then((users) => {
+      setSavedUsers(users.filter((u) => !u.isGuest));
+    });
+  }, []);
 
   const currentQIndex = step - 1;
   const currentQ = QUESTIONS[currentQIndex];
@@ -162,8 +205,8 @@ export default function OnboardingScreen() {
 
     if (step < 4) {
       setStep(step + 1);
-    } else {
-      handleFinalize();
+    } else if (step === 4) {
+      setStep(5); // Go to Account / Auth Station
     }
   };
 
@@ -173,245 +216,611 @@ export default function OnboardingScreen() {
     }
   };
 
-  const handleFinalize = () => {
-    completeCadetOrientation(cadetName, answers);
-    router.replace('/(tabs)');
-  };
-
   const calculatedArchetypeKey = calculateArchetype(answers);
   const archetypeInfo = ARCHETYPES[calculatedArchetypeKey];
 
+  // Auth actions
+  const handleSignUp = async () => {
+    setLocalAuthError(null);
+    if (!username.trim()) {
+      setLocalAuthError('ইউজারনেম বা কল-সাইন প্রদান করো।');
+      return;
+    }
+    if (!cadetName.trim()) {
+      setLocalAuthError('তোমার নাম প্রদান করো।');
+      return;
+    }
+    if (!password.trim() || password.trim().length < 3) {
+      setLocalAuthError('পাসওয়ার্ড কমপক্ষে ৩ অক্ষরের হতে হবে।');
+      return;
+    }
+
+    const res = await signUpUser({
+      username,
+      displayName: cadetName,
+      password,
+      cadetArchetype: calculatedArchetypeKey,
+      psychometricAnswers: answers,
+    });
+
+    if (res.success) {
+      router.replace('/(tabs)');
+    } else if (res.error) {
+      setLocalAuthError(res.error);
+    }
+  };
+
+  const handleLogin = async () => {
+    setLocalAuthError(null);
+    if (!username.trim()) {
+      setLocalAuthError('ইউজারনেম প্রদান করো।');
+      return;
+    }
+    if (!password.trim()) {
+      setLocalAuthError('পাসওয়ার্ড প্রদান করো।');
+      return;
+    }
+
+    const res = await loginUser(username, password);
+    if (res.success) {
+      router.replace('/(tabs)');
+    } else if (res.error) {
+      setLocalAuthError(res.error);
+    }
+  };
+
+  const handleGuest = async () => {
+    setLocalAuthError(null);
+    await continueAsGuest(cadetName, calculatedArchetypeKey, answers);
+    router.replace('/(tabs)');
+  };
+
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={{ flex: 1 }}
     >
-      {/* Step 0: Welcome & Orientation Briefing */}
-      {step === 0 && (
-        <View style={styles.welcomeWrapper}>
-          <View style={styles.topBadgeRow}>
-            <Sparkles size={14} color={Colors.gold} />
-            <Text style={styles.topBadgeText}>মহাকাশ একাডেমি ওরিয়েন্টেশন</Text>
-            <Sparkles size={14} color={Colors.gold} />
-          </View>
-
-          <DoubleBezelCard glow="cyan" style={styles.welcomeCard}>
-            <View style={styles.mascotBox}>
-              <AnimatedMascot size={120} mood="waving" />
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Step 0: Welcome & Orientation Briefing */}
+        {step === 0 && (
+          <View style={styles.welcomeWrapper}>
+            <View style={styles.topBadgeRow}>
+              <Sparkles size={14} color={Colors.gold} />
+              <Text style={styles.topBadgeText}>মহাকাশ একাডেমি ওরিয়েন্টেশন</Text>
+              <Sparkles size={14} color={Colors.gold} />
             </View>
 
-            <Text style={styles.welcomeTitle}>স্বাগতম নতুন ক্যাডেট! 👨‍🚀</Text>
-            <Text style={styles.welcomeDesc}>
-              আমি তোমার গাইড অ্যাস্ট্রো-বন্ধু! মহাকাশ একাডেমিতে যোগ দেওয়ার আগে ৩টি মজার কৌতূহলের উত্তর দাও। তুমি চাইলে একাধিক বিষয় একসাথে বেছে নিতে পারো!
-            </Text>
-
-            <View style={styles.guidanceBox}>
-              <Text style={styles.guidanceText}>
-                ✨ কোনো ভুল উত্তর নেই! তোমার যা যা করতে ভালো লাগে, এক বা একাধিক বিষয় বেছে নাও।
-              </Text>
-            </View>
-          </DoubleBezelCard>
-
-          <TactileButton
-            title="কৌতূহল আবিষ্কার শুরু করো ➔"
-            onPress={() => setStep(1)}
-            variant="gold"
-            size="large"
-            style={styles.fullBtn}
-          />
-        </View>
-      )}
-
-      {/* Steps 1 to 3: Multi-Select Kid Space Interest Questions */}
-      {step >= 1 && step <= 3 && currentQ && (
-        <View style={styles.questionWrapper}>
-          {/* Header Progress Strip */}
-          <View style={styles.progressRow}>
-            <View style={styles.stepPill}>
-              <Text style={styles.stepPillText}>প্রশ্ন {step} / ৩</Text>
-            </View>
-            <Text style={styles.tagText}>{currentQ.tag}</Text>
-          </View>
-
-          {/* Scenario Prompt Card */}
-          <DoubleBezelCard glow="blue" style={styles.scenarioCard}>
-            <View style={styles.scenarioIconHeader}>
-              <Compass size={18} color={Colors.cyan} />
-              <Text style={styles.scenarioSubtitle}>{currentQ.topicTitle_bn}</Text>
-            </View>
-            <Text style={styles.scenarioText}>{currentQ.scenario_bn}</Text>
-
-            {/* Multi-Select Friendly Tip */}
-            <View style={styles.multiSelectHintPill}>
-              <Sparkles size={12} color={Colors.gold} />
-              <Text style={styles.multiSelectHintText}>
-                একাধিক উত্তর বেছে নিতে পারো (যেগুলো তোমার পছন্দ)
-              </Text>
-            </View>
-          </DoubleBezelCard>
-
-          {/* 4 Vector Illustration Multi-Select Choice Cards */}
-          <View style={styles.choicesList}>
-            {currentQ.options.map((opt, idx) => {
-              const isSelected = currentSelections.includes(idx);
-              const archetypeMeta = ARCHETYPES[opt.type];
-              return (
-                <Pressable
-                  key={idx}
-                  style={[
-                    styles.choiceCard,
-                    isSelected && {
-                      borderColor: archetypeMeta.accentColor,
-                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                      borderBottomColor: archetypeMeta.accentColor,
-                    },
-                  ]}
-                  onPress={() => handleToggleChoice(currentQ.id, idx)}
-                >
-                  <SpaceChoiceBadge
-                    type={opt.type}
-                    size={48}
-                    isSelected={isSelected}
-                  />
-
-                  <View style={styles.choiceTextContainer}>
-                    <Text
-                      style={[
-                        styles.choiceTitle,
-                        isSelected && { color: archetypeMeta.accentColor },
-                      ]}
-                    >
-                      {opt.title_bn}
-                    </Text>
-                    <Text style={styles.choiceSubtitle}>
-                      {opt.subtitle_bn}
-                    </Text>
-                  </View>
-
-                  {isSelected ? (
-                    <View
-                      style={[
-                        styles.checkBadge,
-                        { backgroundColor: archetypeMeta.accentColor },
-                      ]}
-                    >
-                      <Check size={14} color="#0B1026" strokeWidth={3.5} />
-                    </View>
-                  ) : (
-                    <View style={styles.unselectedRing} />
-                  )}
-                </Pressable>
-              );
-            })}
-          </View>
-
-          {/* Navigation Controls */}
-          <View style={styles.navRow}>
-            <TactileButton
-              title="পেছনে"
-              onPress={handlePrev}
-              variant="outline"
-              size="normal"
-              icon={<ArrowLeft size={16} color="#FFFFFF" />}
-              style={styles.prevBtn}
-            />
-            <TactileButton
-              title={
-                !hasSelection
-                  ? 'কমপক্ষে ১টি বেছে নাও'
-                  : step === 3
-                  ? 'ক্যাডেট পরিচয়পত্র দেখো ➔'
-                  : 'পরবর্তী প্রশ্ন ➔'
-              }
-              onPress={handleNext}
-              variant={hasSelection ? 'primary' : 'outline'}
-              size="normal"
-              icon={hasSelection ? <ArrowRight size={16} color="#FFFFFF" /> : undefined}
-              style={[styles.nextBtn, !hasSelection && styles.disabledNextBtn]}
-            />
-          </View>
-        </View>
-      )}
-
-      {/* Step 4: Official Cadet Identity & Archetype Reveal */}
-      {step === 4 && (
-        <View style={styles.resultWrapper}>
-          <ConfettiEffect active />
-
-          <View style={styles.topBadgeRow}>
-            <Sparkles size={14} color={Colors.gold} />
-            <Text style={styles.topBadgeText}>অফিসিয়াল স্পেস ক্যাডেট পরিচয়পত্র</Text>
-            <Sparkles size={14} color={Colors.gold} />
-          </View>
-
-          <DoubleBezelCard glow="gold" style={styles.archetypeCard}>
-            {/* Cadet Uniform Avatar based on Rank Tier: Cadet */}
-            <View style={styles.avatarHolder}>
-              <AstronautAvatar size={92} rank="Cadet" showHalo />
-              <View
-                style={[
-                  styles.archetypeBadgeFloating,
-                  { borderColor: archetypeInfo.accentColor },
-                ]}
-              >
-                <SpaceChoiceBadge
-                  type={calculatedArchetypeKey}
-                  size={38}
-                  isSelected
-                />
+            <DoubleBezelCard glow="cyan" style={styles.welcomeCard}>
+              <View style={styles.mascotBox}>
+                <AnimatedMascot size={120} mood="waving" />
               </View>
-            </View>
 
-            {/* Revealed Archetype Title & Motto */}
-            <Text style={[styles.archetypeTitle, { color: archetypeInfo.accentColor }]}>
-              {archetypeInfo.title_bn}
-            </Text>
-            <Text style={styles.archetypeMotto}>"{archetypeInfo.motto_bn}"</Text>
+              <Text style={styles.welcomeTitle}>স্বাগতম নতুন ক্যাডেট! 👨‍🚀</Text>
+              <Text style={styles.welcomeDesc}>
+                আমি তোমার গাইড অ্যাস্ট্রো-বন্ধু! মহাকাশ একাডেমিতে যোগ দেওয়ার আগে ৩টি মজার কৌতূহলের উত্তর দাও। তুমি চাইলে একাধিক বিষয় একসাথে বেছে নিতে পারো!
+              </Text>
 
-            <View style={styles.archetypeDescCard}>
-              <Text style={styles.archetypeDesc}>{archetypeInfo.description_bn}</Text>
-              <View style={styles.focusChip}>
-                <Star size={12} color={Colors.gold} fill={Colors.gold} />
-                <Text style={styles.focusChipText}>
-                  প্রস্তাবিত বিশেষায়িত পাঠ: {archetypeInfo.recommendedFocus_bn}
+              <View style={styles.guidanceBox}>
+                <Text style={styles.guidanceText}>
+                  ✨ কোনো ভুল উত্তর নেই! তোমার যা যা করতে ভালো লাগে, এক বা একাধিক বিষয় বেছে নাও।
                 </Text>
               </View>
-            </View>
+            </DoubleBezelCard>
 
-            {/* Cadet Name Registration Input */}
-            <View style={styles.nameSection}>
-              <Text style={styles.nameFieldLabel}>তোমার অফিসিয়াল ক্যাডেট নাম:</Text>
-              <View style={styles.nameInputBox}>
-                <TextInput
-                  style={styles.nameInput}
-                  value={cadetName}
-                  onChangeText={setCadetName}
-                  placeholder="তোমার নাম লেখো..."
-                  placeholderTextColor={Colors.textMuted}
-                  maxLength={20}
-                />
-              </View>
-            </View>
+            <TactileButton
+              title="কৌতূহল আবিষ্কার শুরু করো ➔"
+              onPress={() => setStep(1)}
+              variant="gold"
+              size="large"
+              style={styles.fullBtn}
+            />
 
-            {/* Strict Rank Progression Rule Reminder */}
-            <View style={styles.roleNotice}>
-              <Text style={styles.roleNoticeText}>
-                ⭐ সকল নতুন শিক্ষার্থী স্পেস ক্যাডেট হিসেবে যাত্রা শুরু করে। পাঠ ও কুইজ জয় করে পয়েন্ট অর্জন করলে তোমার পদবী উন্নীত হবে!
+            {/* Quick returning user login shortcut */}
+            <Pressable
+              onPress={() => {
+                setAuthMode('login');
+                setStep(5);
+              }}
+              style={styles.alreadyHaveAccountBtn}
+            >
+              <Text style={styles.alreadyHaveAccountText}>
+                তোমার কি ইতিমধ্যে একটি অ্যাকাউন্ট আছে?{' '}
+                <Text style={{ color: Colors.cyan, fontWeight: 'bold' }}>লগইন করো ➔</Text>
               </Text>
-            </View>
-          </DoubleBezelCard>
+            </Pressable>
+          </View>
+        )}
 
-          <TactileButton
-            title="ক্যাডেট হিসেবে মিশন শুরু করো 🚀"
-            onPress={handleFinalize}
-            variant="gold"
-            size="large"
-            style={styles.fullBtn}
-          />
-        </View>
-      )}
-    </ScrollView>
+        {/* Steps 1 to 3: Multi-Select Kid Space Interest Questions */}
+        {step >= 1 && step <= 3 && currentQ && (
+          <View style={styles.questionWrapper}>
+            {/* Header Progress Strip */}
+            <View style={styles.progressRow}>
+              <View style={styles.stepPill}>
+                <Text style={styles.stepPillText}>প্রশ্ন {step} / ৩</Text>
+              </View>
+              <Text style={styles.tagText}>{currentQ.tag}</Text>
+            </View>
+
+            {/* Scenario Prompt Card */}
+            <DoubleBezelCard glow="blue" style={styles.scenarioCard}>
+              <View style={styles.scenarioIconHeader}>
+                <Compass size={18} color={Colors.cyan} />
+                <Text style={styles.scenarioSubtitle}>{currentQ.topicTitle_bn}</Text>
+              </View>
+              <Text style={styles.scenarioText}>{currentQ.scenario_bn}</Text>
+
+              {/* Multi-Select Friendly Tip */}
+              <View style={styles.multiSelectHintPill}>
+                <Sparkles size={12} color={Colors.gold} />
+                <Text style={styles.multiSelectHintText}>
+                  একাধিক উত্তর বেছে নিতে পারো (যেগুলো তোমার পছন্দ)
+                </Text>
+              </View>
+            </DoubleBezelCard>
+
+            {/* 4 Vector Illustration Multi-Select Choice Cards */}
+            <View style={styles.choicesList}>
+              {currentQ.options.map((opt, idx) => {
+                const isSelected = currentSelections.includes(idx);
+                const archetypeMeta = ARCHETYPES[opt.type];
+                return (
+                  <Pressable
+                    key={idx}
+                    style={[
+                      styles.choiceCard,
+                      isSelected && {
+                        borderColor: archetypeMeta.accentColor,
+                        backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                        borderBottomColor: archetypeMeta.accentColor,
+                      },
+                    ]}
+                    onPress={() => handleToggleChoice(currentQ.id, idx)}
+                  >
+                    <SpaceChoiceBadge
+                      type={opt.type}
+                      size={48}
+                      isSelected={isSelected}
+                    />
+
+                    <View style={styles.choiceTextContainer}>
+                      <Text
+                        style={[
+                          styles.choiceTitle,
+                          isSelected && { color: archetypeMeta.accentColor },
+                        ]}
+                      >
+                        {opt.title_bn}
+                      </Text>
+                      <Text style={styles.choiceSubtitle}>
+                        {opt.subtitle_bn}
+                      </Text>
+                    </View>
+
+                    {isSelected ? (
+                      <View
+                        style={[
+                          styles.checkBadge,
+                          { backgroundColor: archetypeMeta.accentColor },
+                        ]}
+                      >
+                        <Check size={14} color="#0B1026" strokeWidth={3.5} />
+                      </View>
+                    ) : (
+                      <View style={styles.unselectedRing} />
+                    )}
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            {/* Navigation Controls */}
+            <View style={styles.navRow}>
+              <TactileButton
+                title="পেছনে"
+                onPress={handlePrev}
+                variant="outline"
+                size="normal"
+                icon={<ArrowLeft size={16} color="#FFFFFF" />}
+                style={styles.prevBtn}
+              />
+              <TactileButton
+                title={
+                  !hasSelection
+                    ? 'কমপক্ষে ১টি বেছে নাও'
+                    : step === 3
+                    ? 'ক্যাডেট পরিচয়পত্র দেখো ➔'
+                    : 'পরবর্তী প্রশ্ন ➔'
+                }
+                onPress={handleNext}
+                variant={hasSelection ? 'primary' : 'outline'}
+                size="normal"
+                icon={hasSelection ? <ArrowRight size={16} color="#FFFFFF" /> : undefined}
+                style={[styles.nextBtn, !hasSelection && styles.disabledNextBtn]}
+              />
+            </View>
+          </View>
+        )}
+
+        {/* Step 4: Official Cadet Identity & Archetype Reveal */}
+        {step === 4 && (
+          <View style={styles.resultWrapper}>
+            <ConfettiEffect active />
+
+            <View style={styles.topBadgeRow}>
+              <Sparkles size={14} color={Colors.gold} />
+              <Text style={styles.topBadgeText}>অফিসিয়াল স্পেস ক্যাডেট পরিচয়পত্র</Text>
+              <Sparkles size={14} color={Colors.gold} />
+            </View>
+
+            <DoubleBezelCard glow="gold" style={styles.archetypeCard}>
+              {/* Cadet Uniform Avatar based on Rank Tier: Cadet */}
+              <View style={styles.avatarHolder}>
+                <AstronautAvatar size={92} rank="Cadet" showHalo />
+                <View
+                  style={[
+                    styles.archetypeBadgeFloating,
+                    { borderColor: archetypeInfo.accentColor },
+                  ]}
+                >
+                  <SpaceChoiceBadge
+                    type={calculatedArchetypeKey}
+                    size={38}
+                    isSelected
+                  />
+                </View>
+              </View>
+
+              {/* Revealed Archetype Title & Motto */}
+              <Text style={[styles.archetypeTitle, { color: archetypeInfo.accentColor }]}>
+                {archetypeInfo.title_bn}
+              </Text>
+              <Text style={styles.archetypeMotto}>"{archetypeInfo.motto_bn}"</Text>
+
+              <View style={styles.archetypeDescCard}>
+                <Text style={styles.archetypeDesc}>{archetypeInfo.description_bn}</Text>
+                <View style={styles.focusChip}>
+                  <Star size={12} color={Colors.gold} fill={Colors.gold} />
+                  <Text style={styles.focusChipText}>
+                    প্রস্তাবিত বিশেষায়িত পাঠ: {archetypeInfo.recommendedFocus_bn}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Cadet Name Registration Input */}
+              <View style={styles.nameSection}>
+                <Text style={styles.nameFieldLabel}>তোমার অফিসিয়াল ক্যাডেট নাম:</Text>
+                <View style={styles.nameInputBox}>
+                  <TextInput
+                    style={styles.nameInput}
+                    value={cadetName}
+                    onChangeText={setCadetName}
+                    placeholder="তোমার নাম লেখো..."
+                    placeholderTextColor={Colors.textMuted}
+                    maxLength={20}
+                  />
+                </View>
+              </View>
+
+              {/* Strict Rank Progression Rule Reminder */}
+              <View style={styles.roleNotice}>
+                <Text style={styles.roleNoticeText}>
+                  ⭐ সকল নতুন শিক্ষার্থী স্পেস ক্যাডেট হিসেবে যাত্রা শুরু করে। পাঠ ও কুইজ জয় করে পয়েন্ট অর্জন করলে তোমার পদবী উন্নীত হবে!
+                </Text>
+              </View>
+            </DoubleBezelCard>
+
+            <TactileButton
+              title="অ্যাকাউন্ট তৈরি ও ক্রেডেনশিয়াল ➔"
+              onPress={() => setStep(5)}
+              variant="gold"
+              size="large"
+              style={styles.fullBtn}
+            />
+          </View>
+        )}
+
+        {/* ── Step 5: Official Academy Credentialing (Sign Up, Log In, Guest) ── */}
+        {step === 5 && (
+          <View style={styles.authWrapper}>
+            <View style={styles.topBadgeRow}>
+              <Sparkles size={14} color={Colors.cyan} />
+              <Text style={styles.topBadgeText}>একাডেমি ক্রেডেনশিয়াল স্টেশন 🛰️</Text>
+              <Sparkles size={14} color={Colors.cyan} />
+            </View>
+
+            {/* 3-Way Mode Switcher Tabs */}
+            <View style={styles.authTabBar}>
+              <Pressable
+                style={[styles.authTabBtn, authMode === 'signup' && styles.authTabBtnActive]}
+                onPress={() => {
+                  setAuthMode('signup');
+                  setLocalAuthError(null);
+                }}
+              >
+                <Rocket size={13} color={authMode === 'signup' ? '#080D27' : Colors.cyan} />
+                <Text style={[styles.authTabBtnText, authMode === 'signup' && styles.authTabBtnTextActive]}>
+                  সাইন আপ
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={[styles.authTabBtn, authMode === 'login' && styles.authTabBtnActive]}
+                onPress={() => {
+                  setAuthMode('login');
+                  setLocalAuthError(null);
+                }}
+              >
+                <ShieldCheck size={13} color={authMode === 'login' ? '#080D27' : Colors.gold} />
+                <Text style={[styles.authTabBtnText, authMode === 'login' && styles.authTabBtnTextActive]}>
+                  লগইন
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={[styles.authTabBtn, authMode === 'guest' && styles.authTabBtnActive]}
+                onPress={() => {
+                  setAuthMode('guest');
+                  setLocalAuthError(null);
+                }}
+              >
+                <Compass size={13} color={authMode === 'guest' ? '#080D27' : Colors.emerald} />
+                <Text style={[styles.authTabBtnText, authMode === 'guest' && styles.authTabBtnTextActive]}>
+                  অতিথি
+                </Text>
+              </Pressable>
+            </View>
+
+            {/* Error Banner */}
+            {(localAuthError || authError) && (
+              <View style={styles.authErrorBanner}>
+                <AlertCircle size={15} color={Colors.coral} />
+                <Text style={styles.authErrorText}>{localAuthError || authError}</Text>
+              </View>
+            )}
+
+            {/* ── SIGN UP ────────────────────────────── */}
+            {authMode === 'signup' && (
+              <DoubleBezelCard glow="cyan" style={styles.authCardShell}>
+                <View style={styles.authSectionHeader}>
+                  <SpaceChoiceBadge type={calculatedArchetypeKey} size={32} isSelected />
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.authCardTitle, { color: archetypeInfo.accentColor }]}>
+                      {archetypeInfo.title_bn}
+                    </Text>
+                    <Text style={styles.authCardSub}>নতুন অ্যাকাউন্ট তৈরি করো ও তথ্য সংরক্ষণ করো</Text>
+                  </View>
+                </View>
+
+                {/* Input: Callsign / Username */}
+                <View style={styles.fieldGroup}>
+                  <Text style={styles.fieldLabel}>ইউজারনেম / স্পেস কল-সাইন:</Text>
+                  <View style={styles.fieldInputShell}>
+                    <User size={15} color={Colors.cyan} />
+                    <TextInput
+                      style={styles.fieldTextInput}
+                      value={username}
+                      onChangeText={(val) => setUsername(val.toLowerCase().replace(/\s+/g, '_'))}
+                      placeholder="যেমন: roket_pilot_10"
+                      placeholderTextColor={Colors.textMuted}
+                      autoCapitalize="none"
+                    />
+                  </View>
+                </View>
+
+                {/* Input: Name */}
+                <View style={styles.fieldGroup}>
+                  <Text style={styles.fieldLabel}>তোমার নাম:</Text>
+                  <View style={styles.fieldInputShell}>
+                    <Sparkles size={15} color={Colors.gold} />
+                    <TextInput
+                      style={styles.fieldTextInput}
+                      value={cadetName}
+                      onChangeText={setCadetName}
+                      placeholder="তোমার নাম লেখো"
+                      placeholderTextColor={Colors.textMuted}
+                    />
+                  </View>
+                </View>
+
+                {/* Input: Password */}
+                <View style={styles.fieldGroup}>
+                  <Text style={styles.fieldLabel}>পাসকোড / পাসওয়ার্ড:</Text>
+                  <View style={styles.fieldInputShell}>
+                    <KeyRound size={15} color={Colors.coral} />
+                    <TextInput
+                      style={styles.fieldTextInput}
+                      value={password}
+                      onChangeText={setPassword}
+                      placeholder="কমপক্ষে ৩ অক্ষরের পাসওয়ার্ড"
+                      placeholderTextColor={Colors.textMuted}
+                      secureTextEntry={!showPassword}
+                    />
+                    <Pressable onPress={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <EyeOff size={15} color={Colors.textMuted} />
+                      ) : (
+                        <Eye size={15} color={Colors.textMuted} />
+                      )}
+                    </Pressable>
+                  </View>
+                </View>
+
+                <View style={styles.authBtnRow}>
+                  <TactileButton
+                    title="পেছনে"
+                    onPress={() => setStep(4)}
+                    variant="outline"
+                    size="normal"
+                    style={{ flex: 1 }}
+                  />
+                  <TactileButton
+                    title={isAuthLoading ? 'তৈরি হচ্ছে...' : 'অ্যাকাউন্ট তৈরি 🚀'}
+                    onPress={handleSignUp}
+                    variant="gold"
+                    size="normal"
+                    disabled={isAuthLoading}
+                    style={{ flex: 2 }}
+                  />
+                </View>
+              </DoubleBezelCard>
+            )}
+
+            {/* ── LOGIN ──────────────────────────────── */}
+            {authMode === 'login' && (
+              <DoubleBezelCard glow="gold" style={styles.authCardShell}>
+                <View style={styles.authSectionHeader}>
+                  <ShieldCheck size={24} color={Colors.gold} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.authCardTitle}>ক্যাডেট অ্যাকাউন্টে লগইন</Text>
+                    <Text style={styles.authCardSub}>পূর্ববর্তী সংরক্ষিত অগ্রগতিতে ফিরে যাও</Text>
+                  </View>
+                </View>
+
+                {/* Quick Pick if previous accounts exist */}
+                {savedUsers.length > 0 && (
+                  <View style={styles.quickPickBox}>
+                    <Text style={styles.quickPickLabel}>সংরক্ষিত ক্যাডেট (১-ট্যাপ):</Text>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                      {savedUsers.map((u) => (
+                        <Pressable
+                          key={u.id}
+                          style={[
+                            styles.quickChip,
+                            username === u.username && styles.quickChipActive,
+                          ]}
+                          onPress={() => {
+                            setUsername(u.username);
+                            setCadetName(u.displayName);
+                            setLocalAuthError(null);
+                          }}
+                        >
+                          <AstronautAvatar size={22} rank={u.rank} />
+                          <Text style={styles.quickChipText}>@{u.username}</Text>
+                        </Pressable>
+                      ))}
+                    </ScrollView>
+                  </View>
+                )}
+
+                {/* Username */}
+                <View style={styles.fieldGroup}>
+                  <Text style={styles.fieldLabel}>ইউজারনেম / কল-সাইন:</Text>
+                  <View style={styles.fieldInputShell}>
+                    <User size={15} color={Colors.cyan} />
+                    <TextInput
+                      style={styles.fieldTextInput}
+                      value={username}
+                      onChangeText={(val) => setUsername(val.toLowerCase())}
+                      placeholder="ইউজারনেম লেখো"
+                      placeholderTextColor={Colors.textMuted}
+                      autoCapitalize="none"
+                    />
+                  </View>
+                </View>
+
+                {/* Password */}
+                <View style={styles.fieldGroup}>
+                  <Text style={styles.fieldLabel}>পাসওয়ার্ড:</Text>
+                  <View style={styles.fieldInputShell}>
+                    <KeyRound size={15} color={Colors.coral} />
+                    <TextInput
+                      style={styles.fieldTextInput}
+                      value={password}
+                      onChangeText={setPassword}
+                      placeholder="পাসওয়ার্ড লেখো"
+                      placeholderTextColor={Colors.textMuted}
+                      secureTextEntry={!showPassword}
+                    />
+                    <Pressable onPress={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <EyeOff size={15} color={Colors.textMuted} />
+                      ) : (
+                        <Eye size={15} color={Colors.textMuted} />
+                      )}
+                    </Pressable>
+                  </View>
+                </View>
+
+                <View style={styles.authBtnRow}>
+                  <TactileButton
+                    title="পেছনে"
+                    onPress={() => setStep(4)}
+                    variant="outline"
+                    size="normal"
+                    style={{ flex: 1 }}
+                  />
+                  <TactileButton
+                    title={isAuthLoading ? 'লগইন হচ্ছে...' : 'লগইন করো ➔'}
+                    onPress={handleLogin}
+                    variant="primary"
+                    size="normal"
+                    disabled={isAuthLoading}
+                    style={{ flex: 2 }}
+                  />
+                </View>
+              </DoubleBezelCard>
+            )}
+
+            {/* ── GUEST ──────────────────────────────── */}
+            {authMode === 'guest' && (
+              <DoubleBezelCard glow="emerald" style={styles.authCardShell}>
+                <View style={styles.authSectionHeader}>
+                  <Compass size={24} color={Colors.emerald} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.authCardTitle}>অতিথি হিসেবে অন্বেষণ</Text>
+                    <Text style={styles.authCardSub}>পাসওয়ার্ড ছাড়া দ্রুত খেলা শুরু করো</Text>
+                  </View>
+                </View>
+
+                <View style={styles.guestNotice}>
+                  <CheckCircle2 size={16} color={Colors.emerald} />
+                  <Text style={styles.guestNoticeText}>
+                    কোনো পাসওয়ার্ড ছাড়াই তুমি অবিলম্বে সব পাঠ, কুইজ এবং চন্দ্রাভিযান খেলতে পারবে। পরবর্তীতে যেকোনো সময় তোমার প্রোফাইল থেকে স্থায়ী অ্যাকাউন্ট তৈরি করে নিতে পারবে।
+                  </Text>
+                </View>
+
+                <View style={styles.fieldGroup}>
+                  <Text style={styles.fieldLabel}>তোমার ক্যাডেট নাম:</Text>
+                  <View style={styles.fieldInputShell}>
+                    <User size={15} color={Colors.emerald} />
+                    <TextInput
+                      style={styles.fieldTextInput}
+                      value={cadetName}
+                      onChangeText={setCadetName}
+                      placeholder="নাম লেখো"
+                      placeholderTextColor={Colors.textMuted}
+                    />
+                  </View>
+                </View>
+
+                <View style={styles.authBtnRow}>
+                  <TactileButton
+                    title="পেছনে"
+                    onPress={() => setStep(4)}
+                    variant="outline"
+                    size="normal"
+                    style={{ flex: 1 }}
+                  />
+                  <TactileButton
+                    title={isAuthLoading ? 'শুরু হচ্ছে...' : 'অতিথি হিসেবে চলো 🛸'}
+                    onPress={handleGuest}
+                    variant="emerald"
+                    size="normal"
+                    disabled={isAuthLoading}
+                    style={{ flex: 2 }}
+                  />
+                </View>
+              </DoubleBezelCard>
+            )}
+          </View>
+        )}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -428,97 +837,111 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   welcomeWrapper: {
-    width: '100%',
+    alignItems: 'center',
+    gap: 16,
   },
   topBadgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: 6,
-    backgroundColor: 'rgba(255, 184, 0, 0.15)',
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 14,
+    backgroundColor: 'rgba(255, 184, 0, 0.12)',
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: 'rgba(255, 184, 0, 0.3)',
-    marginBottom: 16,
-    alignSelf: 'center',
+    marginBottom: 4,
   },
   topBadgeText: {
     color: Colors.gold,
     fontSize: Typography.size.caption,
+    fontFamily: Typography.fontSans,
     fontWeight: Typography.weight.bold,
   },
   welcomeCard: {
-    marginBottom: 20,
+    width: '100%',
     alignItems: 'center',
+    paddingVertical: 24,
   },
   mascotBox: {
-    height: 130,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 10,
+    marginBottom: 16,
   },
   welcomeTitle: {
     color: Colors.text,
-    fontSize: Typography.size.hero,
-    fontWeight: Typography.weight.black,
+    fontSize: Typography.size.h1,
+    fontFamily: Typography.fontSans,
+    fontWeight: Typography.weight.heavy,
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   welcomeDesc: {
     color: Colors.textSecondary,
-    fontSize: Typography.size.body,
-    lineHeight: Typography.lineHeight.body,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.fontSans,
     textAlign: 'center',
-    marginBottom: 16,
+    lineHeight: Typography.lineHeight.bodySmall,
+    paddingHorizontal: 8,
+    marginBottom: 14,
   },
   guidanceBox: {
-    backgroundColor: 'rgba(56, 189, 248, 0.12)',
-    borderRadius: 14,
-    padding: 12,
+    backgroundColor: 'rgba(0, 240, 255, 0.08)',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'rgba(56, 189, 248, 0.25)',
+    borderColor: 'rgba(0, 240, 255, 0.2)',
   },
   guidanceText: {
     color: Colors.cyan,
     fontSize: Typography.size.caption,
-    lineHeight: Typography.lineHeight.caption,
+    fontFamily: Typography.fontSans,
     textAlign: 'center',
     fontWeight: Typography.weight.semiBold,
   },
   fullBtn: {
     width: '100%',
   },
+  alreadyHaveAccountBtn: {
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  alreadyHaveAccountText: {
+    color: Colors.textMuted,
+    fontSize: 13,
+    fontFamily: Typography.fontSans,
+  },
+
+  // Questions Flow
   questionWrapper: {
-    width: '100%',
+    gap: 14,
   },
   progressRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    paddingHorizontal: 4,
   },
   stepPill: {
-    backgroundColor: Colors.cyanBg,
+    backgroundColor: Colors.primaryBg,
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 10,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: Colors.borderGlowBlue,
+    borderColor: Colors.borderLight,
   },
   stepPillText: {
-    color: Colors.cyan,
-    fontSize: Typography.size.micro,
+    color: Colors.primaryLight,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.fontSans,
     fontWeight: Typography.weight.bold,
   },
   tagText: {
-    color: Colors.textSecondary,
+    color: Colors.textMuted,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.semiBold,
+    fontFamily: Typography.fontSans,
   },
   scenarioCard: {
-    marginBottom: 16,
+    paddingVertical: 16,
   },
   scenarioIconHeader: {
     flexDirection: 'row',
@@ -529,71 +952,63 @@ const styles = StyleSheet.create({
   scenarioSubtitle: {
     color: Colors.cyan,
     fontSize: Typography.size.caption,
+    fontFamily: Typography.fontSans,
     fontWeight: Typography.weight.bold,
   },
   scenarioText: {
     color: Colors.text,
-    fontSize: Typography.size.h3,
-    lineHeight: Typography.lineHeight.h3,
-    fontWeight: Typography.weight.bold,
+    fontSize: Typography.size.body,
+    fontFamily: Typography.fontSans,
+    lineHeight: Typography.lineHeight.body,
+    fontWeight: Typography.weight.medium,
   },
   multiSelectHintPill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(255, 184, 0, 0.12)',
-    alignSelf: 'flex-start',
+    marginTop: 12,
+    backgroundColor: 'rgba(255, 184, 0, 0.1)',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 8,
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 184, 0, 0.25)',
+    alignSelf: 'flex-start',
   },
   multiSelectHintText: {
     color: Colors.gold,
-    fontSize: Typography.size.micro,
-    fontWeight: Typography.weight.bold,
+    fontSize: 11,
+    fontFamily: Typography.fontSans,
+    fontWeight: Typography.weight.semiBold,
   },
+
+  // Choice Cards
   choicesList: {
-    gap: 12,
-    marginBottom: 20,
+    gap: 10,
   },
   choiceCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surfaceCard,
-    padding: 12,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderBottomWidth: 4,
-    borderBottomColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(14, 18, 60, 0.88)',
+    borderRadius: 16,
+    borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.1)',
+    padding: 12,
     gap: 12,
   },
   choiceTextContainer: {
     flex: 1,
-    justifyContent: 'center',
   },
   choiceTitle: {
     color: Colors.text,
     fontSize: Typography.size.body,
-    fontWeight: Typography.weight.black,
+    fontFamily: Typography.fontSans,
+    fontWeight: Typography.weight.bold,
     marginBottom: 2,
   },
   choiceSubtitle: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
+    fontFamily: Typography.fontSans,
     lineHeight: Typography.lineHeight.caption,
-    fontWeight: Typography.weight.medium,
-  },
-  unselectedRing: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.25)',
-    marginLeft: 4,
   },
   checkBadge: {
     width: 24,
@@ -601,12 +1016,20 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 4,
   },
+  unselectedRing: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+  },
+
+  // Nav Row
   navRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     gap: 12,
+    marginTop: 6,
   },
   prevBtn: {
     flex: 1,
@@ -615,71 +1038,76 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   disabledNextBtn: {
-    opacity: 0.65,
+    opacity: 0.6,
   },
+
+  // Result / Archetype Reveal
   resultWrapper: {
-    width: '100%',
+    alignItems: 'center',
+    gap: 16,
   },
   archetypeCard: {
-    marginBottom: 20,
+    width: '100%',
     alignItems: 'center',
+    paddingVertical: 20,
   },
   avatarHolder: {
     position: 'relative',
-    marginVertical: 10,
-    alignItems: 'center',
+    marginBottom: 12,
   },
   archetypeBadgeFloating: {
     position: 'absolute',
     bottom: -6,
-    right: -10,
-    backgroundColor: Colors.surfaceCard,
-    borderRadius: 22,
+    right: -6,
+    backgroundColor: '#080D27',
+    borderRadius: 16,
     borderWidth: 2,
-    overflow: 'hidden',
+    padding: 2,
   },
   archetypeTitle: {
-    fontSize: Typography.size.h1,
-    fontWeight: Typography.weight.black,
+    fontSize: 22,
+    fontFamily: Typography.fontSans,
+    fontWeight: Typography.weight.heavy,
     textAlign: 'center',
     marginBottom: 4,
   },
   archetypeMotto: {
-    color: Colors.cyan,
-    fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    color: Colors.textSecondary,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.fontSans,
+    fontStyle: 'italic',
     textAlign: 'center',
-    marginBottom: 12,
+    marginBottom: 14,
   },
   archetypeDescCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    borderRadius: 16,
-    padding: 14,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 12,
+    padding: 12,
     width: '100%',
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    marginBottom: 14,
   },
   archetypeDesc: {
     color: Colors.textSecondary,
-    fontSize: Typography.size.bodySmall,
-    lineHeight: Typography.lineHeight.bodySmall,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.fontSans,
+    lineHeight: 18,
     textAlign: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   focusChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     gap: 6,
     backgroundColor: 'rgba(255, 184, 0, 0.12)',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    alignSelf: 'center',
   },
   focusChipText: {
     color: Colors.gold,
-    fontSize: Typography.size.micro,
+    fontSize: 11,
+    fontFamily: Typography.fontSans,
     fontWeight: Typography.weight.bold,
   },
   nameSection: {
@@ -689,33 +1117,183 @@ const styles = StyleSheet.create({
   nameFieldLabel: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
+    fontFamily: Typography.fontSans,
     fontWeight: Typography.weight.bold,
     marginBottom: 6,
   },
   nameInputBox: {
-    backgroundColor: 'rgba(10, 14, 45, 0.85)',
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    backgroundColor: 'rgba(8, 12, 38, 0.85)',
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    paddingHorizontal: 12,
+    height: 44,
+    justifyContent: 'center',
   },
   nameInput: {
-    color: Colors.text,
+    color: '#FFFFFF',
     fontSize: Typography.size.body,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.fontSans,
   },
   roleNotice: {
-    backgroundColor: 'rgba(37, 99, 235, 0.15)',
-    padding: 10,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(37, 99, 235, 0.3)',
+    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+    borderRadius: 8,
+    padding: 8,
+    width: '100%',
   },
   roleNoticeText: {
     color: Colors.cyan,
-    fontSize: Typography.size.micro,
-    lineHeight: Typography.lineHeight.caption,
+    fontSize: 11,
+    fontFamily: Typography.fontSans,
+    lineHeight: 16,
     textAlign: 'center',
+  },
+
+  // ── Step 5: Auth Station Styles ──────────────────────────
+  authWrapper: {
+    gap: 14,
+  },
+  authTabBar: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(14, 18, 60, 0.85)',
+    borderRadius: 14,
+    padding: 3,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    gap: 4,
+  },
+  authTabBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 5,
+    paddingVertical: 9,
+    borderRadius: 10,
+  },
+  authTabBtnActive: {
+    backgroundColor: Colors.cyan,
+  },
+  authTabBtnText: {
+    color: Colors.textSecondary,
+    fontSize: 12,
+    fontWeight: Typography.weight.bold,
+  },
+  authTabBtnTextActive: {
+    color: '#080D27',
+    fontWeight: Typography.weight.heavy,
+  },
+  authErrorBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: 'rgba(255, 71, 87, 0.16)',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.coral,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  authErrorText: {
+    flex: 1,
+    color: Colors.coral,
+    fontSize: 12,
+    fontWeight: Typography.weight.semiBold,
+  },
+  authCardShell: {
+    paddingVertical: 18,
+  },
+  authSectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 16,
+  },
+  authCardTitle: {
+    color: Colors.text,
+    fontSize: 15,
+    fontWeight: Typography.weight.heavy,
+    marginBottom: 2,
+  },
+  authCardSub: {
+    color: Colors.textMuted,
+    fontSize: 11,
+  },
+  fieldGroup: {
+    marginBottom: 12,
+  },
+  fieldLabel: {
+    color: Colors.textSecondary,
+    fontSize: 12,
+    fontWeight: Typography.weight.semiBold,
+    marginBottom: 6,
+  },
+  fieldInputShell: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(8, 12, 38, 0.9)',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    paddingHorizontal: 12,
+    height: 46,
+    gap: 10,
+  },
+  fieldTextInput: {
+    flex: 1,
+    color: '#FFFFFF',
+    fontSize: 14,
+  },
+  authBtnRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 8,
+  },
+  quickPickBox: {
+    marginBottom: 14,
+  },
+  quickPickLabel: {
+    color: Colors.textMuted,
+    fontSize: 11,
+    fontWeight: Typography.weight.semiBold,
+    marginBottom: 6,
+  },
+  quickChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    marginRight: 8,
+  },
+  quickChipActive: {
+    borderColor: Colors.cyan,
+    backgroundColor: 'rgba(0, 240, 255, 0.15)',
+  },
+  quickChipText: {
+    color: Colors.text,
+    fontSize: 11,
+    fontWeight: Typography.weight.bold,
+  },
+  guestNotice: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+    padding: 10,
+    marginBottom: 14,
+  },
+  guestNoticeText: {
+    flex: 1,
+    color: Colors.textSecondary,
+    fontSize: 11,
+    lineHeight: 16,
   },
 });

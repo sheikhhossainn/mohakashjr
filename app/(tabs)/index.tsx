@@ -37,6 +37,8 @@ import {
   Circle,
   ChevronRight,
   Bot,
+  User,
+  ShieldCheck,
 } from 'lucide-react-native';
 
 // ─── Rotating NASA Facts ────────────────────────────────────────────────────
@@ -60,6 +62,8 @@ export default function DashboardScreen() {
     completedLessonIds,
     quizAttempts,
     cadetArchetype,
+    currentUser,
+    isGuest,
   } = useAppStore();
 
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -67,8 +71,29 @@ export default function DashboardScreen() {
   const [fuelCharged, setFuelCharged] = useState(false);
   const [mascotMood, setMascotMood] = useState<'happy' | 'waving' | 'excited' | 'thinking'>('waving');
 
+  // Animation hooks for modern galactic micro-interactions
+  const pulseAnim = React.useRef(new Animated.Value(1)).current;
+  const fuelScale = React.useRef(new Animated.Value(1)).current;
+
   useEffect(() => {
     getLessons().then(setLessons);
+
+    const pulse = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, {
+          toValue: 0.35,
+          duration: 1200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulseAnim, {
+          toValue: 1,
+          duration: 1200,
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    pulse.start();
+    return () => pulse.stop();
   }, []);
 
   const archetypeInfo = ARCHETYPES[cadetArchetype] || ARCHETYPES.pilot;
@@ -95,6 +120,10 @@ export default function DashboardScreen() {
 
   const handleRecharge = () => {
     if (!fuelCharged) {
+      Animated.sequence([
+        Animated.timing(fuelScale, { toValue: 1.06, duration: 120, useNativeDriver: true }),
+        Animated.spring(fuelScale, { toValue: 1, friction: 4, useNativeDriver: true }),
+      ]).start();
       addXP(25);
       setFuelCharged(true);
       setMascotMood('excited');
@@ -118,6 +147,37 @@ export default function DashboardScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
+      {/* ── Top Cadet Command Bar ────────────────────────── */}
+      <View style={styles.commandBar}>
+        <View style={styles.statusGroup}>
+          <Animated.View
+            style={[
+              styles.statusDot,
+              {
+                backgroundColor: isGuest ? Colors.gold : Colors.emerald,
+                opacity: pulseAnim,
+              },
+            ]}
+          />
+          <Text style={[styles.statusText, { color: isGuest ? Colors.gold : Colors.emerald }]}>
+            {isGuest ? 'গেস্ট মোড (অস্থায়ী)' : 'অরবিট সিঙ্ক সক্রিয় ✓'}
+          </Text>
+        </View>
+
+        <Pressable
+          style={({ pressed }) => [styles.accountCapsule, pressed && styles.capsulePressed]}
+          onPress={() => router.push((isGuest ? '/auth' : '/(tabs)/profile') as any)}
+        >
+          <View style={[styles.accountIconBox, isGuest && styles.accountIconBoxGuest]}>
+            {isGuest ? <User size={12} color={Colors.gold} /> : <ShieldCheck size={12} color={Colors.cyan} />}
+          </View>
+          <Text style={styles.accountNameText} numberOfLines={1}>
+            {currentUser?.username ? `@${currentUser.username}` : displayName}
+          </Text>
+          <ChevronRight size={11} color={Colors.textMuted} />
+        </Pressable>
+      </View>
+
       {/* ── Telemetry Strip ─────────────────────────────── */}
       <SpaceTelemetryHUD />
 
@@ -149,27 +209,32 @@ export default function DashboardScreen() {
         {/* Fuel Cell Recharge CTA */}
         <View style={styles.fuelDivider} />
         {!fuelCharged ? (
-          <Pressable
-            style={({ pressed }) => [styles.rechargeBtn, pressed && styles.rechargeBtnPressed]}
-            onPress={handleRecharge}
-            hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-          >
-            <View style={styles.rechargeIconBox}>
-              <BatteryCharging size={15} color={Colors.gold} />
-            </View>
-            <View style={styles.rechargeTextBox}>
-              <Text style={styles.rechargeLabel}>দৈনিক মহাকাশ জ্বালানি রিচার্জ</Text>
-              <Text style={styles.rechargeSub}>থ্রাস্টার চার্জ করে +২৫ XP নাও</Text>
-            </View>
-            <View style={styles.rechargeXpBadge}>
-              <Zap size={11} color={Colors.gold} fill={Colors.gold} />
-              <Text style={styles.rechargeXpText}>+২৫</Text>
-            </View>
-          </Pressable>
+          <Animated.View style={{ transform: [{ scale: fuelScale }] }}>
+            <Pressable
+              style={({ pressed }) => [styles.rechargeBtn, pressed && styles.rechargeBtnPressed]}
+              onPress={handleRecharge}
+              hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+            >
+              <View style={styles.rechargeIconBox}>
+                <BatteryCharging size={16} color={Colors.gold} />
+              </View>
+              <View style={styles.rechargeTextBox}>
+                <Text style={styles.rechargeLabel}>দৈনিক মহাকাশ জ্বালানি রিচার্জ</Text>
+                <Text style={styles.rechargeSub}>থ্রাস্টার চার্জ করে +২৫ XP নাও</Text>
+              </View>
+              <View style={styles.rechargeXpBadge}>
+                <Zap size={11} color={Colors.gold} fill={Colors.gold} />
+                <Text style={styles.rechargeXpText}>+২৫</Text>
+              </View>
+            </Pressable>
+          </Animated.View>
         ) : (
           <View style={styles.fuelFullRow}>
-            <CheckCircle2 size={15} color={Colors.emerald} />
+            <CheckCircle2 size={16} color={Colors.emerald} />
             <Text style={styles.fuelFullText}>থ্রাস্টার সর্বোচ্চ ক্ষমতায় চার্জড! 🚀</Text>
+            <View style={styles.fuelFullBadge}>
+              <Text style={styles.fuelFullBadgeText}>১০০%</Text>
+            </View>
           </View>
         )}
       </View>
@@ -297,8 +362,15 @@ export default function DashboardScreen() {
             <Target size={14} color={Colors.cyan} />
             <Text style={styles.questShellTitle}>আজকের ক্যাডেট মিশন</Text>
           </View>
-          <View style={styles.questCounter}>
-            <Text style={styles.questCounterText}>{doneCount} / ৩</Text>
+          <View style={styles.questProgressContainer}>
+            <View style={styles.questPillSegments}>
+              <View style={[styles.questSegment, q1Done && styles.questSegmentDone]} />
+              <View style={[styles.questSegment, q2Done && styles.questSegmentDone]} />
+              <View style={[styles.questSegment, q3Done && styles.questSegmentDone]} />
+            </View>
+            <View style={styles.questCounter}>
+              <Text style={styles.questCounterText}>{doneCount} / ৩</Text>
+            </View>
           </View>
         </View>
 
@@ -506,6 +578,68 @@ const styles = StyleSheet.create({
     paddingBottom: 48,
   },
 
+  // ── COMMAND BAR ──────────────────────────────────────
+  commandBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 16,
+    marginBottom: 10,
+    backgroundColor: 'rgba(14, 18, 60, 0.72)',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.10)',
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+  },
+  statusGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+  },
+  statusDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+  },
+  statusText: {
+    fontSize: Typography.size.micro,
+    fontWeight: Typography.weight.bold,
+  },
+  accountCapsule: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    maxWidth: 160,
+  },
+  capsulePressed: {
+    opacity: 0.75,
+    transform: [{ scale: 0.97 }],
+  },
+  accountIconBox: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(0, 240, 255, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  accountIconBoxGuest: {
+    backgroundColor: 'rgba(255, 184, 0, 0.15)',
+  },
+  accountNameText: {
+    color: Colors.text,
+    fontSize: Typography.size.micro,
+    fontWeight: Typography.weight.bold,
+    maxWidth: 90,
+  },
+
   // ── HERO ─────────────────────────────────────────────
   heroShell: {
     marginHorizontal: 16,
@@ -650,6 +784,17 @@ const styles = StyleSheet.create({
     color: Colors.emerald,
     fontSize: Typography.size.caption,
     fontWeight: Typography.weight.bold,
+  },
+  fuelFullBadge: {
+    backgroundColor: 'rgba(16, 185, 129, 0.25)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  fuelFullBadgeText: {
+    color: Colors.emerald,
+    fontSize: Typography.size.micro,
+    fontWeight: Typography.weight.heavy,
   },
 
   // ── ASTRO-BUDDY ───────────────────────────────────────
@@ -878,6 +1023,25 @@ const styles = StyleSheet.create({
     color: Colors.text,
     fontSize: Typography.size.body,
     fontWeight: Typography.weight.bold,
+  },
+  questProgressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  questPillSegments: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  questSegment: {
+    width: 14,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+  },
+  questSegmentDone: {
+    backgroundColor: Colors.emerald,
   },
   questCounter: {
     backgroundColor: 'rgba(0,240,255,0.14)',

@@ -22,6 +22,10 @@ import {
   Rocket,
   Shield,
   Lock,
+  ShieldCheck,
+  UserPlus,
+  LogOut,
+  User,
 } from 'lucide-react-native';
 
 export default function ProfileScreen() {
@@ -34,7 +38,15 @@ export default function ProfileScreen() {
     quizAttempts,
     resetProgress,
     cadetArchetype,
+    currentUser,
+    isGuest,
+    logoutUser,
   } = useAppStore();
+
+  const handleSwitchAccount = async () => {
+    await logoutUser();
+    router.replace('/auth' as any);
+  };
 
   const threshold = RANK_THRESHOLDS[rank];
   const archetypeInfo = ARCHETYPES[cadetArchetype] || ARCHETYPES.pilot;
@@ -113,14 +125,18 @@ export default function ProfileScreen() {
       showsVerticalScrollIndicator={false}
     >
       {/* Cute Astronaut ID Badge Card */}
-      <DoubleBezelCard glow="blue" style={styles.profileCardMargin}>
+      <DoubleBezelCard glow={isGuest ? 'gold' : 'blue'} style={styles.profileCardMargin}>
         <View style={styles.dossierHeader}>
-          <View style={styles.idChip}>
-            <Text style={styles.idChipText}>মহাকাশ একাডেমি অফিসিয়াল আইডি</Text>
+          <View style={[styles.idChip, isGuest && styles.idChipGuest]}>
+            <Text style={[styles.idChipText, isGuest && styles.idChipTextGuest]}>
+              {isGuest ? 'মহাকাশ একাডেমি ভিজিটর পাস 🎫' : `@${currentUser?.username || 'cadet'} · অফিসিয়াল আইডি 🛰️`}
+            </Text>
           </View>
-          <View style={styles.activePill}>
-            <View style={styles.activeDot} />
-            <Text style={styles.activePillText}>সক্রিয় ক্যাডেট</Text>
+          <View style={[styles.activePill, isGuest && styles.activePillGuest]}>
+            <View style={[styles.activeDot, isGuest && styles.activeDotGuest]} />
+            <Text style={[styles.activePillText, isGuest && styles.activePillTextGuest]}>
+              {isGuest ? 'অতিথি ক্যাডেট' : 'ভেরিফাইড ক্যাডেট'}
+            </Text>
           </View>
         </View>
 
@@ -147,6 +163,58 @@ export default function ProfileScreen() {
           <Text style={styles.archetypeDescText}>{archetypeInfo.description_bn}</Text>
         </View>
       </DoubleBezelCard>
+
+      {/* Account Status / Upgrade Prompt */}
+      {isGuest ? (
+        <View style={styles.guestAlertBanner}>
+          <View style={styles.guestAlertHeader}>
+            <View style={styles.guestAlertIconBox}>
+              <UserPlus size={18} color={Colors.gold} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.guestAlertTitle}>তোমার অগ্রগতি সংরক্ষণ করো!</Text>
+              <Text style={styles.guestAlertSub}>
+                বর্তমানে তুমি অতিথি মোডে আছো। তোমার {xp} XP ও সমাপ্ত পাঠগুলো সংরক্ষণ করতে একটি স্থায়ী অ্যাকাউন্ট খোলো।
+              </Text>
+            </View>
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <TactileButton
+              title="স্থায়ী অ্যাকাউন্ট তৈরি করো ➔"
+              variant="gold"
+              size="small"
+              onPress={() => router.push('/auth' as any)}
+            />
+          </View>
+        </View>
+      ) : (
+        <View style={styles.accountVerifiedBanner}>
+          <ShieldCheck size={16} color={Colors.emerald} />
+          <Text style={styles.accountVerifiedText}>
+            আইডি: @{currentUser?.username} · লোকাল ডেটাবেসে অগ্রগতি সংরক্ষিত ✓
+          </Text>
+        </View>
+      )}
+
+      {/* Account Action Buttons */}
+      <View style={styles.accountActionCard}>
+        <View style={styles.accountActionTextCol}>
+          <Text style={styles.accountActionTitle}>
+            {isGuest ? 'অন্য কোনো অ্যাকাউন্ট আছে?' : 'অ্যাকাউন্ট ব্যবস্থাপনা'}
+          </Text>
+          <Text style={styles.accountActionSub}>
+            {isGuest
+              ? 'তোমার পূর্বে তৈরি অ্যাকাউন্টে লগইন করতে পারো'
+              : 'অন্য অ্যাকাউন্টে লগইন করো অথবা নতুন অ্যাকাউন্ট খোলো'}
+          </Text>
+        </View>
+        <TactileButton
+          title={isGuest ? 'লগইন করো ➔' : 'লগআউট / পরিবর্তন 🚪'}
+          variant="outline"
+          size="small"
+          onPress={handleSwitchAccount}
+        />
+      </View>
 
       {/* Experience & Onboarding Replay Shortcuts */}
       <View style={styles.shortcutsRow}>
@@ -386,6 +454,103 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     fontSize: Typography.size.micro,
     lineHeight: Typography.lineHeight.caption,
+  },
+  idChipGuest: {
+    backgroundColor: 'rgba(255, 184, 0, 0.15)',
+    borderColor: 'rgba(255, 184, 0, 0.35)',
+  },
+  idChipTextGuest: {
+    color: Colors.gold,
+  },
+  activePillGuest: {
+    backgroundColor: 'rgba(255, 184, 0, 0.15)',
+  },
+  activeDotGuest: {
+    backgroundColor: Colors.gold,
+  },
+  activePillTextGuest: {
+    color: Colors.gold,
+  },
+  guestAlertBanner: {
+    backgroundColor: 'rgba(255, 184, 0, 0.10)',
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderBottomWidth: 3.5,
+    borderColor: 'rgba(255, 184, 0, 0.35)',
+    borderBottomColor: 'rgba(0, 0, 0, 0.35)',
+    padding: 14,
+    marginBottom: 12,
+  },
+  guestAlertHeader: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  guestAlertIconBox: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 184, 0, 0.22)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  guestAlertTitle: {
+    color: Colors.gold,
+    fontSize: Typography.size.caption,
+    fontWeight: Typography.weight.heavy,
+    marginBottom: 3,
+  },
+  guestAlertSub: {
+    color: Colors.textSecondary,
+    fontSize: Typography.size.micro,
+    lineHeight: Typography.lineHeight.caption,
+  },
+  accountVerifiedBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.28)',
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    marginBottom: 12,
+  },
+  accountVerifiedText: {
+    color: Colors.emerald,
+    fontSize: Typography.size.micro,
+    fontWeight: Typography.weight.bold,
+    flex: 1,
+  },
+  accountActionCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(14, 18, 60, 0.88)',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderBottomWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderBottomColor: 'rgba(0,0,0,0.3)',
+    padding: 12,
+    marginBottom: 12,
+    gap: 10,
+  },
+  accountActionTextCol: {
+    flex: 1,
+  },
+  accountActionTitle: {
+    color: Colors.text,
+    fontSize: Typography.size.caption,
+    fontWeight: Typography.weight.bold,
+    marginBottom: 2,
+  },
+  accountActionSub: {
+    color: Colors.textMuted,
+    fontSize: 11,
+    lineHeight: 14,
   },
   shortcutsRow: {
     flexDirection: 'row',
