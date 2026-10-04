@@ -13,7 +13,7 @@ import { useAppStore } from '../src/state/useAppStore';
 export default function RootLayout() {
   const router = useRouter();
   const segments = useSegments();
-  const { hasCompletedOnboarding } = useAppStore();
+  const { hasCompletedOnboarding, initializeSession } = useAppStore();
 
   const [fontsLoaded] = useFonts({
     'NotoSansBengali-Regular': require('../assets/fonts/NotoSansBengali-Regular.ttf'),
@@ -25,8 +25,14 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    // If user has not completed onboarding and is not already on splash or onboarding, direct them to splash
-    const inAuthGroup = segments[0] === 'splash' || segments[0] === 'onboarding';
+    // Attempt to restore persistent session from local database on app launch
+    initializeSession();
+  }, []);
+
+  useEffect(() => {
+    // If user has not completed onboarding and is not already on splash, onboarding or auth, direct them to splash
+    const firstSeg = segments[0] as string | undefined;
+    const inAuthGroup = firstSeg === 'splash' || firstSeg === 'onboarding' || firstSeg === 'auth';
     if (!hasCompletedOnboarding && !inAuthGroup) {
       router.replace('/splash');
     }
@@ -54,6 +60,7 @@ export default function RootLayout() {
         >
           <Stack.Screen name="splash" options={{ headerShown: false, animation: 'fade' }} />
           <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'slide_from_right' }} />
+          <Stack.Screen name="auth" options={{ headerShown: false, animation: 'slide_from_right' }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
             name="lessons/[id]"

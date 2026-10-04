@@ -2,42 +2,33 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
-import { Sparkles, Compass, Star } from 'lucide-react-native';
-import { useAppStore } from '../state/useAppStore';
+import { Sparkles, Heart, Star } from 'lucide-react-native';
+import { useAppStore, RANK_THRESHOLDS } from '../state/useAppStore';
+import { getTranslation } from '../i18n/translations';
 
 export const SpaceTelemetryHUD: React.FC = () => {
-  const { rank, xp } = useAppStore();
+  const { rank, xp, language } = useAppStore();
+  const t = getTranslation(language);
 
-  const getRankBangla = (r: string) => {
-    switch (r) {
-      case 'Cadet':
-        return 'ক্যাডেট';
-      case 'Astronaut':
-        return 'মহাকাশচারী';
-      case 'Mission Specialist':
-        return 'মিশন বিশেষজ্ঞ';
-      case 'Commander':
-        return 'কমান্ডার';
-      default:
-        return r;
-    }
-  };
+  const rankLabel = language === 'en' 
+    ? (RANK_THRESHOLDS[rank]?.label_en || rank) 
+    : (RANK_THRESHOLDS[rank]?.label_bn || rank);
 
   return (
     <View style={styles.container}>
       <View style={styles.badgeItem}>
         <View style={styles.liveDot} />
-        <Text style={styles.badgeText}>অভিযাত্রা সক্রিয়</Text>
+        <Text style={styles.badgeText}>{t.common.missionActive}</Text>
       </View>
 
       <View style={styles.badgeItem}>
-        <Compass size={13} color={Colors.primaryLight} />
-        <Text style={styles.badgeValue}>মহাকাশ অন্বেষণ</Text>
+        <Heart size={12} color={Colors.coral} fill={Colors.coral} />
+        <Text style={styles.badgeValue}>{t.common.lifeSupport}</Text>
       </View>
 
       <View style={styles.badgeItem}>
-        <Star size={13} color={Colors.gold} fill={Colors.gold} />
-        <Text style={styles.badgeRank}>{getRankBangla(rank)} • {xp} XP</Text>
+        <Star size={12} color={Colors.gold} fill={Colors.gold} />
+        <Text style={styles.badgeRank}>{rankLabel} • {xp} XP</Text>
       </View>
     </View>
   );

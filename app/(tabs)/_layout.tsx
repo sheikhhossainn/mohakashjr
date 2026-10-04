@@ -4,8 +4,13 @@ import { Tabs } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
 import { Rocket, BookOpen, User, Compass, Sparkles } from 'lucide-react-native';
+import { useAppStore } from '../../src/state/useAppStore';
+import { getTranslation } from '../../src/i18n/translations';
 
 export default function TabsLayout() {
+  const { language } = useAppStore();
+  const t = getTranslation(language);
+
   return (
     <Tabs
       screenOptions={{
@@ -50,49 +55,49 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'ড্যাশবোর্ড',
+          title: t.tabs.dashboard,
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.tabIconCircle, focused && styles.tabActiveCircle]}>
               <Compass color={color} size={22} />
             </View>
           ),
-          headerTitle: 'মহাকাশ জুনিয়র 🚀',
+          headerTitle: t.tabs.dashboardHeader,
         }}
       />
       <Tabs.Screen
         name="lessons"
         options={{
-          title: 'পাঠশালা',
+          title: t.tabs.lessons,
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.tabIconCircle, focused && styles.tabActiveCircle]}>
               <BookOpen color={color} size={22} />
             </View>
           ),
-          headerTitle: 'মহাকাশ পাঠশালা 📚',
+          headerTitle: t.tabs.lessonsHeader,
         }}
       />
       <Tabs.Screen
         name="mission"
         options={{
-          title: 'চন্দ্রাভিযান',
+          title: t.tabs.mission,
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.tabIconCircle, focused && styles.tabActiveCircle]}>
               <Rocket color={color} size={22} />
             </View>
           ),
-          headerTitle: 'চন্দ্রপৃষ্ঠে অবতরণ মিশন 🌕',
+          headerTitle: t.tabs.missionHeader,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'প্রোফাইল',
+          title: t.tabs.profile,
           tabBarIcon: ({ color, focused }) => (
             <View style={[styles.tabIconCircle, focused && styles.tabActiveCircle]}>
               <User color={color} size={22} />
             </View>
           ),
-          headerTitle: 'আমার নভোচারী প্রোফাইল 👨‍🚀',
+          headerTitle: t.tabs.profileHeader,
         }}
       />
     </Tabs>

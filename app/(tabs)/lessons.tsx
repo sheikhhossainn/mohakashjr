@@ -16,9 +16,12 @@ import {
   BookOpen,
 } from 'lucide-react-native';
 
+import { getTranslation } from '../../src/i18n/translations';
+
 export default function LessonsScreen() {
   const router = useRouter();
-  const { rank, completedLessonIds } = useAppStore();
+  const { rank, completedLessonIds, language } = useAppStore();
+  const t = getTranslation(language);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [activeFilter, setActiveFilter] = useState<'all' | 'Cadet' | 'Astronaut'>('all');
 
@@ -41,6 +44,8 @@ export default function LessonsScreen() {
   const renderLessonItem = ({ item, index }: { item: Lesson; index: number }) => {
     const isCompleted = completedLessonIds.includes(item.id);
     const locked = isLevelLocked(item.level);
+    const title = language === 'en' ? (t.lessonsData[item.id]?.title || item.title_bn) : item.title_bn;
+    const summary = language === 'en' ? (t.lessonsData[item.id]?.summary || item.summary_bn) : item.summary_bn;
 
     return (
       <Pressable
@@ -70,21 +75,21 @@ export default function LessonsScreen() {
                     { color: item.level === 'Astronaut' ? Colors.emerald : Colors.primaryLight },
                   ]}
                 >
-                  {item.level === 'Cadet' ? 'ক্যাডেট স্তর' : 'মহাকাশচারী স্তর'}
+                  {item.level === 'Cadet' ? t.lessonsScreen.cadetTab : t.lessonsScreen.astronautTab}
                 </Text>
               </View>
-              <Text style={styles.orderText}>পাঠ #{index + 1}</Text>
+              <Text style={styles.orderText}>{t.lessonsScreen.lessonPrefix}{index + 1}</Text>
             </View>
 
             {isCompleted ? (
               <View style={styles.completedBadge}>
                 <CheckCircle2 size={13} color={Colors.emerald} />
-                <Text style={styles.completedText}>সম্পন্ন</Text>
+                <Text style={styles.completedText}>{t.common.done}</Text>
               </View>
             ) : locked ? (
               <View style={styles.lockedBadge}>
                 <Lock size={12} color={Colors.textMuted} />
-                <Text style={styles.lockedText}>লকড</Text>
+                <Text style={styles.lockedText}>{t.common.locked}</Text>
               </View>
             ) : (
               <View style={styles.xpBadge}>
@@ -95,25 +100,25 @@ export default function LessonsScreen() {
           </View>
 
           {/* Lesson Title & Summary */}
-          <Text style={[styles.lessonTitle, locked && styles.textLocked]}>{item.title_bn}</Text>
+          <Text style={[styles.lessonTitle, locked && styles.textLocked]}>{title}</Text>
           <Text style={styles.lessonSummary} numberOfLines={2}>
-            {item.summary_bn}
+            {summary}
           </Text>
 
           {/* Card Footer */}
           <View style={styles.cardFooter}>
             <View style={styles.metaTimeGroup}>
               <Clock size={13} color={Colors.textMuted} />
-              <Text style={styles.metaTimeText}>{item.read_time_minutes} মিনিট পাঠ</Text>
+              <Text style={styles.metaTimeText}>{item.read_time_minutes} {t.lessonsScreen.minRead}</Text>
             </View>
 
             {!locked ? (
               <View style={styles.readActionGroup}>
-                <Text style={styles.readActionText}>পড়া শুরু করো</Text>
+                <Text style={styles.readActionText}>{t.lessonsScreen.readAction}</Text>
                 <ChevronRight size={15} color={Colors.primaryLight} />
               </View>
             ) : (
-              <Text style={styles.lockHintText}>ক্যাডেট স্তর সম্পন্ন করে আনলক করো</Text>
+              <Text style={styles.lockHintText}>{t.lessonsScreen.unlockHint}</Text>
             )}
           </View>
         </StoryCard>
@@ -130,7 +135,7 @@ export default function LessonsScreen() {
           onPress={() => setActiveFilter('all')}
         >
           <Text style={[styles.pillText, activeFilter === 'all' && styles.pillTextActive]}>
-            সকল পাঠ ({lessons.length})
+            {t.lessonsScreen.allTab} ({lessons.length})
           </Text>
         </Pressable>
 
@@ -139,7 +144,7 @@ export default function LessonsScreen() {
           onPress={() => setActiveFilter('Cadet')}
         >
           <Text style={[styles.pillText, activeFilter === 'Cadet' && styles.pillTextActive]}>
-            ক্যাডেট স্তর
+            {t.lessonsScreen.cadetTab}
           </Text>
         </Pressable>
 
@@ -148,7 +153,7 @@ export default function LessonsScreen() {
           onPress={() => setActiveFilter('Astronaut')}
         >
           <Text style={[styles.pillText, activeFilter === 'Astronaut' && styles.pillTextActive]}>
-            মহাকাশচারী স্তর
+            {t.lessonsScreen.astronautTab}
           </Text>
         </Pressable>
       </View>
