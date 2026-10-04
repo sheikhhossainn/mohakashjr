@@ -227,6 +227,7 @@ npx tsc --noEmit
 ## 👥 Team Aspire 5 — NASA Space Apps Challenge 2026
 
 - **Sheikh Hossain** — Project Lead, Architecture & Full-Stack Development
+- **Mahi** — Local Data Architecture, Database Layer & AI Proxy
 - **Mahim** — Moon Mission Mechanics & Motion Animations
 - **Humaira** — NASA Curriculum Authoring, Bangla Content & Offline Q&As
 - **Jim** — Typography, Asset Design & AI Tutor Experience
