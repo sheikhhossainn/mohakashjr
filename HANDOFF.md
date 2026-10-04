@@ -21,5 +21,5 @@ Consolidating and merging remote feature branches into `dev`:
 - None.
 
 ## Immediate next steps
-1. Delete merged feature branches (`feature/ui-ux-redesign` and `feature/bilingual-localization`) from local and remote.
-2. Update `implemented_features.md`, `AGENT.md`, `AGENTS.md`, and AST knowledge graph via `graphify update .`.
+1. When user requests or provides permission, verify git credentials and push `dev` to `origin/dev` or open a PR as needed.
+
