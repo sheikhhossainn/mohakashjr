@@ -165,8 +165,8 @@
     "semantic_hash": ""
   },
   "app/(tabs)/index.tsx": {
-    "mtime": 1791144803.5847669,
-    "ast_hash": "07a87219d4c33bedd5615de1b333bc59",
+    "mtime": 1791146703.7933395,
+    "ast_hash": "2539a724182e5288ef1d7e898b3c97e2",
     "semantic_hash": ""
   },
   "app/(tabs)/lessons.tsx": {
@@ -185,13 +185,13 @@
     "semantic_hash": ""
   },
   "app/_layout.tsx": {
-    "mtime": 1791144626.865534,
-    "ast_hash": "32fffe3e437c463b5c790a1f92c34d23",
+    "mtime": 1791146372.641693,
+    "ast_hash": "6467ba2ef107384cbda3aa7ecd23b3b0",
     "semantic_hash": ""
   },
   "app/lessons/[id].tsx": {
-    "mtime": 1791143066.8515131,
-    "ast_hash": "5024b146092c314c09ec81a7bbdda5d7",
+    "mtime": 1791146401.5990627,
+    "ast_hash": "d31b08ecf8a15274a051373e3e1894d9",
     "semantic_hash": ""
   },
   "app/mission/index.tsx": {
@@ -200,13 +200,13 @@
     "semantic_hash": ""
   },
   "app/quiz/[id].tsx": {
-    "mtime": 1791143066.8415103,
-    "ast_hash": "54777d2c7a5c0c8b9c8769bb3706460e",
+    "mtime": 1791146401.5970628,
+    "ast_hash": "816775dc3fbe23c6009d46cdf6659af2",
     "semantic_hash": ""
   },
   "app/quiz/index.tsx": {
-    "mtime": 1791143066.8425114,
-    "ast_hash": "9854e464d97bd5bd55d56886aeb9cf25",
+    "mtime": 1791146372.6436923,
+    "ast_hash": "82a1df3deef0dd6e1d530c4ad4315c06",
     "semantic_hash": ""
   },
   "package.json": {
@@ -910,8 +910,8 @@
     "semantic_hash": ""
   },
   "app/tutor.tsx": {
-    "mtime": 1791145791.539338,
-    "ast_hash": "8497be343b00e4ae4d17bc6e2944a13a",
+    "mtime": 1791146446.5615005,
+    "ast_hash": "6f4e0a93d2bf956c54332a13ae55ff19",
     "semantic_hash": ""
   },
   "assets/lottie/mascot-celebrate.json": {
@@ -1280,8 +1280,8 @@
     "semantic_hash": ""
   },
   "src/components/SpaceHub.tsx": {
-    "mtime": 1791142238.252714,
-    "ast_hash": "23cb80713c579eb12ffdf42db0a5927e",
+    "mtime": 1791146834.381331,
+    "ast_hash": "620bf87dd30c224f9b10a2d209973b5a",
     "semantic_hash": ""
   },
   "src/content/spaceDestinations.ts": {
@@ -1337,6 +1337,11 @@
   "assets/brand/splash-icon.png": {
     "mtime": 1791144858.914343,
     "ast_hash": "fe53009987edba5ac162502d1f25062c",
+    "semantic_hash": ""
+  },
+  "src/components/ScreenHeader.tsx": {
+    "mtime": 1791146371.131022,
+    "ast_hash": "3e58982fe77f9de4e861c3381e6dc017",
     "semantic_hash": ""
   }
 }
