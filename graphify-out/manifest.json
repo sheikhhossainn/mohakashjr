@@ -110,8 +110,8 @@
     "semantic_hash": ""
   },
   "AGENT.md": {
-    "mtime": 1791131654.71315,
-    "ast_hash": "9ee1af08b3934355f70395b22d05f4b7",
+    "mtime": 1791132309.7250848,
+    "ast_hash": "22f571b0432dd38a315e6ec3293ad32e",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1791131666.7056184,
-    "ast_hash": "5e7dcc8172b10997fd784b8d56074bf4",
+    "mtime": 1791132318.399969,
+    "ast_hash": "dec9098bd48e2b049a4acfe245a86455",
     "semantic_hash": ""
   },
   "TEAMCONTRIBUTION.md": {
@@ -180,8 +180,8 @@
     "semantic_hash": ""
   },
   "app/(tabs)/mission.tsx": {
-    "mtime": 1790951245.3645551,
-    "ast_hash": "463a357ce1ff95506b16012dbf0db6b3",
+    "mtime": 1791134036.6673005,
+    "ast_hash": "1541b01e4484261f91fe781319e60f5e",
     "semantic_hash": ""
   },
   "app/(tabs)/profile.tsx": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "HANDOFF.md": {
-    "mtime": 1791132055.297672,
-    "ast_hash": "b59d51fe71b94170d8868ec05fad3f9e",
+    "mtime": 1791132327.5425358,
+    "ast_hash": "0319d86b35c13924234ee868163b9bcb",
     "semantic_hash": ""
   },
   "src/components/DoubleBezelCard.tsx": {
@@ -995,13 +995,13 @@
     "semantic_hash": ""
   },
   "src/components/mission/MoonLandingMission.tsx": {
-    "mtime": 1790919813.4034538,
-    "ast_hash": "5714a77269f5b02b85db6a7e37602c04",
+    "mtime": 1791133977.7253263,
+    "ast_hash": "7afb83016bb4e22128b77089007596da",
     "semantic_hash": ""
   },
   "src/components/mission/index.ts": {
-    "mtime": 1790919813.4034538,
-    "ast_hash": "813c329ddf165429884bdf319e315a25",
+    "mtime": 1791133981.8627098,
+    "ast_hash": "8ffe1bd479bb7d57179c0b9227a74b63",
     "semantic_hash": ""
   },
   "src/content/missionData.ts": {
@@ -1045,8 +1045,8 @@
     "semantic_hash": ""
   },
   "src/i18n/translations.ts": {
-    "mtime": 1791131568.0298574,
-    "ast_hash": "84903bd145fc8534a5eb595acba62ef3",
+    "mtime": 1791133843.0307977,
+    "ast_hash": "71252fee760724a32a9326cdc7a0b408",
     "semantic_hash": ""
   },
   "src/services/authDatabase.ts": {
@@ -1067,6 +1067,36 @@
   "docs/APP_WALKTHROUGH_GUIDE.md": {
     "mtime": 1791131568.0250764,
     "ast_hash": "22e654323db90b5e68f11a01e32e7844",
+    "semantic_hash": ""
+  },
+  "src/components/mission/AstronautSuitUpGame.tsx": {
+    "mtime": 1791133876.578741,
+    "ast_hash": "1c217ce660acc7a19fa3a2c57bc24964",
+    "semantic_hash": ""
+  },
+  "src/components/mission/CockpitIgnitionDeck.tsx": {
+    "mtime": 1791134055.1011147,
+    "ast_hash": "54d6d758d7a79c73fa1eed7800c8da56",
+    "semantic_hash": ""
+  },
+  "src/components/mission/LunarDescentModule.tsx": {
+    "mtime": 1791134075.2758253,
+    "ast_hash": "e39b36400c006502cdad9ce682309a5c",
+    "semantic_hash": ""
+  },
+  "src/components/mission/MoonwalkCelebration.tsx": {
+    "mtime": 1791134080.5042458,
+    "ast_hash": "74da9466018f7ba6c3b18ddf92a5186f",
+    "semantic_hash": ""
+  },
+  "src/components/mission/RocketFuelingStation.tsx": {
+    "mtime": 1791134069.8940551,
+    "ast_hash": "bb52039e5e9e6047b68144ed8e8eac59",
+    "semantic_hash": ""
+  },
+  "tests/missionGame.test.ts": {
+    "mtime": 1791134110.8647778,
+    "ast_hash": "af1c4fad16ed2f0dcb62d180551ec39c",
     "semantic_hash": ""
   }
 }

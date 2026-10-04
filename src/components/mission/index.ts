@@ -1,6 +1,11 @@
 // Mission Module Exports for Shahi and App Navigation
 
 export { MoonLandingMission } from './MoonLandingMission';
+export { AstronautSuitUpGame } from './AstronautSuitUpGame';
+export { RocketFuelingStation } from './RocketFuelingStation';
+export { CockpitIgnitionDeck } from './CockpitIgnitionDeck';
+export { LunarDescentModule } from './LunarDescentModule';
+export { MoonwalkCelebration } from './MoonwalkCelebration';
 export { LunarSiteSelector } from './LunarSiteSelector';
 export { CargoPackingGame } from './CargoPackingGame';
 export { MissionDebriefView } from './MissionDebriefView';
