@@ -1,16 +1,16 @@
 # Graph Report - mohakashjr  (2026-10-04)
 
 ## Corpus Check
-- 207 files · ~298,339 words
+- 213 files · ~308,290 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2637 nodes · 3615 edges · 186 communities (144 shown, 42 thin omitted)
+- 2658 nodes · 3741 edges · 190 communities (147 shown, 43 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 210 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `157789f1`
+- Built from commit: `e9897897`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -199,37 +199,41 @@
 - onboarding.tsx
 - 8
 - secondary-foreground
+- 16
+- 1
 - expo-constants
+- 3
+- 8
 - lucide-react-native
 
 ## God Nodes (most connected - your core abstractions)
 1. `TailwindConfigGenerator` - 57 edges
-2. `DesignSystemGenerator` - 45 edges
-3. `search()` - 40 edges
-4. `useAppStore` - 36 edges
-5. `TestTailwindConfigGenerator` - 35 edges
-6. `ShadcnInstaller` - 33 edges
-7. `Colors` - 33 edges
-8. `search_stack()` - 30 edges
-9. `Typography` - 28 edges
+2. `useAppStore` - 49 edges
+3. `DesignSystemGenerator` - 45 edges
+4. `search()` - 40 edges
+5. `Colors` - 38 edges
+6. `TestTailwindConfigGenerator` - 35 edges
+7. `ShadcnInstaller` - 33 edges
+8. `Typography` - 33 edges
+9. `search_stack()` - 30 edges
 10. `TestShadcnInstaller` - 26 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `DashboardScreen()` --references--> `react`  [EXTRACTED]
   app/(tabs)/index.tsx → package.json
+- `DashboardScreen()` --calls--> `getLessons()`  [EXTRACTED]
+  app/(tabs)/index.tsx → src/services/lessonService.ts
+- `LessonsScreen()` --calls--> `getTranslation()`  [EXTRACTED]
+  app/(tabs)/lessons.tsx → src/i18n/translations.ts
+- `LessonsScreen()` --calls--> `useAppStore`  [EXTRACTED]
+  app/(tabs)/lessons.tsx → src/state/useAppStore.ts
 - `RootLayout()` --calls--> `useAppStore`  [EXTRACTED]
   app/_layout.tsx → src/state/useAppStore.ts
-- `SplashScreen()` --calls--> `useAppStore`  [EXTRACTED]
-  app/splash.tsx → src/state/useAppStore.ts
-- `AuthScreen()` --calls--> `useAppStore`  [EXTRACTED]
-  app/auth.tsx → src/state/useAppStore.ts
-- `LessonReaderScreen()` --calls--> `getLessonById()`  [EXTRACTED]
-  app/lessons/[id].tsx → src/services/lessonService.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (186 total, 42 thin omitted)
+## Communities (190 total, 43 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -316,8 +320,8 @@ Cohesion: 0.09
 Nodes (21): 1. Quick Start & Git Workflow (For Every Teammate & Agent), 2. Team Task Allocation & Dependency Matrix, 3. Step-by-Step "How-To" Instructions per Role, 4. Key Milestones Timeline, Guide for Humaira (Bangla Content & AI Knowledge), Guide for Jim (Typography, Design, Chat UI & QA), Guide for Mahi (Database & Cloudflare Proxy), Guide for Mahim (Mascot Motion & Moon Mission) (+13 more)
 
 ### Community 33 - "dependencies"
-Cohesion: 0.67
-Nodes (4): $type, $value, md, md
+Cohesion: 0.43
+Nodes (3): _filter_anti_patterns_for_mode(), Drop "avoid dark mode" advice once dark mode is the resolved answer., TestAntiPatternGating
 
 ### Community 34 - "expo"
 Cohesion: 0.10
@@ -360,16 +364,16 @@ Cohesion: 0.06
 Nodes (35): 1. Visual Communication First, 2. Minimal Text Integration, 3. Expert Craftsmanship, 4. Systematic Patterns, Analog Meditation, Approach, Canvas Boundaries, Canvas Design System (+27 more)
 
 ### Community 44 - "design_system.py"
-Cohesion: 0.10
-Nodes (25): ansi_ljust(), _detect_page_type(), format_ascii_box(), format_master_md(), format_page_override_md(), _generate_intelligent_overrides(), hex_to_ansi(), persist_design_system() (+17 more)
+Cohesion: 0.08
+Nodes (30): ansi_ljust(), _detect_page_type(), format_ascii_box(), format_markdown(), format_master_md(), format_page_override_md(), generate_design_system(), _generate_intelligent_overrides() (+22 more)
 
 ### Community 45 - "Prerequisites"
 Cohesion: 0.06
 Nodes (34): Accessibility, Available Domains, Available Stacks, Common Rules for Professional UI, Common Sticking Points, Example Workflow, How to Use This Skill, Icons & Visual Elements (+26 more)
 
 ### Community 46 - "spacing"
-Cohesion: 0.06
-Nodes (34): $type, $value, $type, $value, $type, $value, $type, $value (+26 more)
+Cohesion: 0.09
+Nodes (22): $type, $value, $type, $value, $type, $value, $type, $value (+14 more)
 
 ### Community 47 - "Form & Input Components"
 Cohesion: 0.06
@@ -564,8 +568,8 @@ Cohesion: 0.23
 Nodes (3): detect_domain(), Auto-detect the most relevant domain from query.      Matches are weighted by, TestDomainDetection
 
 ### Community 96 - ".generate"
-Cohesion: 0.16
-Nodes (8): _filter_anti_patterns_for_mode(), Drop "avoid dark mode" advice once dark mode is the resolved answer., Execute searches across multiple domains., Extract results list from search result dict., Generate complete design system recommendation.          variance/motion/densi, Bucket a 1-10 dial value into its tier config. Returns None if value is None., _resolve_dial(), TestAntiPatternGating
+Cohesion: 0.14
+Nodes (8): Execute searches across multiple domains., Find matching reasoning rule for a category., Apply reasoning rules to search results., Select best matching result based on priority keywords., Extract results list from search result dict., Generate complete design system recommendation.          variance/motion/densi, Bucket a 1-10 dial value into its tier config. Returns None if value is None., _resolve_dial()
 
 ### Community 97 - "Banner Design - Multi-Format Creative Banner System"
 Cohesion: 0.14
@@ -628,8 +632,8 @@ Cohesion: 0.18
 Nodes (10): Bold Dynamic, CIP Design Style Guide, Classic Traditional, Color Psychology, Corporate Minimal, Fresh Modern, Luxury Premium, Modern Tech (+2 more)
 
 ### Community 112 - "primitive"
-Cohesion: 0.18
-Nodes (11): fast, normal, slow, $type, $value, $type, $value, primitive (+3 more)
+Cohesion: 0.20
+Nodes (10): fast, normal, slow, $type, $value, $type, $value, duration (+2 more)
 
 ### Community 113 - "test_tailwind_config_gen.py"
 Cohesion: 0.20
@@ -664,8 +668,8 @@ Cohesion: 0.22
 Nodes (6): Path, Initialize generator.          Args:             typescript: If True, generat, Determine default output path., Create base configuration structure., Get default content paths for framework., Any
 
 ### Community 121 - "parse_decision_rules"
-Cohesion: 0.15
-Nodes (9): Find matching reasoning rule for a category., Apply reasoning rules to search results., Select best matching result based on priority keywords., apply_decision_rules(), _object_without_duplicates(), parse_decision_rules(), Return deterministic mutations and an audit trail; never execute data., Parse the canonical condition -> action-array representation. (+1 more)
+Cohesion: 0.27
+Nodes (6): apply_decision_rules(), _object_without_duplicates(), parse_decision_rules(), Return deterministic mutations and an audit trail; never execute data., Parse the canonical condition -> action-array representation., _validate_action()
 
 ### Community 122 - "_run"
 Cohesion: 0.28
@@ -680,16 +684,12 @@ Cohesion: 0.29
 Nodes (8): padding-x, input, $type, $value, focus-ring, padding-x, $type, $value
 
 ### Community 125 - "radius"
-Cohesion: 0.29
-Nodes (8): $type, $value, $type, $value, radius, default, full, default
+Cohesion: 0.19
+Nodes (14): $type, $value, $type, $value, $type, $value, primitive, radius (+6 more)
 
 ### Community 126 - "._generate_javascript"
 Cohesion: 0.29
 Nodes (4): Generate TypeScript configuration., Generate JavaScript configuration., Format plugins array for config.          Validates each plugin name against a, Add indentation to JSON string.
-
-### Community 127 - "test_core.py"
-Cohesion: 0.13
-Nodes (7): format_markdown(), generate_design_system(), Format design system as markdown., Main entry point for design system generation.      Args:         query: Sear, TestBm25CoreBehavior, TestDiagnosticsContracts, TestPersistence
 
 ### Community 128 - "Slides Reference"
 Cohesion: 0.29
@@ -708,8 +708,8 @@ Cohesion: 0.04
 Nodes (45): Explanation Script:, Explanation Script:, Explanation Script:, Explanation Script:, Explanation Script:, Explanation Script:, Explanation Script:, 💎 Key Talking Points for Pitch & Judging (+37 more)
 
 ### Community 133 - "shadow"
-Cohesion: 0.47
-Nodes (6): sm, shadow, sm, sm, $type, $value
+Cohesion: 0.60
+Nodes (5): sm, sm, sm, $type, $value
 
 ### Community 134 - "Slides"
 Cohesion: 0.33
@@ -724,8 +724,8 @@ Cohesion: 0.40
 Nodes (4): Brand Guidelines Template, Document Structure, Extractable Fields, Usage
 
 ### Community 137 - "$type"
-Cohesion: 0.11
-Nodes (30): styles, OnboardingScreen(), Option, Question, QUESTIONS, styles, AnimatedMascot(), AnimatedMascotProps (+22 more)
+Cohesion: 0.14
+Nodes (23): OnboardingScreen(), Option, Question, QUESTIONS, styles, AstronautAvatarProps, SpaceChoiceBadge(), SpaceChoiceBadgeProps (+15 more)
 
 ### Community 138 - "radius"
 Cohesion: 0.60
@@ -736,16 +736,16 @@ Cohesion: 0.05
 Nodes (41): dependencies, expo, expo-asset, expo-constants, expo-font, @expo-google-fonts/hind-siliguri, @expo-google-fonts/noto-sans-bengali, expo-linking (+33 more)
 
 ### Community 141 - "xl"
-Cohesion: 0.13
-Nodes (25): BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), lessonQuizzes, outputPath, seedData (+17 more)
+Cohesion: 0.10
+Nodes (32): QuizHubScreen(), styles, LessonsScreen(), styles, AITutorChatScreen(), lessonQuizzes, outputPath, seedData (+24 more)
 
 ### Community 142 - "md"
 Cohesion: 0.40
 Nodes (5): AnimatedXPBar(), AnimatedXPBarProps, BENGALI_DIGITS, styles, toBengaliNumber()
 
 ### Community 143 - "none"
-Cohesion: 0.22
-Nodes (11): AITutorChatScreen(), ChatMessage, styles, OfflineQAItem, findOfflineAnswer(), getAllOfflineQuestions(), getOfflineQuestionsByCategory(), ITEMS (+3 more)
+Cohesion: 0.33
+Nodes (5): CosmicBackground(), NightSkyCanvas(), STARS_LAYER_1, STARS_LAYER_2, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }
 
 ### Community 146 - "destructive"
 Cohesion: 0.67
@@ -772,24 +772,24 @@ Cohesion: 0.67
 Nodes (3): muted, $type, $value
 
 ### Community 177 - "useAppStore"
-Cohesion: 0.07
-Nodes (33): LessonReaderScreen(), styles, styles, SplashScreen(), styles, { width: SCREEN_WIDTH }, styles, GentleButton() (+25 more)
+Cohesion: 0.16
+Nodes (13): LessonReaderScreen(), styles, IllustrationHeader(), IllustrationHeaderProps, IllustrationTopic, styles, { width: SCREEN_WIDTH }, styles (+5 more)
 
 ### Community 178 - "colors.ts"
 Cohesion: 0.33
 Nodes (5): 1. Persona Overview, 2. Core Pedagogical Rules, 3. System Prompt (Ready for API Injection), 4. Example In-Flight Interaction, AI Tutor System Prompt & Persona Specification — Mohakash Jr
 
 ### Community 179 - "[id].tsx"
-Cohesion: 0.12
-Nodes (14): RootLayout(), styles, CONFETTI_COLORS, ConfettiEffect(), ConfettiPiece, styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }, CosmicBackground() (+6 more)
+Cohesion: 0.09
+Nodes (32): styles, BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), ChatMessage, styles (+24 more)
 
 ### Community 180 - "DoubleBezelCard.tsx"
 Cohesion: 0.67
 Nodes (3): primary-foreground, $type, $value
 
 ### Community 181 - "onboarding.tsx"
-Cohesion: 0.16
-Nodes (23): AuthScreen(), QuizHubScreen(), DashboardScreen(), styles, styles, TabsLayout(), LessonsScreen(), styles (+15 more)
+Cohesion: 0.08
+Nodes (47): AuthScreen(), RootLayout(), styles, SplashScreen(), styles, { width: SCREEN_WIDTH }, DashboardScreen(), styles (+39 more)
 
 ### Community 182 - "8"
 Cohesion: 0.60
@@ -799,28 +799,44 @@ Nodes (5): lg, $type, $value, lg, lg
 Cohesion: 0.67
 Nodes (3): secondary-foreground, $type, $value
 
+### Community 184 - "16"
+Cohesion: 0.67
+Nodes (3): $type, $value, 16
+
+### Community 185 - "1"
+Cohesion: 0.67
+Nodes (3): $type, $value, 1
+
 ### Community 186 - "expo-constants"
 Cohesion: 0.15
 Nodes (12): 1. Executive Summary, 2.1 Embedded Bengali Fonts, 2.2 Conjunct & Diacritic Stress Testing, 2. Typography & Rendering Verification, 3. Full Airplane Mode Walkthrough, 4. Compiled Bug & Remediation List (Hour 44 Review), 5. Visual Asset Inventory Supplied in `assets/`, Device Testing, Typography & Bug Report — Mohakash Jr (+4 more)
 
+### Community 187 - "3"
+Cohesion: 0.67
+Nodes (3): $type, $value, 3
+
+### Community 188 - "8"
+Cohesion: 0.67
+Nodes (3): $type, $value, 8
+
 ### Community 189 - "lucide-react-native"
-Cohesion: 0.12
-Nodes (30): DoubleBezelCard(), DoubleBezelCardProps, styles, BENGALI_DIGITS, CargoPackingGame(), CargoPackingGameProps, styles, toBengaliNumber() (+22 more)
+Cohesion: 0.11
+Nodes (30): BENGALI_DIGITS, CargoPackingGame(), CargoPackingGameProps, styles, toBengaliNumber(), LunarDescentModuleProps, styles, LunarSiteSelector() (+22 more)
 
 ## Knowledge Gaps
-- **1167 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1162 more)
+- **1175 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1170 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **42 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **43 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `DesignSystemGenerator` connect `DesignSystemGenerator` to `.generate`, `read_rows`, `search`, `design_system.py`, `_resolve_color_mode`, `_select_palette_for_mode`, `parse_decision_rules`, `test_core.py`, `BM25`, `detect_domain`?**
+- **Why does `DesignSystemGenerator` connect `DesignSystemGenerator` to `.generate`, `dependencies`, `read_rows`, `search`, `design_system.py`, `_resolve_color_mode`, `_select_palette_for_mode`, `test_core.py`, `BM25`, `detect_domain`?**
   _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **Why does `search()` connect `search` to `.generate`, `/graphify`, `_row_identities`, `lg`, `design_system.py`, `search_stack`, `core.py`, `_normalize`, `test_core.py`, `BM25`, `detect_domain`?**
   _High betweenness centrality (0.009) - this node is a cross-community bridge._
-- **Why does `BM25` connect `BM25` to `search`, `DesignSystemGenerator`, `test_core.py`, `BM25`, `detect_domain`?**
-  _High betweenness centrality (0.008) - this node is a cross-community bridge._
+- **Why does `BM25` connect `BM25` to `search`, `DesignSystemGenerator`, `design_system.py`, `test_core.py`, `BM25`, `detect_domain`?**
+  _High betweenness centrality (0.007) - this node is a cross-community bridge._
 - **Are the 36 inferred relationships involving `TailwindConfigGenerator` (e.g. with `TestGeneratedConfigIsValidJs` and `.test_node_check_parses_generated_config()`) actually correct?**
   _`TailwindConfigGenerator` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 30 inferred relationships involving `DesignSystemGenerator` (e.g. with `TestBm25CoreBehavior` and `TestDiagnosticsContracts`) actually correct?**
@@ -828,4 +844,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Are the 22 inferred relationships involving `search()` (e.g. with `.generate()` and `._multi_domain_search()`) actually correct?**
   _`search()` has 22 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Regression test for sync-brand-to-tokens.cjs.  The color parser required a par`, `Resolve token reference like {primitive.color.ocean-blue.500} to hex value.`, `Load colors from assets/design-tokens.json for overlay gradients.      Resolve` to the rest of the system?**
-  _1415 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1423 weakly-connected nodes found - possible documentation gaps or missing edges._
