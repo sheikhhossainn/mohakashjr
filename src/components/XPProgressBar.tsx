@@ -14,7 +14,7 @@ export const XPProgressBar: React.FC<XPProgressBarProps> = ({
   showRankLabel = true,
   compact = false,
 }) => {
-  const { xp, rank, getRankProgress } = useAppStore();
+  const { xp, rank, getRankProgress, language } = useAppStore();
   const { percentage: progressPercent, max: maxXP } = getRankProgress();
 
   const animatedPercent = useRef(new Animated.Value(Math.max(5, Math.min(progressPercent, 100)))).current;
@@ -29,17 +29,21 @@ export const XPProgressBar: React.FC<XPProgressBarProps> = ({
   }, [progressPercent]);
 
   const getRankDisplayName = (r: string) => {
+    if (language === 'en') {
+      switch (r) {
+        case 'Cadet': return 'Space Cadet';
+        case 'Astronaut': return 'Official Astronaut';
+        case 'Mission Specialist': return 'Mission Specialist';
+        case 'Commander': return 'Flight Commander';
+        default: return r;
+      }
+    }
     switch (r) {
-      case 'Cadet':
-        return 'স্পেস ক্যাডেট';
-      case 'Astronaut':
-        return 'মহাকাশচারী';
-      case 'Mission Specialist':
-        return 'মিশন বিশেষজ্ঞ';
-      case 'Commander':
-        return 'মহাকাশ কমান্ডার';
-      default:
-        return r;
+      case 'Cadet': return 'স্পেস ক্যাডেট';
+      case 'Astronaut': return 'মহাকাশচারী';
+      case 'Mission Specialist': return 'মিশন বিশেষজ্ঞ';
+      case 'Commander': return 'মহাকাশ কমান্ডার';
+      default: return r;
     }
   };
 
@@ -67,7 +71,7 @@ export const XPProgressBar: React.FC<XPProgressBarProps> = ({
               {rank !== 'Commander' ? (
                 <Text style={styles.xpTarget}> / {maxXP} XP</Text>
               ) : (
-                <Text style={styles.xpTarget}> (সর্বোচ্চ)</Text>
+                <Text style={styles.xpTarget}> {language === 'en' ? '(Max)' : '(সর্বোচ্চ)'}</Text>
               )}
             </Text>
           </View>
@@ -95,8 +99,11 @@ export const XPProgressBar: React.FC<XPProgressBarProps> = ({
         <View style={styles.encouragementRow}>
           <Sparkles size={13} color={Colors.gold} />
           <Text style={styles.encouragementText}>
-            পরবর্তী পদমর্যাদা আনলক করতে আর মাত্র{' '}
-            <Text style={styles.highlightText}>{remainingXP} XP</Text> দরকার!
+            {language === 'en' ? (
+              <>Only <Text style={styles.highlightText}>{remainingXP} XP</Text> needed to unlock next rank!</>
+            ) : (
+              <>পরবর্তী পদমর্যাদা আনলক করতে আর মাত্র <Text style={styles.highlightText}>{remainingXP} XP</Text> দরকার!</>
+            )}
           </Text>
         </View>
       )}

@@ -1,16 +1,21 @@
 import { create } from 'zustand';
 import { RankTier, QuizAttemptRecord } from '../content/schema';
 import { authDatabase, UserAccount } from '../services/authDatabase';
+import { AppLanguage } from '../i18n/translations';
 
 export type CadetArchetype = 'pilot' | 'astronomer' | 'engineer' | 'explorer';
 
 export interface CadetArchetypeInfo {
   id: CadetArchetype;
   title_bn: string;
+  title_en: string;
   badge: string;
   motto_bn: string;
+  motto_en: string;
   description_bn: string;
+  description_en: string;
   recommendedFocus_bn: string;
+  recommendedFocus_en: string;
   accentColor: string;
 }
 
@@ -18,37 +23,53 @@ export const ARCHETYPES: Record<CadetArchetype, CadetArchetypeInfo> = {
   pilot: {
     id: 'pilot',
     title_bn: 'রকেট পাইলট ক্যাডেট',
+    title_en: 'Rocket Pilot Cadet',
     badge: '🚀',
     motto_bn: 'ঝড়ের গতি, নির্ভীক উড্ডয়ন ও গ্রহজয়',
+    motto_en: 'Hypersonic speed, fearless flight & planetary conquest',
     description_bn: 'তুমি উল্কার গতিতে শক্তিশালী রকেট ওড়াতে এবং নিরাপদে মহাকাশযান ল্যান্ড করাতে ভালোবাসো!',
+    description_en: 'You love piloting hypersonic rockets and steering safe spacecraft touchdowns on distant worlds!',
     recommendedFocus_bn: 'রকেট চালনা ও চন্দ্রাভিযান',
+    recommendedFocus_en: 'Rocket Propulsion & Lunar Landings',
     accentColor: '#FF6B35',
   },
   astronomer: {
     id: 'astronomer',
     title_bn: 'তারা সন্ধানী ক্যাডেট',
+    title_en: 'Stargazer Cadet',
     badge: '🔭',
     motto_bn: 'মহাজাগতিক বিস্ময় ও দূর নক্ষত্র দর্শন',
+    motto_en: 'Cosmic wonders & deep stellar horizons',
     description_bn: 'তুমি টেলিস্কোপ দিয়ে দূর তারা, নেবুলা, শনির বলয় আর ব্ল্যাকহোলের রহস্য দেখতে ভালোবাসো!',
+    description_en: 'You love peering through telescopes to explore distant stars, colorful nebulas, and black holes!',
     recommendedFocus_bn: 'নক্ষত্রমণ্ডল ও গভীর মহাবিশ্ব',
+    recommendedFocus_en: 'Constellations & Deep Universe',
     accentColor: '#00F0FF',
   },
   engineer: {
     id: 'engineer',
     title_bn: 'রকেট ও রোভার ইঞ্জিনিয়ার',
+    title_en: 'Space Systems Engineer',
     badge: '🛠️',
     motto_bn: 'প্রযুক্তি উদ্ভাবন ও রোবট নির্মাণ',
+    motto_en: 'Technological invention & robotic mastery',
     description_bn: 'তুমি মার্স রোভারের রোবটিক হাত, সুপার থ্রাস্টার এবং স্পেস স্টেশন তৈরি করতে ভালোবাসো!',
+    description_en: 'You love engineering robotic rover arms, cryogenic thrusters, and orbital space stations!',
     recommendedFocus_bn: 'মার্স রোভার ও রকেট প্রযুক্তি',
+    recommendedFocus_en: 'Mars Rovers & Rocket Technology',
     accentColor: '#FFB800',
   },
   explorer: {
     id: 'explorer',
     title_bn: 'ভিনগ্রহের সাহসী অভিযাত্রী',
+    title_en: 'Deep Space Explorer',
     badge: '🪐',
     motto_bn: 'রহস্য উন্মোচন ও অচেনা জগতের সন্ধান',
+    motto_en: 'Unlocking mysteries & charting the unknown',
     description_bn: 'তুমি অচেনা দূর গ্রহে প্রথম পা রেখে অদ্ভুত স্ফটিক গুহা আর নতুন পৃথিবীর রহস্য খুঁজতে ভালোবাসো!',
+    description_en: 'You love stepping onto untamed exoplanets, crystalline caves, and searching for alien mysteries!',
     recommendedFocus_bn: 'সৌরজগতের রহস্য ও বহির্গ্রহ',
+    recommendedFocus_en: 'Solar Mysteries & Exoplanets',
     accentColor: '#00E599',
   },
 };
@@ -147,13 +168,17 @@ export interface AppState {
   continueAsGuest: (displayName?: string, archetype?: CadetArchetype, answers?: Record<number, number[]>) => Promise<void>;
   logoutUser: () => Promise<void>;
   syncCurrentProgressToDb: () => Promise<void>;
+
+  // Language & Localization
+  language: AppLanguage;
+  setLanguage: (lang: AppLanguage) => Promise<void>;
 }
 
-export const RANK_THRESHOLDS: Record<RankTier, { min: number; max: number; label_bn: string }> = {
-  'Cadet': { min: 0, max: 200, label_bn: 'স্পেস ক্যাডেট' },
-  'Astronaut': { min: 201, max: 600, label_bn: 'মহাকাশচারী' },
-  'Mission Specialist': { min: 601, max: 1200, label_bn: 'মিশন বিশেষজ্ঞ' },
-  'Commander': { min: 1201, max: 2500, label_bn: 'মহাকাশ কমান্ডার' },
+export const RANK_THRESHOLDS: Record<RankTier, { min: number; max: number; label_bn: string; label_en: string }> = {
+  'Cadet': { min: 0, max: 200, label_bn: 'স্পেস ক্যাডেট', label_en: 'Space Cadet' },
+  'Astronaut': { min: 201, max: 600, label_bn: 'মহাকাশচারী', label_en: 'Official Astronaut' },
+  'Mission Specialist': { min: 601, max: 1200, label_bn: 'মিশন বিশেষজ্ঞ', label_en: 'Mission Specialist' },
+  'Commander': { min: 1201, max: 2500, label_bn: 'মহাকাশ কমান্ডার', label_en: 'Flight Commander' },
 };
 
 export function calculateRank(xp: number): RankTier {
@@ -178,6 +203,12 @@ export const useAppStore = create<AppState>((set, get) => ({
   hasCompletedOnboarding: false,
   cadetArchetype: 'pilot',
   psychometricAnswers: {},
+  language: 'bn',
+
+  setLanguage: async (lang: AppLanguage) => {
+    set({ language: lang });
+    await authDatabase.setStoredLanguage(lang);
+  },
 
   setDisplayName: (name: string) => set({ displayName: name }),
   setCadetArchetype: (archetype: CadetArchetype) => set({ cadetArchetype: archetype }),
@@ -287,6 +318,9 @@ export const useAppStore = create<AppState>((set, get) => ({
   initializeSession: async () => {
     set({ isAuthLoading: true });
     try {
+      const storedLang = await authDatabase.getStoredLanguage();
+      set({ language: storedLang });
+
       const sessionUser = await authDatabase.getCurrentSession();
       if (sessionUser) {
         set({

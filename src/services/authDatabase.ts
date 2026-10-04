@@ -20,10 +20,12 @@ export interface UserAccount {
 
 const STORAGE_USERS_KEY = '@mohakashjr_users_v2';
 const STORAGE_SESSION_KEY = '@mohakashjr_session_v2';
+const STORAGE_LANGUAGE_KEY = '@mohakashjr_language';
 
 // In-memory fallback if storage encounters issues
 let memoryUsers: Record<string, UserAccount> = {};
 let memoryCurrentSessionId: string | null = null;
+let memoryLanguage: 'bn' | 'en' = 'bn';
 
 // Simple non-cryptographic hash for space cadet app kid authentication
 function simpleHash(str: string): string {
@@ -267,6 +269,34 @@ export const authDatabase = {
   },
 
   /**
+   * Get persisted application language preference
+   */
+  async getStoredLanguage(): Promise<'bn' | 'en'> {
+    try {
+      const raw = await AsyncStorage.getItem(STORAGE_LANGUAGE_KEY);
+      if (raw === 'en' || raw === 'bn') {
+        memoryLanguage = raw;
+        return raw;
+      }
+    } catch {
+      // Fallback
+    }
+    return memoryLanguage;
+  },
+
+  /**
+   * Persist application language preference ('bn' or 'en')
+   */
+  async setStoredLanguage(lang: 'bn' | 'en'): Promise<void> {
+    memoryLanguage = lang;
+    try {
+      await AsyncStorage.setItem(STORAGE_LANGUAGE_KEY, lang);
+    } catch {
+      // Fallback
+    }
+  },
+
+  /**
    * Reset all data (for testing purposes)
    */
   async _resetAll(): Promise<void> {
@@ -280,3 +310,6 @@ export const authDatabase = {
     }
   },
 };
+
+export const getStoredLanguage = authDatabase.getStoredLanguage.bind(authDatabase);
+export const setStoredLanguage = authDatabase.setStoredLanguage.bind(authDatabase);

@@ -1,35 +1,42 @@
-# HANDOFF — 2026-10-04 08:30
+# HANDOFF — 2026-10-04 08:56
 
 ## Current task status
-Completed implementation of user account creation, persistent authentication database engine, guest mode flow, and clean modern Home Page (Dashboard) redesign with micro-animations and zero boilerplate aesthetic.
+Completed Universal Bilingual Localization Engine (Bangla & English) across the application, with language changing features on both Dashboard and Profile/Settings, persisting user selection across app restarts.
 
 ## Just completed
-- **Persistent Auth Database Service (`src/services/authDatabase.ts`)**:
-  - Implemented multi-user database engine using `@react-native-async-storage/async-storage` with an in-memory web fallback.
-  - Supports user sign up, password hashing, unique username validation, login, guest session creation (`continueAsGuest`), session restoration on app boot, and automatic progress persistence (XP, rank, archetype, lessons, quizzes).
-  - Added 6 comprehensive automated unit tests in `tests/authDatabase.test.ts` (suite total: 33/33 tests passing).
-- **Dedicated Auth Screen (`app/auth.tsx`)**:
-  - Built interactive 3-mode segmented authentication interface (Sign Up, Log In, Guest Mode).
-  - Included saved accounts quick-picker chips for frictionless testing and instant re-login.
-  - Added password visibility toggle, clear Bengali error feedback, and pre-population of chosen display name and archetype.
-- **Onboarding Integration (`app/onboarding.tsx`)**:
-  - Inserted Step 5 Credentialing Station right after the 3-question psychometric orientation and archetype reveal.
-  - Provided Sign Up, Log In, and Guest options, plus a quick login link directly on Step 0 for returning cadets.
-- **Profile Screen Integration (`app/(tabs)/profile.tsx`)**:
-  - Updated Astronaut ID badge to show verified username vs guest status.
-  - Added a guest-to-registered upgrade callout card to encourage permanent cloud/local storage of earned XP.
-  - Added a logout / switch account action routing to `/auth`.
-- **Modern Home Page (Dashboard) Redesign (`app/(tabs)/index.tsx`)**:
-  - Added top Cadet Command Bar with pulsing emerald/gold live status indicator and clickable Cadet Identity Capsule.
-  - Integrated interactive Fuel Thruster Cell with spring physics animation and +25 XP rewards.
-  - Rebuilt Astro-Buddy commlink with floating zero-G vector mascot, interactive moods, and quick AI Tutor chat launcher.
-  - Added modern segmented progress bar (`X / 3 সম্পন্ন`) to Daily Cadet Quests hub.
-  - Refined 2×2 Bento Grid with illuminated accent borders and spring-scale pressable interactions.
-  - Preserved Bengali typography diacritic protection with zero clipping.
+- **Universal Bilingual Localization Engine (`src/i18n/translations.ts`)**:
+  - Authored complete bilingual dictionary (`bn` & `en`) covering navigation tabs, common microcopy, dashboard, archetypes, ranks, profile/settings, lessons screen, curriculum lessons data (titles & summaries for all 8 lessons), and 7 rotating NASA facts.
+  - Exported `getTranslation(lang: AppLanguage)` and `AppLanguage` type.
+- **Language Persistence Engine (`src/services/authDatabase.ts`)**:
+  - Implemented `@mohakashjr_language` persistent key with `getStoredLanguage()` and `setStoredLanguage()`.
+  - Added in-memory fallback for web and fast test environments.
+- **State Integration (`src/state/useAppStore.ts`)**:
+  - Added `language: AppLanguage` (default `'bn'`) to global Zustand state.
+  - Added `setLanguage: (lang: AppLanguage) => Promise<void>` which updates state and writes to persistent storage.
+  - Initialized language from storage on boot in `initializeSession()`.
+  - Updated `ARCHETYPES` with English titles, mottos, descriptions, and focus areas.
+  - Updated `RANK_THRESHOLDS` with English rank labels.
+- **Dynamic Navigation Tabs (`app/(tabs)/_layout.tsx`)**:
+  - Reactive tab titles (`Dashboard` / `ড্যাশবোর্ড`, `Academy` / `পাঠশালা`, `Moon Mission` / `চন্দ্রাভিযান`, `Profile` / `প্রোফাইল`) and headers.
+- **Interactive Dashboard Controls (`app/(tabs)/index.tsx`)**:
+  - Added top Command Bar quick-switch capsule (`[ 🇧🇩 বাংলা | EN 🇺🇸 ]`) with instant feedback.
+  - Added dedicated "ভাষা ও সেটিংস / Settings & Language" clay card with segmented buttons and checkmark indicators.
+  - Localized greeting, archetype motto, fuel recharge CTA, Astro-Buddy dialogs & buttons, smart flight mission dispatch card, daily quests, 2×2 Bento grid, AI Tutor mentor card, and rotating NASA facts.
+- **Profile / Settings Screen (`app/(tabs)/profile.tsx`)**:
+  - Added prominent "ভাষা নির্বাচন / Language Settings" segmented card with flags and active checkmarks.
+  - Localized Astronaut ID / Visitor Pass, rank badge, spacesuit progression tiers & conditions, stats counters, badges collection, offline banner, and reset CTA.
+- **Lessons Screen (`app/(tabs)/lessons.tsx`)**:
+  - Localized filter pills (`All Lessons`, `Cadet Level`, `Astronaut Level`), card level tags, order prefix, time duration, and reading action/hint.
+  - Mapped lesson titles and summaries seamlessly between Bangla and English.
+- **Space Telemetry & Progress Components (`SpaceTelemetryHUD.tsx`, `XPProgressBar.tsx`)**:
+  - Localized life support gauge, active mission badge, rank tier labels, and milestone cheer texts.
+- **Automated Verification (`tests/i18n.test.ts`)**:
+  - Added 3 comprehensive test suites covering dictionary completeness, bilingual archetype/rank models, and reactive store toggle + database persistence.
+  - 36/36 tests passing in 380ms; zero TypeScript compiler errors.
 
 ## Active blockers
-- None. All 33 unit tests pass and TypeScript check (`tsc --noEmit`) passes with 0 errors.
+- None.
 
 ## Immediate next steps
-1. Review git identity with user and obtain explicit permission before pushing to `origin dev`.
-2. Demonstrate or launch Expo dev server for user testing if desired.
+1. Check git identity (`git config user.name`, `git config user.email`).
+2. Follow rule 5 of `AGENT.md`: Request explicit confirmation from user before pushing.

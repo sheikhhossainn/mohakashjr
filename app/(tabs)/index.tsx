@@ -39,18 +39,9 @@ import {
   Bot,
   User,
   ShieldCheck,
+  Languages,
 } from 'lucide-react-native';
-
-// ─── Rotating NASA Facts ────────────────────────────────────────────────────
-const COSMIC_FACTS = [
-  'সূর্য এতো বিশাল যে তার ভেতর প্রায় ১৩ লক্ষ পৃথিবী এঁটে যেতে পারে! ☀️',
-  'মহাকাশে কোনো শব্দ নেই — শব্দের চলাচলে বাতাস লাগে, যা সেখানে অনুপস্থিত! 🤫',
-  'চাঁদে তোমার ওজন পৃথিবীর মাত্র ৬ ভাগের ১ ভাগ হবে! 🌕',
-  'শনি গ্রহের ঘনত্ব এতোটাই কম — বিশাল সমুদ্র থাকলে এটি ভেসে থাকত! 🪐',
-  'ISS নভোচারীরা প্রতি ২৪ ঘণ্টায় ১৬ বার সূর্যোদয় দেখেন! 🚀',
-  'শুক্র গ্রহে অ্যাসিড মেঘ আছে, তাপমাত্রা প্রায় ৪৬৫°C! 🌋',
-  'চাঁদে নভোচারীদের পায়ের ছাপ কোটি বছর অক্ষত থাকবে! 👣',
-];
+import { getTranslation } from '../../src/i18n/translations';
 
 export default function DashboardScreen() {
   const router = useRouter();
@@ -64,7 +55,11 @@ export default function DashboardScreen() {
     cadetArchetype,
     currentUser,
     isGuest,
+    language,
+    setLanguage,
   } = useAppStore();
+
+  const t = getTranslation(language);
 
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [factIndex, setFactIndex] = useState(0);
@@ -132,13 +127,24 @@ export default function DashboardScreen() {
   };
 
   const getBuddyMessage = () => {
-    if (completedLessonIds.length === 0)
-      return `স্বাগতম ${displayName}! তুমি একজন ${archetypeInfo.title_bn} — আজ তোমার প্রথম মহাকাশ পাঠটি শুরু করো! 🚀`;
-    if (allDone)
-      return `সাবাশ ${displayName}! সব পাঠ জয় করেছ। এবার চন্দ্রপৃষ্ঠে ল্যান্ডার নামানোর অভিযানে যোগ দাও! 🏆`;
-    if (isAffinityLesson)
-      return `আজকের পাঠটি বিশেষভাবে একজন ${archetypeInfo.title_bn}-এর জন্য তৈরি — রকেটের শক্তি পূর্ণ করো! ⚡`;
-    return `প্রিয় ${displayName}! প্রতিদিন পাঠ ও কুইজ জয় করে নতুন পদমর্যাদা জয় করো। মহাকাশ তোমার অপেক্ষায়!`;
+    if (completedLessonIds.length === 0) {
+      return language === 'en'
+        ? `Welcome ${displayName}! You are a ${archetypeInfo.title_en} — launch your first space lesson today! 🚀`
+        : `স্বাগতম ${displayName}! তুমি একজন ${archetypeInfo.title_bn} — আজ তোমার প্রথম মহাকাশ পাঠটি শুরু করো! 🚀`;
+    }
+    if (allDone) {
+      return language === 'en'
+        ? `Outstanding ${displayName}! You conquered all lessons. Now join the lunar lander touchdown mission! 🏆`
+        : `সাবাশ ${displayName}! সব পাঠ জয় করেছ। এবার চন্দ্রপৃষ্ঠে ল্যান্ডার নামানোর অভিযানে যোগ দাও! 🏆`;
+    }
+    if (isAffinityLesson) {
+      return language === 'en'
+        ? `Today's mission is specially matched for a ${archetypeInfo.title_en} — power up thrusters! ⚡`
+        : `আজকের পাঠটি বিশেষভাবে একজন ${archetypeInfo.title_bn}-এর জন্য তৈরি — রকেটের শক্তি পূর্ণ করো! ⚡`;
+    }
+    return language === 'en'
+      ? `Hello Cadet ${displayName}! Complete daily lessons and quizzes to earn higher astronaut ranks. Deep space awaits!`
+      : `প্রিয় ${displayName}! প্রতিদিন পাঠ ও কুইজ জয় করে নতুন পদমর্যাদা জয় করো। মহাকাশ তোমার অপেক্ষায়!`;
   };
 
   return (
@@ -160,22 +166,40 @@ export default function DashboardScreen() {
             ]}
           />
           <Text style={[styles.statusText, { color: isGuest ? Colors.gold : Colors.emerald }]}>
-            {isGuest ? 'গেস্ট মোড (অস্থায়ী)' : 'অরবিট সিঙ্ক সক্রিয় ✓'}
+            {isGuest ? t.common.guestMode : t.common.orbitSyncOnline}
           </Text>
         </View>
 
-        <Pressable
-          style={({ pressed }) => [styles.accountCapsule, pressed && styles.capsulePressed]}
-          onPress={() => router.push((isGuest ? '/auth' : '/(tabs)/profile') as any)}
-        >
-          <View style={[styles.accountIconBox, isGuest && styles.accountIconBoxGuest]}>
-            {isGuest ? <User size={12} color={Colors.gold} /> : <ShieldCheck size={12} color={Colors.cyan} />}
-          </View>
-          <Text style={styles.accountNameText} numberOfLines={1}>
-            {currentUser?.username ? `@${currentUser.username}` : displayName}
-          </Text>
-          <ChevronRight size={11} color={Colors.textMuted} />
-        </Pressable>
+        <View style={styles.commandBarRight}>
+          {/* Quick Language Toggle Pill */}
+          <Pressable
+            style={({ pressed }) => [
+              styles.langToggleCapsule,
+              pressed && styles.capsulePressed,
+            ]}
+            onPress={() => setLanguage(language === 'bn' ? 'en' : 'bn')}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Languages size={12} color={Colors.cyan} />
+            <Text style={styles.langLabelText}>
+              {language === 'bn' ? 'বাংলা 🇧🇩' : 'EN 🇺🇸'}
+            </Text>
+          </Pressable>
+
+          {/* Account Capsule */}
+          <Pressable
+            style={({ pressed }) => [styles.accountCapsule, pressed && styles.capsulePressed]}
+            onPress={() => router.push((isGuest ? '/auth' : '/(tabs)/profile') as any)}
+          >
+            <View style={[styles.accountIconBox, isGuest && styles.accountIconBoxGuest]}>
+              {isGuest ? <User size={12} color={Colors.gold} /> : <ShieldCheck size={12} color={Colors.cyan} />}
+            </View>
+            <Text style={styles.accountNameText} numberOfLines={1}>
+              {currentUser?.username ? `@${currentUser.username}` : displayName}
+            </Text>
+            <ChevronRight size={11} color={Colors.textMuted} />
+          </Pressable>
+        </View>
       </View>
 
       {/* ── Telemetry Strip ─────────────────────────────── */}
@@ -188,20 +212,24 @@ export default function DashboardScreen() {
           <View style={[styles.archetypePill, { borderColor: archetypeInfo.accentColor + '60' }]}>
             <SpaceChoiceBadge type={cadetArchetype} size={22} isSelected />
             <Text style={[styles.archetypePillText, { color: archetypeInfo.accentColor }]}>
-              {archetypeInfo.title_bn}
+              {language === 'en' ? archetypeInfo.title_en : archetypeInfo.title_bn}
             </Text>
           </View>
           <View style={styles.rankPill}>
             <Star size={11} color={Colors.gold} fill={Colors.gold} />
-            <Text style={styles.rankPillText}>{rankInfo.label_bn}</Text>
+            <Text style={styles.rankPillText}>
+              {language === 'en' ? rankInfo.label_en : rankInfo.label_bn}
+            </Text>
           </View>
         </View>
 
         {/* Avatar + Greeting */}
         <View style={styles.heroMain}>
           <View style={styles.heroLeft}>
-            <Text style={styles.heroGreeting}>স্বাগতম, {displayName}! 👨‍🚀</Text>
-            <Text style={styles.heroMotto}>"{archetypeInfo.motto_bn}"</Text>
+            <Text style={styles.heroGreeting}>{t.dashboard.greeting}, {displayName}! 👨‍🚀</Text>
+            <Text style={styles.heroMotto}>
+              "{language === 'en' ? archetypeInfo.motto_en : archetypeInfo.motto_bn}"
+            </Text>
           </View>
           <AstronautAvatar size={76} rank={rank} showHalo />
         </View>
@@ -219,8 +247,8 @@ export default function DashboardScreen() {
                 <BatteryCharging size={16} color={Colors.gold} />
               </View>
               <View style={styles.rechargeTextBox}>
-                <Text style={styles.rechargeLabel}>দৈনিক মহাকাশ জ্বালানি রিচার্জ</Text>
-                <Text style={styles.rechargeSub}>থ্রাস্টার চার্জ করে +২৫ XP নাও</Text>
+                <Text style={styles.rechargeLabel}>{t.dashboard.fuelRechargeTitle}</Text>
+                <Text style={styles.rechargeSub}>{t.dashboard.fuelRechargeSub}</Text>
               </View>
               <View style={styles.rechargeXpBadge}>
                 <Zap size={11} color={Colors.gold} fill={Colors.gold} />
@@ -231,9 +259,9 @@ export default function DashboardScreen() {
         ) : (
           <View style={styles.fuelFullRow}>
             <CheckCircle2 size={16} color={Colors.emerald} />
-            <Text style={styles.fuelFullText}>থ্রাস্টার সর্বোচ্চ ক্ষমতায় চার্জড! 🚀</Text>
+            <Text style={styles.fuelFullText}>{t.dashboard.fuelChargedTitle}</Text>
             <View style={styles.fuelFullBadge}>
-              <Text style={styles.fuelFullBadgeText}>১০০%</Text>
+              <Text style={styles.fuelFullBadgeText}>{t.dashboard.fuelFullBadge}</Text>
             </View>
           </View>
         )}
@@ -252,15 +280,15 @@ export default function DashboardScreen() {
           <View style={styles.buddyBubbleHeader}>
             <View style={styles.buddyBubbleTitleRow}>
               <Sparkles size={12} color={Colors.pink} />
-              <Text style={styles.buddyBubbleTitle}>অ্যাস্ট্রো-বন্ধুর বার্তা</Text>
+              <Text style={styles.buddyBubbleTitle}>{t.dashboard.buddyRadioTitle}</Text>
             </View>
             <Pressable
               style={styles.factCycleBtn}
-              onPress={() => setFactIndex((i) => (i + 1) % COSMIC_FACTS.length)}
+              onPress={() => setFactIndex((i) => (i + 1) % t.cosmicFacts.length)}
               hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
             >
               <RefreshCw size={10} color={Colors.cyan} />
-              <Text style={styles.factCycleBtnText}>তথ্য বদলাও</Text>
+              <Text style={styles.factCycleBtnText}>{t.dashboard.buddyCycleBtn}</Text>
             </Pressable>
           </View>
           <Text style={styles.buddyBubbleMsg}>{getBuddyMessage()}</Text>
@@ -269,7 +297,7 @@ export default function DashboardScreen() {
             onPress={() => router.push('/tutor' as any)}
           >
             <Bot size={13} color={Colors.cyan} />
-            <Text style={styles.buddyChatBtnText}>ক্যাপ্টেন রোভারের সাথে কথা বলো 💬</Text>
+            <Text style={styles.buddyChatBtnText}>{t.dashboard.chatWithRover}</Text>
             <ChevronRight size={11} color={Colors.cyan} />
           </Pressable>
         </View>
@@ -279,7 +307,7 @@ export default function DashboardScreen() {
       <View style={styles.xpShell}>
         <View style={styles.xpShellHeader}>
           <Star size={14} color={Colors.gold} fill={Colors.gold} />
-          <Text style={styles.xpShellTitle}>নভোচারী র‍্যাঙ্ক ও অভিজ্ঞতা</Text>
+          <Text style={styles.xpShellTitle}>{t.dashboard.rankTitle}</Text>
         </View>
         <XPProgressBar compact={false} />
       </View>
@@ -303,13 +331,13 @@ export default function DashboardScreen() {
                 styles.missionTypeBadgeText,
                 { color: allDone ? Colors.emerald : isAffinityLesson ? Colors.gold : Colors.cyan }
               ]}>
-                {allDone ? 'সব পাঠ সমাপ্ত! 🏆' : 'আজকের প্রধান অভিযান'}
+                {allDone ? t.dashboard.primeDirectiveAllDone : t.dashboard.primeDirectiveActive}
               </Text>
             </View>
             {isAffinityLesson && !allDone && (
               <View style={styles.affinityChip}>
                 <Sparkles size={10} color={Colors.emerald} />
-                <Text style={styles.affinityChipText}>তোমার পছন্দের বিষয়</Text>
+                <Text style={styles.affinityChipText}>{t.dashboard.affinityChip}</Text>
               </View>
             )}
           </View>
@@ -324,16 +352,20 @@ export default function DashboardScreen() {
         {/* Lesson content */}
         {!allDone && nextLesson ? (
           <>
-            <Text style={styles.missionTitle}>{nextLesson.title_bn} 🌕</Text>
-            <Text style={styles.missionDesc}>{nextLesson.summary_bn}</Text>
+            <Text style={styles.missionTitle}>
+              {language === 'en' ? (t.lessonsData[nextLesson.id]?.title || nextLesson.title_bn) : nextLesson.title_bn} 🌕
+            </Text>
+            <Text style={styles.missionDesc}>
+              {language === 'en' ? (t.lessonsData[nextLesson.id]?.summary || nextLesson.summary_bn) : nextLesson.summary_bn}
+            </Text>
             <View style={styles.missionMeta}>
               <Clock size={12} color={Colors.textMuted} />
-              <Text style={styles.missionMetaText}>{nextLesson.read_time_minutes} মিনিট</Text>
+              <Text style={styles.missionMetaText}>{nextLesson.read_time_minutes} {t.common.minutes}</Text>
               <Text style={styles.missionMetaDot}>·</Text>
-              <Text style={styles.missionMetaText}>পাঠ #{nextLesson.order_index}</Text>
+              <Text style={styles.missionMetaText}>{t.common.lessonPrefix}{nextLesson.order_index}</Text>
             </View>
             <TactileButton
-              title="অভিযানে চলো ➔"
+              title={t.dashboard.launchMission}
               onPress={() => router.push(`/lessons/${nextLesson.id}`)}
               variant="gold"
               size="normal"
@@ -341,12 +373,12 @@ export default function DashboardScreen() {
           </>
         ) : (
           <>
-            <Text style={styles.missionTitle}>মিশন পাঠশালা বিজয়ী! 🏆</Text>
+            <Text style={styles.missionTitle}>{t.dashboard.primeDirectiveAllDone}</Text>
             <Text style={styles.missionDesc}>
-              সমস্ত পাঠ সফলভাবে জয় করেছ! এবার চন্দ্রপৃষ্ঠে ল্যান্ডার অবতরণ করিয়ে বাস্তব অভিযান শুরু করো।
+              {t.dashboard.allLessonsCelebration}
             </Text>
             <TactileButton
-              title="চন্দ্রাভিযান শুরু করো ➔"
+              title={t.dashboard.launchMoonMission}
               onPress={() => router.push('/(tabs)/mission')}
               variant="emerald"
               size="normal"
@@ -360,7 +392,7 @@ export default function DashboardScreen() {
         <View style={styles.questShellHeader}>
           <View style={styles.questShellTitleRow}>
             <Target size={14} color={Colors.cyan} />
-            <Text style={styles.questShellTitle}>আজকের ক্যাডেট মিশন</Text>
+            <Text style={styles.questShellTitle}>{t.dashboard.dailyQuestsTitle}</Text>
           </View>
           <View style={styles.questProgressContainer}>
             <View style={styles.questPillSegments}>
@@ -369,7 +401,7 @@ export default function DashboardScreen() {
               <View style={[styles.questSegment, q3Done && styles.questSegmentDone]} />
             </View>
             <View style={styles.questCounter}>
-              <Text style={styles.questCounterText}>{doneCount} / ৩</Text>
+              <Text style={styles.questCounterText}>{doneCount} / 3</Text>
             </View>
           </View>
         </View>
@@ -384,14 +416,14 @@ export default function DashboardScreen() {
             : <Circle size={17} color="rgba(255,255,255,0.22)" />}
           <View style={styles.questInfo}>
             <Text style={[styles.questTitle, q1Done && styles.questTitleDone]}>
-              ১টি মহাকাশ পাঠ সম্পন্ন করো
+              {t.dashboard.quest1Title}
             </Text>
             <Text style={styles.questSub}>
-              {q1Done ? '✓ সম্পন্ন!' : `${completedLessonIds.length} / ১ পাঠ পড়া হয়েছে`}
+              {q1Done ? t.common.completed : `${completedLessonIds.length} / 1 ${t.dashboard.quest1Sub}`}
             </Text>
           </View>
           <View style={styles.questXP}>
-            <Text style={styles.questXPText}>+২০ XP</Text>
+            <Text style={styles.questXPText}>+20 XP</Text>
           </View>
         </Pressable>
 
@@ -407,14 +439,14 @@ export default function DashboardScreen() {
             : <Circle size={17} color="rgba(255,255,255,0.22)" />}
           <View style={styles.questInfo}>
             <Text style={[styles.questTitle, q2Done && styles.questTitleDone]}>
-              ১টি কুইজ ডেক পরীক্ষা দাও
+              {t.dashboard.quest2Title}
             </Text>
             <Text style={styles.questSub}>
-              {q2Done ? '✓ সম্পন্ন!' : 'জ্ঞান যাচাই করে পয়েন্ট নাও'}
+              {q2Done ? t.common.completed : t.dashboard.quest2Sub}
             </Text>
           </View>
           <View style={styles.questXP}>
-            <Text style={styles.questXPText}>+১৫ XP</Text>
+            <Text style={styles.questXPText}>+15 XP</Text>
           </View>
         </Pressable>
 
@@ -427,22 +459,22 @@ export default function DashboardScreen() {
             : <Circle size={17} color="rgba(255,255,255,0.22)" />}
           <View style={styles.questInfo}>
             <Text style={[styles.questTitle, q3Done && styles.questTitleDone]}>
-              ৫০+ XP শক্তি অর্জন করো
+              {t.dashboard.quest3Title}
             </Text>
             <Text style={styles.questSub}>
-              {Math.min(xp, 50)} / ৫০ XP সংগ্রহ হয়েছে
+              {q3Done ? t.common.completed : `${Math.min(xp, 50)} / 50 ${t.dashboard.quest3Sub}`}
             </Text>
           </View>
           <View style={styles.questXP}>
-            <Text style={styles.questXPText}>+৫০ XP</Text>
+            <Text style={styles.questXPText}>+50 XP</Text>
           </View>
         </View>
       </View>
 
       {/* ── 2×2 Mission Control Bento Grid ──────────────── */}
       <View style={styles.sectionRow}>
-        <Text style={styles.sectionTitle}>স্পেস স্টেশন মডিউল</Text>
-        <Text style={styles.sectionTag}>নেভিগেশন হাব</Text>
+        <Text style={styles.sectionTitle}>{t.dashboard.bentoTitle}</Text>
+        <Text style={styles.sectionTag}>{t.dashboard.bentoTag}</Text>
       </View>
 
       <View style={styles.bentoGrid}>
@@ -454,10 +486,10 @@ export default function DashboardScreen() {
           <View style={[styles.bentoIcon, { backgroundColor: Colors.cyanBg }]}>
             <BookOpen size={20} color={Colors.cyan} />
           </View>
-          <Text style={styles.bentoTileTitle}>পাঠাগার 📖</Text>
-          <Text style={styles.bentoTileSub}>{completedLessonIds.length}/{lessons.length || 6}টি সমাপ্ত</Text>
+          <Text style={styles.bentoTileTitle}>{t.dashboard.bentoLessonsTitle}</Text>
+          <Text style={styles.bentoTileSub}>{completedLessonIds.length}/{lessons.length || 6} {t.dashboard.bentoLessonsSub}</Text>
           <View style={styles.bentoFooter}>
-            <Text style={[styles.bentoAction, { color: Colors.cyan }]}>পাঠ শুরু</Text>
+            <Text style={[styles.bentoAction, { color: Colors.cyan }]}>{t.dashboard.bentoLessonsAction}</Text>
             <ChevronRight size={12} color={Colors.cyan} />
           </View>
         </Pressable>
@@ -470,10 +502,10 @@ export default function DashboardScreen() {
           <View style={[styles.bentoIcon, { backgroundColor: Colors.emeraldBg }]}>
             <HelpCircle size={20} color={Colors.emerald} />
           </View>
-          <Text style={styles.bentoTileTitle}>কুইজ ডেক 🎮</Text>
-          <Text style={styles.bentoTileSub}>{totalQuizzes}টি পরীক্ষা সম্পন্ন</Text>
+          <Text style={styles.bentoTileTitle}>{t.dashboard.bentoQuizTitle}</Text>
+          <Text style={styles.bentoTileSub}>{totalQuizzes} {t.dashboard.bentoQuizSub}</Text>
           <View style={styles.bentoFooter}>
-            <Text style={[styles.bentoAction, { color: Colors.emerald }]}>কুইজ নাও</Text>
+            <Text style={[styles.bentoAction, { color: Colors.emerald }]}>{t.dashboard.bentoQuizAction}</Text>
             <ChevronRight size={12} color={Colors.emerald} />
           </View>
         </Pressable>
@@ -486,10 +518,10 @@ export default function DashboardScreen() {
           <View style={[styles.bentoIcon, { backgroundColor: Colors.purpleBg }]}>
             <Rocket size={20} color={Colors.purple} />
           </View>
-          <Text style={styles.bentoTileTitle}>চন্দ্রাভিযান 🌕</Text>
-          <Text style={styles.bentoTileSub}>ল্যান্ডিং সিমুলেটর</Text>
+          <Text style={styles.bentoTileTitle}>{t.dashboard.bentoMissionTitle}</Text>
+          <Text style={styles.bentoTileSub}>{t.dashboard.bentoMissionSub}</Text>
           <View style={styles.bentoFooter}>
-            <Text style={[styles.bentoAction, { color: Colors.purple }]}>অভিযান</Text>
+            <Text style={[styles.bentoAction, { color: Colors.purple }]}>{t.dashboard.bentoMissionAction}</Text>
             <ChevronRight size={12} color={Colors.purple} />
           </View>
         </Pressable>
@@ -502,10 +534,10 @@ export default function DashboardScreen() {
           <View style={[styles.bentoIcon, { backgroundColor: Colors.goldBg }]}>
             <Award size={20} color={Colors.gold} />
           </View>
-          <Text style={styles.bentoTileTitle}>ক্যাডেট ডসিয়ার 👨‍🚀</Text>
-          <Text style={styles.bentoTileSub}>স্যুট ও পদক</Text>
+          <Text style={styles.bentoTileTitle}>{t.dashboard.bentoProfileTitle}</Text>
+          <Text style={styles.bentoTileSub}>{t.dashboard.bentoProfileSub}</Text>
           <View style={styles.bentoFooter}>
-            <Text style={[styles.bentoAction, { color: Colors.gold }]}>প্রোফাইল</Text>
+            <Text style={[styles.bentoAction, { color: Colors.gold }]}>{t.dashboard.bentoProfileAction}</Text>
             <ChevronRight size={12} color={Colors.gold} />
           </View>
         </Pressable>
@@ -522,34 +554,89 @@ export default function DashboardScreen() {
           </View>
           <View style={styles.tutorTextBox}>
             <View style={styles.tutorTitleRow}>
-              <Text style={styles.tutorTitle}>ক্যাপ্টেন রোভার এআই 🛰️</Text>
+              <Text style={styles.tutorTitle}>{t.dashboard.tutorTitle}</Text>
               <View style={styles.tutorBadge}>
-                <Text style={styles.tutorBadgeText}>অফলাইন + অনলাইন</Text>
+                <Text style={styles.tutorBadgeText}>{t.dashboard.tutorBadge}</Text>
               </View>
             </View>
-            <Text style={styles.tutorSub}>মহাকাশ নিয়ে তোমার যেকোনো প্রশ্ন বাংলায় জিজ্ঞেস করো!</Text>
+            <Text style={styles.tutorSub}>{t.dashboard.tutorSub}</Text>
           </View>
         </View>
         <ChevronRight size={16} color={Colors.cyan} />
       </Pressable>
+
+      {/* ── Dashboard Settings & Language Control Card ───── */}
+      <View style={styles.langModuleCard}>
+        <View style={styles.langModuleHeader}>
+          <View style={styles.langModuleTitleRow}>
+            <Languages size={15} color={Colors.cyan} />
+            <Text style={styles.langModuleTitle}>{t.dashboard.langSwitcherTitle}</Text>
+          </View>
+          <Text style={styles.langModuleActiveTag}>
+            {language === 'bn' ? 'বাংলা সক্রিয়' : 'English Active'}
+          </Text>
+        </View>
+
+        <View style={styles.langSegmentRow}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.langSegmentBtn,
+              language === 'bn' && styles.langSegmentBtnActive,
+              pressed && styles.langSegmentBtnPressed,
+            ]}
+            onPress={() => setLanguage('bn')}
+          >
+            <Text style={styles.langSegmentFlag}>🇧🇩</Text>
+            <Text style={[
+              styles.langSegmentText,
+              language === 'bn' && styles.langSegmentTextActive,
+            ]}>
+              বাংলা (Bangla)
+            </Text>
+            {language === 'bn' && (
+              <CheckCircle2 size={13} color={Colors.cyan} style={{ marginLeft: 4 }} />
+            )}
+          </Pressable>
+
+          <Pressable
+            style={({ pressed }) => [
+              styles.langSegmentBtn,
+              language === 'en' && styles.langSegmentBtnActive,
+              pressed && styles.langSegmentBtnPressed,
+            ]}
+            onPress={() => setLanguage('en')}
+          >
+            <Text style={styles.langSegmentFlag}>🇺🇸</Text>
+            <Text style={[
+              styles.langSegmentText,
+              language === 'en' && styles.langSegmentTextActive,
+            ]}>
+              English
+            </Text>
+            {language === 'en' && (
+              <CheckCircle2 size={13} color={Colors.cyan} style={{ marginLeft: 4 }} />
+            )}
+          </Pressable>
+        </View>
+      </View>
 
       {/* ── Cosmic Fact Widget ───────────────────────────── */}
       <View style={styles.factShell}>
         <View style={styles.factHeader}>
           <View style={styles.factTitleRow}>
             <Sparkles size={13} color={Colors.purple} />
-            <Text style={styles.factTitle}>মহাজাগতিক বিস্ময় (NASA Fact)</Text>
+            <Text style={styles.factTitle}>{t.dashboard.factTitle}</Text>
           </View>
           <Pressable
             style={styles.factNextBtn}
-            onPress={() => setFactIndex((i) => (i + 1) % COSMIC_FACTS.length)}
+            onPress={() => setFactIndex((i) => (i + 1) % t.cosmicFacts.length)}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
             <RefreshCw size={11} color={Colors.cyan} />
-            <Text style={styles.factNextText}>পরবর্তী</Text>
+            <Text style={styles.factNextText}>{t.dashboard.factNext}</Text>
           </Pressable>
         </View>
-        <Text style={styles.factBody}>{COSMIC_FACTS[factIndex]}</Text>
+        <Text style={styles.factBody}>{t.cosmicFacts[factIndex % t.cosmicFacts.length]}</Text>
       </View>
     </ScrollView>
   );
@@ -603,6 +690,27 @@ const styles = StyleSheet.create({
     borderRadius: 3.5,
   },
   statusText: {
+    fontSize: Typography.size.micro,
+    fontWeight: Typography.weight.bold,
+  },
+  commandBarRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  langToggleCapsule: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(0, 240, 255, 0.12)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 240, 255, 0.35)',
+  },
+  langLabelText: {
+    color: Colors.cyan,
     fontSize: Typography.size.micro,
     fontWeight: Typography.weight.bold,
   },
@@ -1310,5 +1418,83 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     fontSize: Typography.size.micro,
     lineHeight: 15,
+  },
+  langModuleCard: {
+    marginHorizontal: 16,
+    marginBottom: 14,
+    backgroundColor: GLASS_SURFACE,
+    borderRadius: CARD_RADIUS,
+    borderWidth: 1.5,
+    borderColor: 'rgba(0, 240, 255, 0.28)',
+    borderBottomWidth: 4,
+    borderBottomColor: 'rgba(0, 240, 255, 0.45)',
+    padding: 16,
+    ...GLOW_SHADOW,
+  },
+  langModuleHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  langModuleTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  langModuleTitle: {
+    color: Colors.text,
+    fontSize: Typography.size.body,
+    fontWeight: Typography.weight.bold,
+  },
+  langModuleActiveTag: {
+    color: Colors.cyan,
+    fontSize: Typography.size.micro,
+    fontWeight: Typography.weight.bold,
+    backgroundColor: 'rgba(0, 240, 255, 0.12)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 240, 255, 0.25)',
+  },
+  langSegmentRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  langSegmentBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    borderRadius: INNER_RADIUS,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  langSegmentBtnActive: {
+    backgroundColor: 'rgba(0, 240, 255, 0.14)',
+    borderColor: Colors.cyan,
+    borderBottomWidth: 3,
+    borderBottomColor: Colors.cyan,
+  },
+  langSegmentBtnPressed: {
+    opacity: 0.8,
+    transform: [{ scale: 0.98 }],
+  },
+  langSegmentFlag: {
+    fontSize: 14,
+  },
+  langSegmentText: {
+    color: Colors.textSecondary,
+    fontSize: Typography.size.bodySmall,
+    fontWeight: Typography.weight.medium,
+  },
+  langSegmentTextActive: {
+    color: Colors.text,
+    fontWeight: Typography.weight.bold,
   },
 });

@@ -26,7 +26,9 @@ import {
   UserPlus,
   LogOut,
   User,
+  Languages,
 } from 'lucide-react-native';
+import { getTranslation } from '../../src/i18n/translations';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -41,7 +43,11 @@ export default function ProfileScreen() {
     currentUser,
     isGuest,
     logoutUser,
+    language,
+    setLanguage,
   } = useAppStore();
+
+  const t = getTranslation(language);
 
   const handleSwitchAccount = async () => {
     await logoutUser();
@@ -59,60 +65,60 @@ export default function ProfileScreen() {
   const suitTiers = [
     {
       tier: 'Cadet',
-      title: 'স্পেস ক্যাডেট স্যুট',
+      title: language === 'en' ? 'Space Cadet Suit' : 'স্পেস ক্যাডেট স্যুট',
       icon: '👨‍🚀',
       unlocked: true,
-      condition: 'শুরুর স্তর',
+      condition: language === 'en' ? 'Starting tier' : 'শুরুর স্তর',
     },
     {
       tier: 'Astronaut',
-      title: 'গোল্ডেন ভিসার স্যুট',
+      title: language === 'en' ? 'Golden Visor Suit' : 'গোল্ডেন ভিসার স্যুট',
       icon: '🌟',
       unlocked: rank !== 'Cadet',
-      condition: '২০১ XP অর্জনে আনলক',
+      condition: language === 'en' ? 'Unlocks at 201 XP' : '২০১ XP অর্জনে আনলক',
     },
     {
       tier: 'Mission Specialist',
-      title: 'ডিপ স্পেস নেবুলা স্যুট',
+      title: language === 'en' ? 'Deep Space Nebula Suit' : 'ডিপ স্পেস নেবুলা স্যুট',
       icon: '🌌',
       unlocked: rank === 'Mission Specialist' || rank === 'Commander',
-      condition: '৬০১ XP অর্জনে আনলক',
+      condition: language === 'en' ? 'Unlocks at 601 XP' : '৬০১ XP অর্জনে আনলক',
     },
     {
       tier: 'Commander',
-      title: 'মার্স কমান্ডার গোল্ডেন স্যুট',
+      title: language === 'en' ? 'Mars Commander Golden Suit' : 'মার্স কমান্ডার গোল্ডেন স্যুট',
       icon: '👑',
       unlocked: rank === 'Commander',
-      condition: '১২০১ XP অর্জনে আনলক',
+      condition: language === 'en' ? 'Unlocks at 1201 XP' : '১২০১ XP অর্জনে আনলক',
     },
   ];
 
   const badges = [
     {
       id: 'apollo-11',
-      name_bn: 'প্রথম পদক্ষেপ পদক 🌟',
-      desc_bn: 'প্রথম মহাকাশ পাঠ সফলভাবে সম্পন্ন করার সম্মাননা',
+      name: t.profile.badge1Title,
+      desc: t.profile.badge1Desc,
       icon: <Star size={20} color={Colors.gold} fill={Colors.gold} />,
       unlocked: completedLessonIds.length >= 1,
     },
     {
       id: 'artemis-lunar',
-      name_bn: 'চাঁদের গবেষক 🌕',
-      desc_bn: 'চাঁদ সম্পর্কিত পাঠ ও কুইজ জয় করার কৃতিত্ব',
+      name: t.profile.badge2Title,
+      desc: t.profile.badge2Desc,
       icon: <Award size={20} color={Colors.cyan} />,
       unlocked: completedLessonIds.includes('lesson-1'),
     },
     {
       id: 'propulsion-ace',
-      name_bn: 'রকেট বিজ্ঞানী ব্যাজ 🚀',
-      desc_bn: 'রকেট বিজ্ঞান ও মহাকর্ষের কুইজে শতভাগ সঠিক উত্তর',
+      name: t.profile.badge3Title,
+      desc: t.profile.badge3Desc,
       icon: <Zap size={20} color={Colors.emerald} fill={Colors.emerald} />,
       unlocked: totalQuizzesAnswered >= 1,
     },
     {
       id: 'astronaut-insignia',
-      name_bn: 'অফিসিয়াল নভোচারী মেডেল 🏆',
-      desc_bn: 'ক্যাডেট স্তর সফলভাবে পার করে মহাকাশচারী পদ অর্জন',
+      name: t.profile.badge4Title,
+      desc: t.profile.badge4Desc,
       icon: <Sparkles size={20} color={Colors.gold} />,
       unlocked: rank !== 'Cadet',
     },
@@ -124,18 +130,77 @@ export default function ProfileScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
+      {/* ── Language Settings Card ──────────────────────── */}
+      <View style={styles.langSettingsCard}>
+        <View style={styles.langSettingsHeader}>
+          <View style={styles.langSettingsTitleRow}>
+            <Languages size={16} color={Colors.cyan} />
+            <Text style={styles.langSettingsTitle}>{t.profile.langSectionTitle}</Text>
+          </View>
+          <View style={styles.langActiveBadge}>
+            <Text style={styles.langActiveBadgeText}>
+              {language === 'bn' ? 'বাংলা সক্রিয় 🇧🇩' : 'English Active 🇺🇸'}
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.langSegmentRow}>
+          <Pressable
+            style={({ pressed }) => [
+              styles.langSegmentBtn,
+              language === 'bn' && styles.langSegmentBtnActive,
+              pressed && styles.langSegmentBtnPressed,
+            ]}
+            onPress={() => setLanguage('bn')}
+          >
+            <Text style={styles.langSegmentFlag}>🇧🇩</Text>
+            <Text style={[
+              styles.langSegmentText,
+              language === 'bn' && styles.langSegmentTextActive,
+            ]}>
+              বাংলা (Bangla)
+            </Text>
+            {language === 'bn' && (
+              <CheckCircle2 size={14} color={Colors.cyan} style={{ marginLeft: 4 }} />
+            )}
+          </Pressable>
+
+          <Pressable
+            style={({ pressed }) => [
+              styles.langSegmentBtn,
+              language === 'en' && styles.langSegmentBtnActive,
+              pressed && styles.langSegmentBtnPressed,
+            ]}
+            onPress={() => setLanguage('en')}
+          >
+            <Text style={styles.langSegmentFlag}>🇺🇸</Text>
+            <Text style={[
+              styles.langSegmentText,
+              language === 'en' && styles.langSegmentTextActive,
+            ]}>
+              English
+            </Text>
+            {language === 'en' && (
+              <CheckCircle2 size={14} color={Colors.cyan} style={{ marginLeft: 4 }} />
+            )}
+          </Pressable>
+        </View>
+      </View>
+
       {/* Cute Astronaut ID Badge Card */}
       <DoubleBezelCard glow={isGuest ? 'gold' : 'blue'} style={styles.profileCardMargin}>
         <View style={styles.dossierHeader}>
           <View style={[styles.idChip, isGuest && styles.idChipGuest]}>
             <Text style={[styles.idChipText, isGuest && styles.idChipTextGuest]}>
-              {isGuest ? 'মহাকাশ একাডেমি ভিজিটর পাস 🎫' : `@${currentUser?.username || 'cadet'} · অফিসিয়াল আইডি 🛰️`}
+              {isGuest
+                ? t.profile.visitorPassTitle
+                : `@${currentUser?.username || 'cadet'} · ${language === 'en' ? 'Official Cadet ID 🛰️' : 'অফিসিয়াল আইডি 🛰️'}`}
             </Text>
           </View>
           <View style={[styles.activePill, isGuest && styles.activePillGuest]}>
             <View style={[styles.activeDot, isGuest && styles.activeDotGuest]} />
             <Text style={[styles.activePillText, isGuest && styles.activePillTextGuest]}>
-              {isGuest ? 'অতিথি ক্যাডেট' : 'ভেরিফাইড ক্যাডেট'}
+              {isGuest ? t.common.guestBadge : t.common.verifiedBadge}
             </Text>
           </View>
         </View>
@@ -147,7 +212,9 @@ export default function ProfileScreen() {
 
           <View style={styles.rankPill}>
             <Sparkles size={14} color={Colors.gold} />
-            <Text style={styles.rankPillText}>{threshold.label_bn}</Text>
+            <Text style={styles.rankPillText}>
+              {language === 'en' ? threshold.label_en : threshold.label_bn}
+            </Text>
           </View>
         </View>
 
@@ -156,11 +223,17 @@ export default function ProfileScreen() {
           <View style={styles.archetypeHeader}>
             <SpaceChoiceBadge type={cadetArchetype} size={42} isSelected />
             <View style={{ flex: 1 }}>
-              <Text style={[styles.archetypeTitle, { color: archetypeInfo.accentColor }]}>{archetypeInfo.title_bn}</Text>
-              <Text style={styles.archetypeMotto}>"{archetypeInfo.motto_bn}"</Text>
+              <Text style={[styles.archetypeTitle, { color: archetypeInfo.accentColor }]}>
+                {language === 'en' ? archetypeInfo.title_en : archetypeInfo.title_bn}
+              </Text>
+              <Text style={styles.archetypeMotto}>
+                "{language === 'en' ? archetypeInfo.motto_en : archetypeInfo.motto_bn}"
+              </Text>
             </View>
           </View>
-          <Text style={styles.archetypeDescText}>{archetypeInfo.description_bn}</Text>
+          <Text style={styles.archetypeDescText}>
+            {language === 'en' ? archetypeInfo.description_en : archetypeInfo.description_bn}
+          </Text>
         </View>
       </DoubleBezelCard>
 
@@ -172,15 +245,17 @@ export default function ProfileScreen() {
               <UserPlus size={18} color={Colors.gold} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.guestAlertTitle}>তোমার অগ্রগতি সংরক্ষণ করো!</Text>
+              <Text style={styles.guestAlertTitle}>{t.profile.guestAlertTitle}</Text>
               <Text style={styles.guestAlertSub}>
-                বর্তমানে তুমি অতিথি মোডে আছো। তোমার {xp} XP ও সমাপ্ত পাঠগুলো সংরক্ষণ করতে একটি স্থায়ী অ্যাকাউন্ট খোলো।
+                {language === 'en'
+                  ? `You are currently in Guest Mode. Register an account to permanently preserve your ${xp} XP and progress.`
+                  : `বর্তমানে তুমি অতিথি মোডে আছো। তোমার ${xp} XP ও সমাপ্ত পাঠগুলো সংরক্ষণ করতে একটি স্থায়ী অ্যাকাউন্ট খোলো।`}
               </Text>
             </View>
           </View>
           <View style={{ marginTop: 10 }}>
             <TactileButton
-              title="স্থায়ী অ্যাকাউন্ট তৈরি করো ➔"
+              title={t.profile.guestUpgradeBtn}
               variant="gold"
               size="small"
               onPress={() => router.push('/auth' as any)}
@@ -191,7 +266,9 @@ export default function ProfileScreen() {
         <View style={styles.accountVerifiedBanner}>
           <ShieldCheck size={16} color={Colors.emerald} />
           <Text style={styles.accountVerifiedText}>
-            আইডি: @{currentUser?.username} · লোকাল ডেটাবেসে অগ্রগতি সংরক্ষিত ✓
+            {language === 'en'
+              ? `ID: @${currentUser?.username} · ${t.profile.accountVerifiedSub}`
+              : `আইডি: @${currentUser?.username} · ${t.profile.accountVerifiedSub}`}
           </Text>
         </View>
       )}
@@ -200,16 +277,14 @@ export default function ProfileScreen() {
       <View style={styles.accountActionCard}>
         <View style={styles.accountActionTextCol}>
           <Text style={styles.accountActionTitle}>
-            {isGuest ? 'অন্য কোনো অ্যাকাউন্ট আছে?' : 'অ্যাকাউন্ট ব্যবস্থাপনা'}
+            {isGuest ? t.profile.accountManagementGuestTitle : t.profile.accountManagementTitle}
           </Text>
           <Text style={styles.accountActionSub}>
-            {isGuest
-              ? 'তোমার পূর্বে তৈরি অ্যাকাউন্টে লগইন করতে পারো'
-              : 'অন্য অ্যাকাউন্টে লগইন করো অথবা নতুন অ্যাকাউন্ট খোলো'}
+            {isGuest ? t.profile.accountManagementGuestSub : t.profile.accountManagementSub}
           </Text>
         </View>
         <TactileButton
-          title={isGuest ? 'লগইন করো ➔' : 'লগআউট / পরিবর্তন 🚪'}
+          title={isGuest ? t.common.login : t.common.logout}
           variant="outline"
           size="small"
           onPress={handleSwitchAccount}
@@ -219,14 +294,14 @@ export default function ProfileScreen() {
       {/* Experience & Onboarding Replay Shortcuts */}
       <View style={styles.shortcutsRow}>
         <TactileButton
-          title="ওরিয়েন্টেশন পরীক্ষা ✨"
+          title={t.profile.shortcutsOrientation}
           onPress={() => router.push('/onboarding')}
           variant="outline"
           size="small"
           style={styles.shortcutBtn}
         />
         <TactileButton
-          title="মঙ্গল স্প্ল্যাশ দৃশ্য 🚀"
+          title={t.profile.shortcutsMars}
           onPress={() => router.push('/splash')}
           variant="outline"
           size="small"
@@ -235,7 +310,7 @@ export default function ProfileScreen() {
       </View>
 
       {/* Rank Suit Progression Tiers */}
-      <Text style={styles.sectionHeading}>স্পেসস্যুট ও পদমর্যাদা অগ্রগতি</Text>
+      <Text style={styles.sectionHeading}>{t.profile.suitSectionTitle}</Text>
       <View style={styles.suitGrid}>
         {suitTiers.map((suit) => (
           <View
@@ -256,7 +331,7 @@ export default function ProfileScreen() {
                 <Lock size={12} color={Colors.textMuted} />
               )}
               <Text style={[styles.suitStatusText, { color: suit.unlocked ? Colors.emerald : Colors.textMuted }]}>
-                {suit.unlocked ? 'আনলকড' : suit.condition}
+                {suit.unlocked ? t.common.unlocked : suit.condition}
               </Text>
             </View>
           </View>
@@ -264,33 +339,33 @@ export default function ProfileScreen() {
       </View>
 
       {/* Gamified XP Progress */}
-      <Text style={styles.sectionHeading}>র‍্যাঙ্ক অগ্রগতি ও মাইলস্টোন</Text>
+      <Text style={styles.sectionHeading}>{t.profile.xpProgressionTitle}</Text>
       <XPProgressBar compact={false} />
 
       {/* Stats Bento Grid */}
-      <Text style={styles.sectionHeading}>মিশন পরিসংখ্যান</Text>
+      <Text style={styles.sectionHeading}>{t.profile.missionStatsTitle}</Text>
       <View style={styles.statsGrid}>
         <View style={styles.statBox}>
           <Zap size={20} color={Colors.gold} fill={Colors.gold} style={styles.statIcon} />
           <Text style={styles.statNumber}>{xp}</Text>
-          <Text style={styles.statLabel}>মোট অর্জিত XP</Text>
+          <Text style={styles.statLabel}>{t.profile.statTotalXP}</Text>
         </View>
 
         <View style={styles.statBox}>
           <BookOpen size={20} color={Colors.cyan} style={styles.statIcon} />
           <Text style={styles.statNumber}>{completedLessonIds.length}</Text>
-          <Text style={styles.statLabel}>পড়া সম্পন্ন</Text>
+          <Text style={styles.statLabel}>{t.profile.statLessonsCompleted}</Text>
         </View>
 
         <View style={styles.statBox}>
           <Target size={20} color={Colors.emerald} style={styles.statIcon} />
           <Text style={styles.statNumber}>{totalQuizzesAnswered}</Text>
-          <Text style={styles.statLabel}>কুইজ সম্পন্ন</Text>
+          <Text style={styles.statLabel}>{t.profile.statQuizzesPassed}</Text>
         </View>
       </View>
 
       {/* Space Mission Badges Collection */}
-      <Text style={styles.sectionHeading}>আমার মহাকাশ পদক সংগ্রহশালা</Text>
+      <Text style={styles.sectionHeading}>{t.profile.badgeSectionTitle}</Text>
       <View style={styles.badgeList}>
         {badges.map((badge) => (
           <DoubleBezelCard
@@ -309,15 +384,15 @@ export default function ProfileScreen() {
               </View>
               <View style={styles.badgeInfo}>
                 <Text style={[styles.badgeName, !badge.unlocked && styles.textLocked]}>
-                  {badge.name_bn}
+                  {badge.name}
                 </Text>
-                <Text style={styles.badgeDesc}>{badge.desc_bn}</Text>
+                <Text style={styles.badgeDesc}>{badge.desc}</Text>
               </View>
               <View style={badge.unlocked ? styles.badgeStatusActive : styles.badgeStatusLocked}>
                 {badge.unlocked ? (
                   <CheckCircle2 size={18} color={Colors.emerald} />
                 ) : (
-                  <Text style={styles.lockText}>লকড</Text>
+                  <Text style={styles.lockText}>{t.common.locked}</Text>
                 )}
               </View>
             </View>
@@ -329,9 +404,9 @@ export default function ProfileScreen() {
       <View style={styles.offlineCard}>
         <WifiOff size={18} color={Colors.cyan} />
         <View style={styles.offlineTextCol}>
-          <Text style={styles.offlineTitle}>অফলাইন মোড সক্রিয়</Text>
+          <Text style={styles.offlineTitle}>{t.profile.offlineCardTitle}</Text>
           <Text style={styles.offlineSubtitle}>
-            ইন্টারনেট সংযোগ ছাড়াও যেকোনো সময় সব পাঠ ও কুইজ পড়তে পারবে।
+            {t.profile.offlineCardSub}
           </Text>
         </View>
       </View>
@@ -339,7 +414,7 @@ export default function ProfileScreen() {
       {/* Reset Progress */}
       <Pressable style={styles.resetButton} onPress={resetProgress}>
         <RotateCcw size={14} color={Colors.coral} />
-        <Text style={styles.resetButtonText}>অগ্রগতি রিসেট করো</Text>
+        <Text style={styles.resetButtonText}>{t.profile.resetBtn}</Text>
       </Pressable>
     </ScrollView>
   );
@@ -749,5 +824,87 @@ const styles = StyleSheet.create({
     color: Colors.coral,
     fontSize: Typography.size.caption,
     fontWeight: Typography.weight.semiBold,
+  },
+  langSettingsCard: {
+    backgroundColor: 'rgba(14, 18, 60, 0.88)',
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: 'rgba(0, 240, 255, 0.35)',
+    borderBottomWidth: 4,
+    borderBottomColor: 'rgba(0, 240, 255, 0.50)',
+    padding: 16,
+    marginBottom: 16,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  langSettingsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  langSettingsTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  langSettingsTitle: {
+    color: Colors.text,
+    fontSize: Typography.size.body,
+    fontWeight: Typography.weight.bold,
+  },
+  langActiveBadge: {
+    backgroundColor: 'rgba(0, 240, 255, 0.12)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0, 240, 255, 0.25)',
+  },
+  langActiveBadgeText: {
+    color: Colors.cyan,
+    fontSize: Typography.size.micro,
+    fontWeight: Typography.weight.bold,
+  },
+  langSegmentRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  langSegmentBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  langSegmentBtnActive: {
+    backgroundColor: 'rgba(0, 240, 255, 0.14)',
+    borderColor: Colors.cyan,
+    borderBottomWidth: 3,
+    borderBottomColor: Colors.cyan,
+  },
+  langSegmentBtnPressed: {
+    opacity: 0.8,
+    transform: [{ scale: 0.98 }],
+  },
+  langSegmentFlag: {
+    fontSize: 14,
+  },
+  langSegmentText: {
+    color: Colors.textSecondary,
+    fontSize: Typography.size.bodySmall,
+    fontWeight: Typography.weight.medium,
+  },
+  langSegmentTextActive: {
+    color: Colors.text,
+    fontWeight: Typography.weight.bold,
   },
 });
