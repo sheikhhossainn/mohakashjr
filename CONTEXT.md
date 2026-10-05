@@ -30,5 +30,5 @@
 - `HANDOFF.md` — current session state (created/updated as work progresses)
 - `implemented_features.md` — running log of what's been built and how
 
-**Status:** Local-First Space Hub Release — Local-first architecture active (`profileStorage.ts`), interactive Space Destination Hub live with Moon landing simulation, Captain Rover offline AI tutor expanded to 114+ FAQs with connection awareness, unified brand identity & animated splash, clean header architecture, and full Play Store quality polish. 37/37 tests passing with 0 TS errors. Merged across dev and main.
+**Status:** Planetary Dossiers Release — Interactive Planetary Dossiers active (`PlanetaryDossier.tsx`, `spaceDestinations.ts`) unlocking all 8 solar system destinations with dynamic Planetary Weight Calculator, NASA environmental telemetry, relatable Bangladeshi analogies, survival checklists, robotic exploration history, and mini-quizzes (+10 XP). 39/39 tests passing with 0 TS errors on feature/planetary-dossiers.
 

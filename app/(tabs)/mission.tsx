@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import Svg, { Rect, Circle, Path, Defs, LinearGradient, Stop, G, Line, Text as SvgText } from 'react-native-svg';
 import { Colors } from '../../src/theme/colors';
 import { Typography } from '../../src/theme/typography';
+import { Radius } from '../../src/theme/layout';
 import { StoryCard } from '../../src/components/StoryCard';
 import { GentleButton } from '../../src/components/GentleButton';
 import { MascotReaction } from '../../src/components/MascotReaction';
@@ -25,6 +26,9 @@ import {
   UserCheck,
 } from 'lucide-react-native';
 
+import { PlanetaryDossier } from '../../src/components/PlanetaryDossier';
+import { DestinationId } from '../../src/content/spaceDestinations';
+
 import { useNavigation } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -38,7 +42,8 @@ export default function MissionScreen() {
   const rankTitles = getTranslation(language).ranks;
   const hubT = getTranslation(language).spaceHub;
 
-  const [screen, setScreen] = useState<'hub' | 'moon'>('hub');
+  const [screen, setScreen] = useState<'hub' | 'moon' | 'dossier'>('hub');
+  const [selectedDestination, setSelectedDestination] = useState<DestinationId>('moon');
   const [isMissionActive, setIsMissionActive] = useState(false);
   const [missionStartStage, setMissionStartStage] = useState<MissionStage>('suit_up');
 
@@ -47,7 +52,7 @@ export default function MissionScreen() {
 
   React.useEffect(() => {
     navigation.setOptions({
-      headerShown: !isMissionActive,
+      headerShown: !isMissionActive && screen !== 'dossier',
       tabBarStyle: isMissionActive
         ? { display: 'none' }
         : {
@@ -64,7 +69,7 @@ export default function MissionScreen() {
             elevation: 4,
           },
     });
-  }, [isMissionActive, navigation, insets.bottom]);
+  }, [isMissionActive, screen, navigation, insets.bottom]);
 
   const startMissionAtStage = (stage: MissionStage) => {
     setMissionStartStage(stage);
@@ -88,8 +93,24 @@ export default function MissionScreen() {
       <SpaceHub
         language={language}
         onOpenDestination={(id) => {
-          if (id === 'moon') setScreen('moon');
+          setSelectedDestination(id);
+          setScreen('dossier');
         }}
+        onLaunchMoon={() => {
+          setScreen('moon');
+        }}
+      />
+    );
+  }
+
+  if (screen === 'dossier') {
+    return (
+      <PlanetaryDossier
+        destinationId={selectedDestination}
+        language={language}
+        onBack={() => setScreen('hub')}
+        onLaunchMoon={() => setScreen('moon')}
+        onSelectDestination={(id) => setSelectedDestination(id)}
       />
     );
   }
@@ -166,16 +187,31 @@ export default function MissionScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Pressable
-        onPress={() => setScreen('hub')}
-        style={styles.backRow}
-        accessibilityRole="button"
-        accessibilityLabel={hubT.backToHub}
-        hitSlop={8}
-      >
-        <ChevronLeft size={20} color={Colors.primaryLight} />
-        <Text style={styles.backText}>{hubT.backToHub}</Text>
-      </Pressable>
+      <View style={styles.topNavigationRow}>
+        <Pressable
+          onPress={() => setScreen('hub')}
+          style={styles.backRow}
+          accessibilityRole="button"
+          accessibilityLabel={hubT.backToHub}
+          hitSlop={8}
+        >
+          <ChevronLeft size={20} color={Colors.primaryLight} />
+          <Text style={styles.backText}>{hubT.backToHub}</Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => {
+            setSelectedDestination('moon');
+            setScreen('dossier');
+          }}
+          style={styles.moonDossierBtn}
+          accessibilityRole="button"
+          accessibilityLabel={hubT.viewDossier}
+        >
+          <Sparkles size={13} color={Colors.gold} />
+          <Text style={styles.moonDossierBtnText}>{hubT.viewDossier}</Text>
+        </Pressable>
+      </View>
 
       {/* Hero Mission Control Briefing Card */}
       <StoryCard accent="primary" style={styles.heroCard}>
@@ -364,19 +400,40 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
   },
+  topNavigationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 40,
+    marginBottom: 6,
+  },
   backRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'flex-start',
     gap: 4,
-    minHeight: 40,
-    marginBottom: 6,
+    paddingVertical: 6,
   },
   backText: {
     color: Colors.primaryLight,
     fontSize: Typography.size.bodySmall,
     lineHeight: Typography.lineHeight.caption,
     fontFamily: Typography.family.headingSemi,
+  },
+  moonDossierBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: 'rgba(217, 119, 6, 0.1)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: Radius.full,
+    borderWidth: 1,
+    borderColor: 'rgba(217, 119, 6, 0.25)',
+  },
+  moonDossierBtnText: {
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.headingSemi,
+    color: Colors.gold,
   },
   heroCard: {
     marginBottom: 14,

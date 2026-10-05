@@ -1,35 +1,35 @@
-# HANDOFF — 2026-10-05 02:50
+# HANDOFF — 2026-10-05 10:05
 
 ## Current task status
-Completed local-first architecture migration, Space Destination Hub, animated app logo & branding, Captain Rover offline tutor expansion (114+ FAQs), quiz anti-farming safeguards, inner-screen header consolidation, and merging `feature/local-first-space-hub` into `dev` and then into `main`. 37/37 tests passing, 0 TypeScript compilation errors.
+Implemented Interactive Planetary Dossiers (গ্রহ পরিক্রমা ও বিবরণী) across all 8 solar system worlds on `feature/planetary-dossiers`. 39/39 tests passing, 0 TypeScript compilation errors.
 
 ## Just completed
-1. **Local-First Architecture (`src/services/profileStorage.ts`)**:
-   - Replaced complex remote auth/accounts with a clean, on-device local-first storage model.
-   - Preserves user progression (XP, rank, completed lessons, quiz scores, missions) with zero cloud barrier.
-   - Added full "delete local data" reset in settings.
-2. **Space Destination Hub (`src/components/SpaceHub.tsx`, `src/content/spaceDestinations.ts`)**:
-   - Rearchitected Space tab into an interactive planetary mission selector.
-   - Moon landing mission is live and fully playable; Mars, Jupiter, Saturn, and Venus configured with upcoming launch badges.
-3. **Branding & Animated App Logo**:
-   - Built vector `AppLogo.tsx` with animated orbital rings and space shuttle.
-   - Upgraded app launcher icon and splash screen brand assets.
-4. **Shared Inner Page Navigation (`src/components/ScreenHeader.tsx`)**:
-   - Standardized top header bar across lessons, quizzes, and profile pages.
-   - Unified back buttons, titles, subtitles, and right action slots.
-5. **Captain Rover AI Tutor Expansion**:
-   - Expanded offline question bank to 114+ authentic space questions with smart keyword fallback.
-   - Proactive internet connectivity detection when cadet asks an unindexed question.
-6. **Branch Merges**:
-   - Merged `feature/local-first-space-hub` into `dev`.
-   - Merged `dev` into `main`.
-   - Verified 37/37 unit tests and 0 TypeScript compilation errors.
+1. **Planetary Dossiers Dataset (`src/content/spaceDestinations.ts`)**:
+   - Extended Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, and Neptune with accurate NASA planetary statistics.
+   - Added gravity multipliers (0.166 to 2.53), distance, rotation day length, solar orbit year length, temperature indicators, and moons counts with names.
+   - Authored authentic, culturally relatable Bangladeshi science analogies (riverbanks, cricket, marble vs football, floating boats, pressure cookers, cyclones).
+   - Added robotic exploration archives (Perseverance, Curiosity, Voyager, Cassini, Apollo, Artemis) and interactive curiosity check quizzes with bilingual explanations.
+2. **Interactive Planetary Dossier Component (`src/components/PlanetaryDossier.tsx`)**:
+   - Built interactive **Planetary Weight Calculator (আমার মহাকাশ ওজন মাপক)** with dynamic gravity calculation based on student's Earth weight, preset chips (20-60kg), +/- stepper buttons, and sensory feedback.
+   - Built telemetry grid, Bangla analogy cards, atmospheric survival warnings, and mission explorer timelines.
+   - Built interactive mini-quiz awarding +10 XP with haptic feedback.
+   - Added sequential navigation (`[← পূর্ববর্তী]` / `[পরবর্তী →]`) and top quick-switcher pill bar for all 8 destinations.
+3. **Space Hub Upgrade (`src/components/SpaceHub.tsx`)**:
+   - Enabled interactive card press for every celestial destination (no more unclickable or disabled cards!).
+   - Provided instant "মিশন খেলো" direct launch for Moon landing simulation plus "বিবরণী দেখো" dossier link.
+4. **Mission Screen Routing (`app/(tabs)/mission.tsx`)**:
+   - Integrated screen state switching (`hub` ↔ `moon` ↔ `dossier`).
+   - Added top navigation bar linking directly between Moon flight stations and Moon's planetary dossier.
+5. **Universal Bilingual Localization (`src/i18n/translations.ts`)**:
+   - Added comprehensive translation dictionaries for both Bangla (`bn`) and English (`en`).
+6. **Testing & Verification (`tests/planetaryDossiers.test.ts`)**:
+   - Authored dedicated unit tests verifying planetary specs, gravity calculations, quiz integrity, and bilingual strings.
+   - Verified 39/39 tests passing with 0 TypeScript compilation errors.
+   - Ran `graphify update .` to update code graph AST.
 
 ## Active blockers
 - None.
 
 ## Immediate next steps
-1. User testing on target physical Android devices.
-2. Production build with EAS when ready (`eas build --platform android`).
-
-
+1. Review feature on physical Android devices.
+2. Merge `feature/planetary-dossiers` into `dev` when approved.

@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
-import { ChevronRight, Clock } from 'lucide-react-native';
+import { ChevronRight, Clock, Rocket, Sparkles } from 'lucide-react-native';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
-import { Radius, Space } from '../theme/layout';
+import { Radius, Space, Gutter } from '../theme/layout';
 import { StarField } from './StarField';
 import { PlanetImage } from './PlanetImage';
+import { ScalePressable } from './ScalePressable';
 import { SPACE_DESTINATIONS, DestinationId } from '../content/spaceDestinations';
 import { getTranslation, AppLanguage } from '../i18n/translations';
 import { tapHaptic } from '../utils/haptics';
@@ -13,12 +14,18 @@ import { tapHaptic } from '../utils/haptics';
 interface SpaceHubProps {
   language: AppLanguage;
   onOpenDestination: (id: DestinationId) => void;
+  onLaunchMoon?: () => void;
 }
 
 /**
- * SpaceHub — pick where to fly. The Moon is live; every planet is "coming soon".
+ * SpaceHub — pick where to fly or explore.
+ * Moon landing simulation is live; all 8 worlds feature rich interactive Planetary Dossiers!
  */
-export const SpaceHub: React.FC<SpaceHubProps> = ({ language, onOpenDestination }) => {
+export const SpaceHub: React.FC<SpaceHubProps> = ({
+  language,
+  onOpenDestination,
+  onLaunchMoon,
+}) => {
   const t = getTranslation(language).spaceHub;
   const en = language === 'en';
 
@@ -40,8 +47,17 @@ export const SpaceHub: React.FC<SpaceHubProps> = ({ language, onOpenDestination 
             const fact = en ? d.fact_en : d.fact_bn;
             const live = !d.comingSoon;
 
-            const card = (
-              <View style={[styles.card, live ? styles.cardLive : styles.cardSoon]}>
+            return (
+              <ScalePressable
+                key={d.id}
+                onPress={() => {
+                  tapHaptic();
+                  onOpenDestination(d.id);
+                }}
+                style={[styles.card, live ? styles.cardLive : styles.cardExplorable]}
+                accessibilityRole="button"
+                accessibilityLabel={`${name}, ${live ? t.liveBadge : t.exploreDossier}`}
+              >
                 <View style={styles.imageTile}>
                   <PlanetImage id={d.id} size={84} />
                 </View>
@@ -54,54 +70,55 @@ export const SpaceHub: React.FC<SpaceHubProps> = ({ language, onOpenDestination 
                     {live ? (
                       <View style={styles.liveBadge}>
                         <View style={styles.liveDot} />
-                        <Text style={styles.liveText} numberOfLines={1}>{t.liveBadge}</Text>
+                        <Text style={styles.liveText} numberOfLines={1}>
+                          {t.liveBadge}
+                        </Text>
                       </View>
                     ) : (
-                      <View style={styles.soonBadge}>
-                        <Clock size={11} color={Colors.textMuted} />
-                        <Text style={styles.soonText} numberOfLines={1}>{t.comingSoon}</Text>
+                      <View style={styles.dossierBadge}>
+                        <Sparkles size={11} color={Colors.primary} />
+                        <Text style={styles.dossierBadgeText} numberOfLines={1}>
+                          {t.exploreDossier}
+                        </Text>
                       </View>
                     )}
                   </View>
 
                   <Text style={styles.fact}>{fact}</Text>
-                  <Text style={styles.summary}>{summary}</Text>
+                  <Text style={styles.summary} numberOfLines={2}>
+                    {summary}
+                  </Text>
 
-                  {live && (
-                    <View style={styles.ctaRow}>
-                      <Text style={styles.ctaText}>{t.startMission}</Text>
-                      <ChevronRight size={16} color={Colors.gold} />
-                    </View>
-                  )}
+                  {/* Actions Row */}
+                  <View style={styles.ctaRow}>
+                    {live && onLaunchMoon ? (
+                      <View style={styles.moonActionsRow}>
+                        <Pressable
+                          onPress={(e) => {
+                            e.stopPropagation();
+                            tapHaptic();
+                            onLaunchMoon();
+                          }}
+                          style={styles.launchBtn}
+                        >
+                          <Rocket size={13} color={Colors.textDark} />
+                          <Text style={styles.launchBtnText}>{t.playMission}</Text>
+                        </Pressable>
+
+                        <View style={styles.dossierLinkRow}>
+                          <Text style={styles.dossierLinkText}>{t.viewDossier}</Text>
+                          <ChevronRight size={14} color={Colors.primary} />
+                        </View>
+                      </View>
+                    ) : (
+                      <View style={styles.dossierLinkRow}>
+                        <Text style={styles.dossierLinkText}>{t.viewDossier}</Text>
+                        <ChevronRight size={14} color={Colors.primary} />
+                      </View>
+                    )}
+                  </View>
                 </View>
-              </View>
-            );
-
-            if (!live) {
-              return (
-                <View
-                  key={d.id}
-                  accessibilityLabel={`${name}, ${t.comingSoon}`}
-                  accessibilityState={{ disabled: true }}
-                >
-                  {card}
-                </View>
-              );
-            }
-
-            return (
-              <Pressable
-                key={d.id}
-                onPress={() => {
-                  tapHaptic();
-                  onOpenDestination(d.id);
-                }}
-                style={({ pressed }) => pressed && styles.pressed}
-                accessibilityRole="button"
-                accessibilityLabel={`${name}, ${t.startMission}`}
-              >
-                {card}
-              </Pressable>
+              </ScalePressable>
             );
           })}
         </View>
@@ -119,24 +136,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: 16,
-    paddingBottom: 48,
-    maxWidth: 620,
-    alignSelf: 'center',
-    width: '100%',
+    paddingHorizontal: Gutter,
+    paddingTop: Space.lg,
+    paddingBottom: Space.xxl + 24,
   },
   title: {
+    fontSize: Typography.size.h2,
+    fontFamily: Typography.family.heading,
     color: Colors.text,
-    fontSize: Typography.size.h1,
-    lineHeight: Typography.lineHeight.h1,
-    fontFamily: Typography.family.notoBold,
-    marginTop: 4,
+    marginBottom: Space.xs,
   },
   subtitle: {
-    color: Colors.textSecondary,
     fontSize: Typography.size.bodySmall,
-    lineHeight: Typography.lineHeight.bodySmall,
     fontFamily: Typography.family.notoRegular,
+    color: Colors.textSecondary,
+    lineHeight: 20,
     marginBottom: Space.lg,
   },
   list: {
@@ -145,50 +159,56 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Space.md,
     backgroundColor: Colors.surface,
     borderRadius: Radius.md,
+    padding: Space.md,
     borderWidth: 1,
     borderColor: Colors.border,
-    padding: Space.md,
+    shadowColor: Colors.text,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 2,
+    gap: Space.md,
   },
   cardLive: {
     borderColor: Colors.gold,
-    backgroundColor: Colors.surfaceElevated,
+    backgroundColor: Colors.surface,
   },
-  cardSoon: {
-    opacity: 0.8,
+  cardExplorable: {
+    borderColor: Colors.border,
+    backgroundColor: Colors.surface,
   },
   imageTile: {
-    width: 92,
-    height: 92,
-    borderRadius: Radius.sm + 4,
-    backgroundColor: Colors.spaceDark,
+    width: 88,
+    height: 88,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: Colors.surfaceWarm,
+    borderRadius: Radius.md,
   },
   cardBody: {
     flex: 1,
   },
   titleRow: {
-    alignItems: 'flex-start',
-    gap: Space.xs,
-    marginBottom: Space.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+    gap: 8,
   },
   name: {
-    flexShrink: 1,
-    color: Colors.text,
     fontSize: Typography.size.h3,
-    lineHeight: Typography.lineHeight.h3,
-    fontFamily: Typography.family.notoBold,
+    fontFamily: Typography.family.heading,
+    color: Colors.text,
+    flex: 1,
   },
   liveBadge: {
-    flexShrink: 0,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: 'rgba(94, 214, 192, 0.14)',
-    paddingHorizontal: 10,
+    backgroundColor: 'rgba(217, 119, 6, 0.12)',
+    paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: Radius.full,
   },
@@ -196,59 +216,75 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: Colors.emerald,
+    backgroundColor: Colors.gold,
   },
   liveText: {
-    flexShrink: 0,
-    color: Colors.emerald,
-    fontSize: Typography.size.caption,
-    lineHeight: Typography.lineHeight.caption,
-    fontFamily: Typography.family.notoSemiBold,
+    fontSize: Typography.size.micro,
+    fontFamily: Typography.family.headingSemi,
+    color: Colors.gold,
   },
-  soonBadge: {
-    flexShrink: 0,
+  dossierBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
-    paddingHorizontal: 10,
+    backgroundColor: Colors.primaryBg,
+    paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: Radius.full,
   },
-  soonText: {
-    flexShrink: 0,
-    color: Colors.textMuted,
-    fontSize: Typography.size.caption,
-    lineHeight: Typography.lineHeight.caption,
-    fontFamily: Typography.family.notoSemiBold,
+  dossierBadgeText: {
+    fontSize: Typography.size.micro,
+    fontFamily: Typography.family.headingMedium,
+    color: Colors.primary,
   },
   fact: {
-    color: Colors.gold,
     fontSize: Typography.size.caption,
-    lineHeight: Typography.lineHeight.caption,
-    fontFamily: Typography.family.notoSemiBold,
+    fontFamily: Typography.family.headingMedium,
+    color: Colors.gold,
     marginBottom: 2,
   },
   summary: {
-    color: Colors.textSecondary,
     fontSize: Typography.size.caption,
-    lineHeight: Typography.lineHeight.caption,
     fontFamily: Typography.family.notoRegular,
+    color: Colors.textSecondary,
+    lineHeight: 18,
+    marginBottom: 8,
   },
   ctaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2,
-    marginTop: Space.xs,
+    justifyContent: 'flex-start',
+    marginTop: 2,
   },
-  ctaText: {
-    color: Colors.gold,
+  moonActionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    gap: 8,
+  },
+  launchBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: Colors.gold,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: Radius.sm,
+  },
+  launchBtnText: {
     fontSize: Typography.size.caption,
-    lineHeight: Typography.lineHeight.caption,
-    fontFamily: Typography.family.notoBold,
+    fontFamily: Typography.family.headingSemi,
+    color: Colors.textDark,
   },
-  pressed: {
-    opacity: 0.85,
-    transform: [{ scale: 0.99 }],
+  dossierLinkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  dossierLinkText: {
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.headingMedium,
+    color: Colors.primary,
   },
 });

@@ -5,7 +5,7 @@
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3346 nodes · 4387 edges · 237 communities (195 shown, 42 thin omitted)
+- 3346 nodes · 4524 edges · 239 communities (197 shown, 42 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 213 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
@@ -252,12 +252,14 @@
 - format_output
 - md
 - 1. THE THREE DIALS (Core Configuration)
+- 6
+- 8
 
 ## God Nodes (most connected - your core abstractions)
 1. `TailwindConfigGenerator` - 57 edges
 2. `useAppStore` - 51 edges
-3. `Colors` - 45 edges
-4. `DesignSystemGenerator` - 45 edges
+3. `DesignSystemGenerator` - 45 edges
+4. `Colors` - 45 edges
 5. `search()` - 40 edges
 6. `CORE DIRECTIVE: IMAGE-FIRST WEBSITE DESIGN TO CODE` - 39 edges
 7. `CORE DIRECTIVE: PREMIUM MOBILE APP IMAGE DIRECTION` - 39 edges
@@ -268,19 +270,19 @@
 ## Surprising Connections (you probably didn't know these)
 - `RootLayout()` --calls--> `useAppStore`  [EXTRACTED]
   app/_layout.tsx → src/state/useAppStore.ts
-- `LessonReaderScreen()` --calls--> `useAppStore`  [EXTRACTED]
-  app/lessons/[id].tsx → src/state/useAppStore.ts
 - `DashboardScreen()` --calls--> `getTranslation()`  [EXTRACTED]
   app/(tabs)/index.tsx → src/i18n/translations.ts
+- `DashboardScreen()` --calls--> `getLessons()`  [EXTRACTED]
+  app/(tabs)/index.tsx → src/services/lessonService.ts
 - `DashboardScreen()` --calls--> `useAppStore`  [EXTRACTED]
   app/(tabs)/index.tsx → src/state/useAppStore.ts
-- `Option` --references--> `CadetArchetype`  [EXTRACTED]
-  app/onboarding.tsx → src/state/useAppStore.ts
+- `LessonsScreen()` --calls--> `getTranslation()`  [EXTRACTED]
+  app/(tabs)/lessons.tsx → src/i18n/translations.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (237 total, 42 thin omitted)
+## Communities (239 total, 42 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -315,8 +317,8 @@ Cohesion: 0.22
 Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
 
 ### Community 8 - "AGENT.md — Instructions for AI coding agents"
-Cohesion: 0.10
-Nodes (20): RootLayout(), styles, AnimatedCircle, AnimatedPath, AppLogo(), AppLogoProps, EASE_IN_OUT, EASE_OUT (+12 more)
+Cohesion: 0.07
+Nodes (34): RootLayout(), styles, OnboardingScreen(), Question, QUESTIONS, styles, styles, AnimatedMascot() (+26 more)
 
 ### Community 9 - "graphify reference: query, path, explain"
 Cohesion: 0.33
@@ -419,8 +421,8 @@ Cohesion: 0.06
 Nodes (34): Accessibility, Available Domains, Available Stacks, Common Rules for Professional UI, Common Sticking Points, Example Workflow, How to Use This Skill, Icons & Visual Elements (+26 more)
 
 ### Community 46 - "spacing"
-Cohesion: 0.06
-Nodes (34): $type, $value, $type, $value, $type, $value, $type, $value (+26 more)
+Cohesion: 0.09
+Nodes (22): $type, $value, $type, $value, $type, $value, $type, $value (+14 more)
 
 ### Community 47 - "Form & Input Components"
 Cohesion: 0.06
@@ -615,8 +617,8 @@ Cohesion: 0.23
 Nodes (3): detect_domain(), Auto-detect the most relevant domain from query.      Matches are weighted by, TestDomainDetection
 
 ### Community 96 - ".generate"
-Cohesion: 0.09
-Nodes (40): styles, TabsLayout(), LessonsScreen(), styles, MissionScreen(), styles, ProfileScreen(), react (+32 more)
+Cohesion: 0.14
+Nodes (22): styles, TabsLayout(), MissionScreen(), ProfileScreen(), react, AstronautSuitUpGame(), AstronautSuitUpGameProps, styles (+14 more)
 
 ### Community 97 - "Banner Design - Multi-Format Creative Banner System"
 Cohesion: 0.14
@@ -679,16 +681,16 @@ Cohesion: 0.18
 Nodes (10): Bold Dynamic, CIP Design Style Guide, Classic Traditional, Color Psychology, Corporate Minimal, Fresh Modern, Luxury Premium, Modern Tech (+2 more)
 
 ### Community 112 - "primitive"
-Cohesion: 0.18
-Nodes (11): fast, normal, slow, $type, $value, $type, $value, primitive (+3 more)
+Cohesion: 0.20
+Nodes (10): fast, normal, slow, $type, $value, $type, $value, duration (+2 more)
 
 ### Community 113 - "test_tailwind_config_gen.py"
 Cohesion: 0.20
 Nodes (7): Tests for tailwind_config_gen.py, Reduce a generated TS/JS config to a bare assignable object so it can be     ha, Regression guard for the missing-comma bug between the ``theme`` block and, The property preceding ``plugins`` must end with a comma (pure-Python         c, The emitted config parses as valid JS via ``node --check``., _strip_to_object(), TestGeneratedConfigIsValidJs
 
 ### Community 114 - "TestStyleTaxonomy"
-Cohesion: 0.29
-Nodes (8): $type, $value, $type, $value, radius, full, none, none
+Cohesion: 0.19
+Nodes (14): $type, $value, $type, $value, $type, $value, primitive, radius (+6 more)
 
 ### Community 115 - "Brand"
 Cohesion: 0.20
@@ -763,8 +765,8 @@ Cohesion: 0.22
 Nodes (3): read_rows(), TestTextLayoutDataContracts, TestTextLayoutRetrieval
 
 ### Community 133 - "shadow"
-Cohesion: 0.47
-Nodes (6): sm, shadow, sm, sm, $type, $value
+Cohesion: 0.60
+Nodes (5): sm, sm, sm, $type, $value
 
 ### Community 134 - "Slides"
 Cohesion: 0.33
@@ -780,7 +782,7 @@ Nodes (4): Brand Guidelines Template, Document Structure, Extractable Fields, Us
 
 ### Community 137 - "$type"
 Cohesion: 0.08
-Nodes (32): LessonReaderScreen(), styles, BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), xpForScore() (+24 more)
+Nodes (34): BN_DIGITS, QuizHubScreen(), styles, toBn(), AITutorChatScreen(), ChatMessage, hasInternet(), styles (+26 more)
 
 ### Community 138 - "radius"
 Cohesion: 0.60
@@ -795,8 +797,8 @@ Cohesion: 0.05
 Nodes (43): dependencies, expo, expo-asset, expo-constants, expo-font, @expo-google-fonts/baloo-da-2, @expo-google-fonts/hind-siliguri, @expo-google-fonts/noto-sans-bengali (+35 more)
 
 ### Community 141 - "xl"
-Cohesion: 0.07
-Nodes (29): AITutorChatScreen(), hasInternet(), lessonQuizzes, outputPath, seedData, AstronautAvatarProps, styles, AI_TUTOR_CONFIG (+21 more)
+Cohesion: 0.10
+Nodes (32): LessonReaderScreen(), BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), xpForScore(), LessonsScreen() (+24 more)
 
 ### Community 142 - "md"
 Cohesion: 0.05
@@ -811,16 +813,16 @@ Cohesion: 0.43
 Nodes (3): _filter_anti_patterns_for_mode(), Drop "avoid dark mode" advice once dark mode is the resolved answer., TestAntiPatternGating
 
 ### Community 147 - "destructive-foreground"
-Cohesion: 0.12
-Nodes (20): OnboardingScreen(), Option, Question, QUESTIONS, styles, SpaceChoiceBadgeProps, styles, styles (+12 more)
+Cohesion: 0.18
+Nodes (16): Option, AstronautAvatarProps, SpaceChoiceBadge(), SpaceChoiceBadgeProps, styles, QuizAttemptRecord, RankTier, AppLanguage (+8 more)
 
 ### Community 148 - "muted"
 Cohesion: 0.67
 Nodes (4): xl, xl, $type, $value
 
 ### Community 149 - "primary-foreground"
-Cohesion: 0.10
-Nodes (31): DashboardScreen(), styles, styles, EASE_IN_OUT, LanguageSwitch(), OPTIONS, styles, PlanetImage() (+23 more)
+Cohesion: 0.09
+Nodes (34): DashboardScreen(), styles, styles, GentleButton(), GentleButtonProps, styles, EASE_IN_OUT, LanguageSwitch() (+26 more)
 
 ### Community 150 - "ring"
 Cohesion: 0.67
@@ -831,16 +833,16 @@ Cohesion: 0.06
 Nodes (34): 10. IMAGE-FIRST CODEX WEBSITE WORKFLOW, 11. WHEN TO TRIGGER IMAGE GENERATION FIRST, 13. WEBSITE REFERENCE RULE, 15. RESPONSIVE FIRST-VIEW RULE, 16. ANTI-NESTED-BOX RULE, 17. REDUCE MICRO-UI CLUTTER RULE, 18. SECTION IMAGE GENERATION RULE, 19. WEBSITE IMAGE SYSTEM RULE (+26 more)
 
 ### Community 177 - "useAppStore"
-Cohesion: 0.29
-Nodes (8): CARGO_ITEMS, CargoCategory, CargoItem, evaluateMoonLandingMission(), LUNAR_REGIONS, LunarRegion, LunarRegionId, MissionTelemetryResult
+Cohesion: 0.40
+Nodes (5): AnimatedXPBar(), AnimatedXPBarProps, BENGALI_DIGITS, styles, toBengaliNumber()
 
 ### Community 178 - "colors.ts"
 Cohesion: 0.33
 Nodes (5): 1. Persona Overview, 2. Core Pedagogical Rules, 3. System Prompt (Ready for API Injection), 4. Example In-Flight Interaction, AI Tutor System Prompt & Persona Specification — Mohakash Jr
 
 ### Community 179 - "6"
-Cohesion: 0.29
-Nodes (4): CONFETTI_COLORS, ConfettiPiece, styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }
+Cohesion: 0.67
+Nodes (3): $type, $value, 0
 
 ### Community 180 - "DoubleBezelCard.tsx"
 Cohesion: 0.06
@@ -879,8 +881,8 @@ Cohesion: 0.12
 Nodes (16): 10. SECTION RHYTHM RULE, 12. DENSITY & SPACING DISCIPLINE, 14. IMAGE / MEDIA DIRECTION, 16. MULTI-IMAGE CONSISTENCY RULE, 17. CLARITY CHECK, 19. RESPONSE BEHAVIOR, 1. ACTIVE BASELINE CONFIGURATION, 21. FINAL GOAL (+8 more)
 
 ### Community 189 - "lucide-react-native"
-Cohesion: 0.07
-Nodes (30): AnimatedXPBar(), AnimatedXPBarProps, BENGALI_DIGITS, styles, toBengaliNumber(), MascotFeedbackPopupProps, MascotReaction(), MascotReactionProps (+22 more)
+Cohesion: 0.08
+Nodes (41): DoubleBezelCard(), DoubleBezelCardProps, styles, MascotFeedbackPopupProps, MascotReaction(), MascotReactionProps, MascotReactionState, styles (+33 more)
 
 ### Community 190 - "SKILL: Industrial Brutalism & Tactical Telemetry UI"
 Cohesion: 0.12
@@ -984,7 +986,7 @@ Nodes (6): 5. IMAGE COUNT & PAGE SLICING, Continuity Rule, Counting rule, Format
 
 ### Community 215 - "0"
 Cohesion: 0.67
-Nodes (4): $type, $value, default, default
+Nodes (3): $type, $value, 16
 
 ### Community 216 - "12. THE BLOCK LIBRARY (Contract - Implementations Land Here Iteratively)"
 Cohesion: 0.40
@@ -1003,8 +1005,8 @@ Cohesion: 0.40
 Nodes (5): 21. MOBILE ANTI-AI-TELLS RULE, Copy AI tells, Layout AI tells, UI clutter tells, Visual AI tells
 
 ### Community 220 - "default"
-Cohesion: 0.29
-Nodes (5): IllustrationHeaderProps, IllustrationTopic, styles, { width: SCREEN_WIDTH }, LessonMoods
+Cohesion: 0.18
+Nodes (11): styles, IllustrationHeader(), IllustrationHeaderProps, IllustrationTopic, styles, { width: SCREEN_WIDTH }, styles, WonderBox() (+3 more)
 
 ### Community 221 - "7. DIAL DEFINITIONS (Technical Reference)"
 Cohesion: 0.50
@@ -1062,25 +1064,33 @@ Nodes (3): primary-foreground, $type, $value
 Cohesion: 0.67
 Nodes (3): secondary-foreground, $type, $value
 
+### Community 237 - "6"
+Cohesion: 0.67
+Nodes (3): $type, $value, 6
+
+### Community 238 - "8"
+Cohesion: 0.67
+Nodes (3): $type, $value, 8
+
 ## Knowledge Gaps
-- **1689 isolated node(s):** `Environment & secrets`, `Git workflow & credentials`, `Context & docs`, `Bookkeeping`, `Testing` (+1684 more)
+- **1674 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1669 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **42 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `dependencies` connect `padding-y` to `.generate`?**
-  _High betweenness centrality (0.005) - this node is a cross-community bridge._
-- **Why does `react` connect `.generate` to `padding-y`?**
-  _High betweenness centrality (0.005) - this node is a cross-community bridge._
 - **Why does `DesignSystemGenerator` connect `DesignSystemGenerator` to `read_rows`, `search`, `design_system.py`, `_resolve_color_mode`, `destructive`, `_select_palette_for_mode`, `input`, `BM25`, `detect_domain`?**
-  _High betweenness centrality (0.004) - this node is a cross-community bridge._
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
+- **Why does `BM25` connect `BM25` to `search`, `DesignSystemGenerator`, `design_system.py`, `BM25`, `detect_domain`?**
+  _High betweenness centrality (0.005) - this node is a cross-community bridge._
+- **Why does `search()` connect `search` to `/graphify`, `TestTextLayoutDataContracts`, `_row_identities`, `design_system.py`, `search_stack`, `core.py`, `_normalize`, `input`, `BM25`, `detect_domain`?**
+  _High betweenness centrality (0.005) - this node is a cross-community bridge._
 - **Are the 36 inferred relationships involving `TailwindConfigGenerator` (e.g. with `TestGeneratedConfigIsValidJs` and `.test_node_check_parses_generated_config()`) actually correct?**
   _`TailwindConfigGenerator` has 36 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 30 inferred relationships involving `DesignSystemGenerator` (e.g. with `TestBm25CoreBehavior` and `TestDiagnosticsContracts`) actually correct?**
   _`DesignSystemGenerator` has 30 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 22 inferred relationships involving `search()` (e.g. with `.generate()` and `._multi_domain_search()`) actually correct?**
   _`search()` has 22 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `Environment & secrets`, `Git workflow & credentials`, `Context & docs` to the rest of the system?**
-  _1963 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `Regression test for sync-brand-to-tokens.cjs.  The color parser required a par`, `Resolve token reference like {primitive.color.ocean-blue.500} to hex value.`, `Load colors from assets/design-tokens.json for overlay gradients.      Resolve` to the rest of the system?**
+  _1948 weakly-connected nodes found - possible documentation gaps or missing edges._
