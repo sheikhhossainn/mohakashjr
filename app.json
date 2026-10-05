@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Mohakash Jr",
-    "slug": "mohakashjr",
+    "slug": "mohakash-jr",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "mohakashjr",
@@ -9,9 +9,11 @@
     "icon": "./assets/brand/icon.png",
     "backgroundColor": "#0B1026",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sheikhhossainn.mohakashjr"
     },
     "android": {
+      "package": "com.sheikhhossainn.mohakashjr",
       "allowBackup": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/brand/adaptive-icon.png",
@@ -40,6 +42,19 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a9ab89a8-86ae-4fe5-a706-06f08ff84329"
+      }
+    },
+    "owner": "sheikhhossainns-team",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/a9ab89a8-86ae-4fe5-a706-06f08ff84329"
     }
   }
 }
