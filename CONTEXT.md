@@ -30,5 +30,5 @@
 - `HANDOFF.md` — current session state (created/updated as work progresses)
 - `implemented_features.md` — running log of what's been built and how
 
-**Status:** Planetary Dossiers Release — Interactive Planetary Dossiers active (`PlanetaryDossier.tsx`, `spaceDestinations.ts`) unlocking all 8 solar system destinations with dynamic Planetary Weight Calculator, NASA environmental telemetry, relatable Bangladeshi analogies, survival checklists, robotic exploration history, and mini-quizzes (+10 XP). 39/39 tests passing with 0 TS errors on feature/planetary-dossiers.
+**Status:** EAS Cloud Build & OTA Updates Active — Expo project linked (`@sheikhhossainns-team/mohakash-jr`, ID `a9ab89a8-86ae-4fe5-a706-06f08ff84329`), `expo-updates` configured, preview & production channels created, initial OTA updates published, and Android cloud preview build triggered (`f776d1ce-3027-4056-a97c-1ab328160177`). 39/39 tests passing with 0 TS errors.
 
