@@ -140,13 +140,13 @@
     "semantic_hash": ""
   },
   "implemented_features.md": {
-    "mtime": 1791351227.9910178,
-    "ast_hash": "b63b5f148db3c41b583d95c90ca26b28",
+    "mtime": 1791381638.243045,
+    "ast_hash": "5573e17e87ca61d6c8887e9a86887558",
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1791351269.6909213,
-    "ast_hash": "2e3acdc12b59af7a571aa1f8e0f452e0",
+    "mtime": 1791381734.5819683,
+    "ast_hash": "4c3d9ebf7cd71428adc5f8a0f1e13c48",
     "semantic_hash": ""
   },
   "TEAMCONTRIBUTION.md": {
@@ -165,23 +165,23 @@
     "semantic_hash": ""
   },
   "app/(tabs)/index.tsx": {
-    "mtime": 1791346985.3238504,
-    "ast_hash": "441bb32693a50d787f4f8544678b2234",
+    "mtime": 1791380539.0583813,
+    "ast_hash": "410610c80be54d51cc1f59e65d6043db",
     "semantic_hash": ""
   },
   "app/(tabs)/lessons.tsx": {
-    "mtime": 1791147249.5291135,
-    "ast_hash": "b8830e5b563b13a399507eba1cb56dd3",
+    "mtime": 1791380752.0193417,
+    "ast_hash": "1077c6b9c97faf81e008d12a81cdbc6d",
     "semantic_hash": ""
   },
   "app/(tabs)/mission.tsx": {
-    "mtime": 1791347870.9510067,
-    "ast_hash": "6ecc46929e9272ba616751ef22c4cec5",
+    "mtime": 1791380813.2052019,
+    "ast_hash": "b36d746cbba9525cc2149cf36d547a49",
     "semantic_hash": ""
   },
   "app/(tabs)/profile.tsx": {
-    "mtime": 1791147249.5301108,
-    "ast_hash": "7da3f35db93cc13ad13baedd62d30f7f",
+    "mtime": 1791380846.2310734,
+    "ast_hash": "a11b593f273accdb75676d837ee8f916",
     "semantic_hash": ""
   },
   "app/_layout.tsx": {
@@ -190,8 +190,8 @@
     "semantic_hash": ""
   },
   "app/lessons/[id].tsx": {
-    "mtime": 1791147249.5311139,
-    "ast_hash": "d31b08ecf8a15274a051373e3e1894d9",
+    "mtime": 1791380776.7631612,
+    "ast_hash": "2ca362fe2dcce5bb0447e84fa6bfb3c3",
     "semantic_hash": ""
   },
   "app/mission/index.tsx": {
@@ -200,13 +200,13 @@
     "semantic_hash": ""
   },
   "app/quiz/[id].tsx": {
-    "mtime": 1791347097.3305972,
-    "ast_hash": "4b8f62a80396347e0ba26d185febbfa1",
+    "mtime": 1791380693.0214527,
+    "ast_hash": "be0a88560d06e094fd7de4735c12e4b3",
     "semantic_hash": ""
   },
   "app/quiz/index.tsx": {
-    "mtime": 1791147249.5331104,
-    "ast_hash": "82a1df3deef0dd6e1d530c4ad4315c06",
+    "mtime": 1791380942.0497565,
+    "ast_hash": "468761138a0c5058630fc50d3e3c2de0",
     "semantic_hash": ""
   },
   "package.json": {
@@ -215,23 +215,23 @@
     "semantic_hash": ""
   },
   "src/components/LevelUpModal.tsx": {
-    "mtime": 1791147249.6340284,
-    "ast_hash": "9aabf83092b5021d048959183d6c3e64",
+    "mtime": 1791381138.8669531,
+    "ast_hash": "7dac9034589189cee96bbc744982239e",
     "semantic_hash": ""
   },
   "src/components/MascotFeedbackSlot.tsx": {
-    "mtime": 1791346959.1531613,
-    "ast_hash": "a84dabc9cc6ae62e3338bc966a459193",
+    "mtime": 1791380641.820207,
+    "ast_hash": "e62e58196cc037d219d6c4f257f63466",
     "semantic_hash": ""
   },
   "src/components/XPProgressBar.tsx": {
-    "mtime": 1791147249.6420298,
-    "ast_hash": "ffd7e317f5ce8e093598f0201c080d81",
+    "mtime": 1791381108.0394008,
+    "ast_hash": "5331ef71f9e2b18ea70e72ae6f9b74f0",
     "semantic_hash": ""
   },
   "src/content/mockLessons.ts": {
-    "mtime": 1791147249.648028,
-    "ast_hash": "7b1d325b5fd0d4b055553c811f5d5d3d",
+    "mtime": 1791381577.7842567,
+    "ast_hash": "4f75569f68f1fa875c6d9c698ed65cf2",
     "semantic_hash": ""
   },
   "src/content/mockQuizzes.ts": {
@@ -255,8 +255,8 @@
     "semantic_hash": ""
   },
   "src/state/useAppStore.ts": {
-    "mtime": 1791147249.6550426,
-    "ast_hash": "659ecb1ef75b31595969177b966a6266",
+    "mtime": 1791380506.2409315,
+    "ast_hash": "53d409868af4f4cf24b0fd9166fcbe4d",
     "semantic_hash": ""
   },
   "src/theme/colors.ts": {
@@ -270,8 +270,8 @@
     "semantic_hash": ""
   },
   "tests/appStore.test.ts": {
-    "mtime": 1791147249.6580417,
-    "ast_hash": "a19016edcd6df0cb8c63a3fa415b3577",
+    "mtime": 1791380582.2604673,
+    "ast_hash": "e90d97e022ce0be0ef626b06205989bd",
     "semantic_hash": ""
   },
   "tsconfig.json": {
@@ -280,8 +280,8 @@
     "semantic_hash": ""
   },
   "HANDOFF.md": {
-    "mtime": 1791351292.6205654,
-    "ast_hash": "4b279ea994b4844acb808925c4203acf",
+    "mtime": 1791381746.1258006,
+    "ast_hash": "f1e97c6de976d5e6e57aa08e185eb9cb",
     "semantic_hash": ""
   },
   "src/components/DoubleBezelCard.tsx": {
@@ -305,8 +305,8 @@
     "semantic_hash": ""
   },
   "src/components/SpaceTelemetryHUD.tsx": {
-    "mtime": 1791147249.64004,
-    "ast_hash": "e70bdb256f9e578a0795a6a25d231b72",
+    "mtime": 1791381174.9928882,
+    "ast_hash": "41aaf3f5d7801219fb500ffc2cd796aa",
     "semantic_hash": ""
   },
   ".agents/skills/brand/scripts/tests/test_sync_brand_to_tokens.py": {
@@ -850,8 +850,8 @@
     "semantic_hash": ""
   },
   "app/onboarding.tsx": {
-    "mtime": 1791147249.5321147,
-    "ast_hash": "f182a4306d648ccc150917b8cb0a5cbb",
+    "mtime": 1791380922.1510875,
+    "ast_hash": "b84f301124a1628049b8739a7c1e8e0e",
     "semantic_hash": ""
   },
   "app/splash.tsx": {
@@ -890,8 +890,8 @@
     "semantic_hash": ""
   },
   "src/content/seed.json": {
-    "mtime": 1790919813.4056208,
-    "ast_hash": "1b9ae973b455982e8fef8aa360d1c269",
+    "mtime": 1791381584.2796447,
+    "ast_hash": "ca090e25e662f9973a0b6ce3dd23f029",
     "semantic_hash": ""
   },
   "src/services/offlineTutorService.ts": {
@@ -910,8 +910,8 @@
     "semantic_hash": ""
   },
   "app/tutor.tsx": {
-    "mtime": 1791147249.535113,
-    "ast_hash": "6f4e0a93d2bf956c54332a13ae55ff19",
+    "mtime": 1791380965.8676603,
+    "ast_hash": "01d7c8dab87b8fcba79be348548767f2",
     "semantic_hash": ""
   },
   "assets/lottie/mascot-celebrate.json": {
@@ -965,23 +965,23 @@
     "semantic_hash": ""
   },
   "src/components/AnimatedXPBar.tsx": {
-    "mtime": 1791147249.630029,
-    "ast_hash": "7c3cec756b58cfa317c879c31c57f8ed",
+    "mtime": 1791381127.4907613,
+    "ast_hash": "3cc3fe7a48ad756971a2d3c3e9b5b009",
     "semantic_hash": ""
   },
   "src/components/MascotReaction.tsx": {
-    "mtime": 1791147249.63603,
-    "ast_hash": "a2bfde6d85fac1d3073f87a91cb2c497",
+    "mtime": 1791381169.2835453,
+    "ast_hash": "d5f7623b85a4821d74e660671c054de8",
     "semantic_hash": ""
   },
   "src/components/mission/CargoPackingGame.tsx": {
-    "mtime": 1791147249.6430292,
-    "ast_hash": "cb4d5c5aff0169264f26242d64b42252",
+    "mtime": 1791381271.6154444,
+    "ast_hash": "0c74dc6aaea32fed80cae82eca3a68dc",
     "semantic_hash": ""
   },
   "src/components/mission/LunarSiteSelector.tsx": {
-    "mtime": 1791147249.6450264,
-    "ast_hash": "0eabdcb48c0de779fce84004e19d4f4b",
+    "mtime": 1791381398.997196,
+    "ast_hash": "0f8e79ca28b5b345b788e96180ef3e69",
     "semantic_hash": ""
   },
   "src/components/mission/MissionDebriefView.tsx": {
@@ -1030,8 +1030,8 @@
     "semantic_hash": ""
   },
   "src/components/WonderBox.tsx": {
-    "mtime": 1791147249.6410267,
-    "ast_hash": "c68b9423a21c260156fd3fa0c6ad9da4",
+    "mtime": 1791381014.2107747,
+    "ast_hash": "244c27211e3cedeae5c7cddf489346a7",
     "semantic_hash": ""
   },
   "src/i18n/translations.ts": {
@@ -1050,28 +1050,28 @@
     "semantic_hash": ""
   },
   "src/components/mission/AstronautSuitUpGame.tsx": {
-    "mtime": 1791147249.6420298,
-    "ast_hash": "9612886091739d086c7048fe1e8bd946",
+    "mtime": 1791381210.9973986,
+    "ast_hash": "66331d6e91fdec967d27331133f4f37a",
     "semantic_hash": ""
   },
   "src/components/mission/CockpitIgnitionDeck.tsx": {
-    "mtime": 1791147249.6440277,
-    "ast_hash": "40d9a07f7da383ddd76df9ef7ac56f41",
+    "mtime": 1791381331.502321,
+    "ast_hash": "1d4cce9dfd73233b8e050f0a4566b081",
     "semantic_hash": ""
   },
   "src/components/mission/LunarDescentModule.tsx": {
-    "mtime": 1791147249.6450264,
-    "ast_hash": "9a7e3a1cce78cce299a771d6f6b13c40",
+    "mtime": 1791381359.3781874,
+    "ast_hash": "3024b8b6a103ab1c7d5e68cd04cdc0e5",
     "semantic_hash": ""
   },
   "src/components/mission/MoonwalkCelebration.tsx": {
-    "mtime": 1791147249.6470277,
-    "ast_hash": "191b71447d19e478e1514b63f2bc2129",
+    "mtime": 1791381545.078564,
+    "ast_hash": "36903856d3f23826ded2d79cdfe06008",
     "semantic_hash": ""
   },
   "src/components/mission/RocketFuelingStation.tsx": {
-    "mtime": 1791147249.6470277,
-    "ast_hash": "1e94575bf82f8b27a6053f9f3b5839a1",
+    "mtime": 1791381486.457166,
+    "ast_hash": "95fb6bb8278a54f4feb43bafd21f9dd6",
     "semantic_hash": ""
   },
   "tests/missionGame.test.ts": {
@@ -1080,8 +1080,8 @@
     "semantic_hash": ""
   },
   "src/components/mission/AtmosphericJourney.tsx": {
-    "mtime": 1791347197.9155388,
-    "ast_hash": "54a988c800d3a238d2b427c79e6166be",
+    "mtime": 1791381247.5524216,
+    "ast_hash": "7c658f7ba5f341f641bdec904c76afed",
     "semantic_hash": ""
   },
   ".claude/skills/ui-ux-pro-max/scripts/core.py": {
@@ -1270,8 +1270,8 @@
     "semantic_hash": ""
   },
   "src/services/profileStorage.ts": {
-    "mtime": 1791147249.6540568,
-    "ast_hash": "384eb9da8417febfbd2ef6e2bc760d99",
+    "mtime": 1791380455.5664148,
+    "ast_hash": "5e47897c341b82674de6acbb17f7b880",
     "semantic_hash": ""
   },
   "src/components/PlanetImage.tsx": {
@@ -1280,8 +1280,8 @@
     "semantic_hash": ""
   },
   "src/components/SpaceHub.tsx": {
-    "mtime": 1791347792.4445276,
-    "ast_hash": "46552c187f6bd7372561597caf1a7f07",
+    "mtime": 1791381044.3949108,
+    "ast_hash": "1dcb86e4b33e6cd413a4d0b27537b626",
     "semantic_hash": ""
   },
   "src/content/spaceDestinations.ts": {
@@ -1345,8 +1345,8 @@
     "semantic_hash": ""
   },
   "src/components/PlanetaryDossier.tsx": {
-    "mtime": 1791347823.117041,
-    "ast_hash": "36b318173a6c262baf4b8a8d16674a11",
+    "mtime": 1791381084.321074,
+    "ast_hash": "e955175b2d4160ca92d30007ef0cad0d",
     "semantic_hash": ""
   },
   "tests/planetaryDossiers.test.ts": {
@@ -1370,8 +1370,8 @@
     "semantic_hash": ""
   },
   "src/components/mission/PlanetaryMissionSimulator.tsx": {
-    "mtime": 1791349659.1058228,
-    "ast_hash": "520b67ea7479a0d4c0028b219d3463a2",
+    "mtime": 1791381461.0363705,
+    "ast_hash": "97086c4f18e08798d78e8991ca6a4337",
     "semantic_hash": ""
   },
   "src/content/planetaryMissionsData.ts": {

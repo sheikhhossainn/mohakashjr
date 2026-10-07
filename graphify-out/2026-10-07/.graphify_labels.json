@@ -231,9 +231,13 @@
   "229": "$type",
   "230": "muted",
   "231": "destructive",
+  "232": "GentleButton.tsx",
   "233": "format_output",
   "234": "format_output",
+  "235": "16",
+  "236": "1",
   "237": "6",
+  "238": "3",
   "239": "Agent Skill: Principal UI/UX Architect & Motion Choreographer (Awwwards-Tier)",
   "240": "SKILL: Industrial Brutalism & Tactical Telemetry UI",
   "241": "Design System: Taste Standard",
@@ -242,5 +246,6 @@
   "244": "Full-Output Enforcement",
   "245": "padding-y",
   "246": "none",
+  "247": "8",
   "248": "destructive"
 }

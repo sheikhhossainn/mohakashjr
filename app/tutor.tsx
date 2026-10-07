@@ -23,7 +23,7 @@ import { findOfflineAnswer, getAllOfflineQuestions } from '../src/services/offli
 import { AI_TUTOR_CONFIG } from '../src/content/aiTutorPrompt';
 import {
   Send,
-  Sparkles,
+  Bot,
   Zap,
   HelpCircle,
   RotateCcw,
@@ -195,7 +195,7 @@ export default function AITutorChatScreen() {
             {!isUser && (
               <View style={styles.tutorTagRow}>
                 <View style={styles.tutorNameTag}>
-                  <Sparkles size={11} color={Colors.cyan} />
+                  <Bot size={12} color={Colors.cyan} />
                   <Text style={styles.tutorNameText}>ক্যাপ্টেন রোভার</Text>
                 </View>
               </View>

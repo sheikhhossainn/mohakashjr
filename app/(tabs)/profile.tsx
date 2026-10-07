@@ -13,7 +13,7 @@ import { LanguageSwitch } from '../../src/components/LanguageSwitch';
 import { useAppStore, RANK_THRESHOLDS, ARCHETYPES } from '../../src/state/useAppStore';
 import {
   CheckCircle2,
-  Sparkles,
+  Shield,
   BookOpen,
   Target,
   Zap,
@@ -108,7 +108,7 @@ export default function ProfileScreen() {
       id: 'astronaut-insignia',
       name: t.profile.badge4Title,
       desc: t.profile.badge4Desc,
-      icon: <Sparkles size={20} color={Colors.gold} />,
+      icon: <Award size={20} color={Colors.gold} />,
       unlocked: rank !== 'Cadet',
     },
   ];
@@ -156,7 +156,7 @@ export default function ProfileScreen() {
           <Text style={styles.nameText}>{displayName}</Text>
 
           <View style={styles.rankPill}>
-            <Sparkles size={14} color={Colors.gold} />
+            <Shield size={13} color={Colors.gold} />
             <Text style={styles.rankPillText}>
               {language === 'en' ? threshold.label_en : threshold.label_bn}
             </Text>

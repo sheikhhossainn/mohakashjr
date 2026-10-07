@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
-import { Sparkles, Heart, Star } from 'lucide-react-native';
+import { Heart, Star } from 'lucide-react-native';
 import { useAppStore, RANK_THRESHOLDS } from '../state/useAppStore';
 import { getTranslation } from '../i18n/translations';
 

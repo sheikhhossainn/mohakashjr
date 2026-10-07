@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Animated, Easing, Modal, Pressable } from 'reac
 import Svg, { Circle, Rect, Path, Defs, LinearGradient, Stop, G } from 'react-native-svg';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
-import { Sparkles, CheckCircle2, AlertCircle, HelpCircle, X } from 'lucide-react-native';
+import { Zap, CheckCircle2, AlertCircle, HelpCircle, X } from 'lucide-react-native';
 import { TactileButton } from './TactileButton';
 
 // Safe dynamic check for Lottie in case Jim provides assets later
@@ -485,7 +485,7 @@ export const MascotFeedbackPopup: React.FC<MascotFeedbackPopupProps> = ({
           {/* Optional XP Badge */}
           {earnedXP !== undefined && earnedXP > 0 && (
             <View style={styles.xpBadgeRow}>
-              <Sparkles size={16} color={Colors.gold} />
+              <Zap size={16} color={Colors.gold} fill={Colors.gold} />
               <Text style={styles.xpBadgeText}>+{earnedXP} XP অর্জিত হয়েছে!</Text>
             </View>
           )}

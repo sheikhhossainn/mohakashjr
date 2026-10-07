@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
-import { Zap, Sparkles, Star } from 'lucide-react-native';
+import { Zap, Star } from 'lucide-react-native';
 
 const BENGALI_DIGITS = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
 function toBengaliNumber(num: number): string {
@@ -158,7 +158,7 @@ export const AnimatedXPBar: React.FC<AnimatedXPBarProps> = ({
 
         {isFinished ? (
           <View style={styles.completeStatus}>
-            <Sparkles size={12} color={Colors.emerald} />
+            <Star size={12} color={Colors.emerald} fill={Colors.emerald} />
             <Text style={styles.completeText}>সফলভাবে যুক্ত হয়েছে!</Text>
           </View>
         ) : (

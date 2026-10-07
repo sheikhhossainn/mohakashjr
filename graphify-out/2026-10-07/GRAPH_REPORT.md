@@ -1,16 +1,16 @@
 # Graph Report - mohakashjr  (2026-10-07)
 
 ## Corpus Check
-- 267 files · ~458,307 words
+- 267 files · ~458,546 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3601 nodes · 4870 edges · 244 communities (202 shown, 42 thin omitted)
+- 3601 nodes · 4870 edges · 249 communities (207 shown, 42 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 213 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `65de6c67`
+- Built from commit: `25365943`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -247,9 +247,13 @@
 - $type
 - muted
 - destructive
+- GentleButton.tsx
 - format_output
 - format_output
+- 16
+- 1
 - 6
+- 3
 - Agent Skill: Principal UI/UX Architect & Motion Choreographer (Awwwards-Tier)
 - SKILL: Industrial Brutalism & Tactical Telemetry UI
 - Design System: Taste Standard
@@ -258,6 +262,7 @@
 - Full-Output Enforcement
 - padding-y
 - none
+- 8
 - destructive
 
 ## God Nodes (most connected - your core abstractions)
@@ -275,19 +280,19 @@
 ## Surprising Connections (you probably didn't know these)
 - `RootLayout()` --calls--> `useAppStore`  [EXTRACTED]
   app/_layout.tsx → src/state/useAppStore.ts
-- `DashboardScreen()` --calls--> `getTranslation()`  [EXTRACTED]
-  app/(tabs)/index.tsx → src/i18n/translations.ts
+- `TabsLayout()` --calls--> `getTranslation()`  [EXTRACTED]
+  app/(tabs)/_layout.tsx → src/i18n/translations.ts
+- `TabsLayout()` --calls--> `useAppStore`  [EXTRACTED]
+  app/(tabs)/_layout.tsx → src/state/useAppStore.ts
 - `DashboardScreen()` --calls--> `getLessons()`  [EXTRACTED]
   app/(tabs)/index.tsx → src/services/lessonService.ts
 - `DashboardScreen()` --calls--> `useAppStore`  [EXTRACTED]
   app/(tabs)/index.tsx → src/state/useAppStore.ts
-- `LessonsScreen()` --calls--> `getTranslation()`  [EXTRACTED]
-  app/(tabs)/lessons.tsx → src/i18n/translations.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (244 total, 42 thin omitted)
+## Communities (249 total, 42 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -374,8 +379,8 @@ Cohesion: 0.09
 Nodes (21): 1. Quick Start & Git Workflow (For Every Teammate & Agent), 2. Team Task Allocation & Dependency Matrix, 3. Step-by-Step "How-To" Instructions per Role, 4. Key Milestones Timeline, Guide for Humaira (Bangla Content & AI Knowledge), Guide for Jim (Typography, Design, Chat UI & QA), Guide for Mahi (Database & Cloudflare Proxy), Guide for Mahim (Mascot Motion & Moon Mission) (+13 more)
 
 ### Community 33 - "dependencies"
-Cohesion: 0.08
-Nodes (23): BD_H, BD_ORIGIN, BD_OUTLINE, BD_RIVER, BD_W, bez(), DHAKA, EARTH (+15 more)
+Cohesion: 0.11
+Nodes (17): BD_H, BD_ORIGIN, BD_OUTLINE, BD_RIVER, BD_W, bez(), DHAKA, EARTH (+9 more)
 
 ### Community 34 - "expo"
 Cohesion: 0.06
@@ -391,7 +396,7 @@ Nodes (53): $type, $value, $type, $value, $type, $value, $type, $value (+45 more
 
 ### Community 37 - "HANDOFF — 2026-09-22 21:23"
 Cohesion: 0.33
-Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-07 10:45, Immediate next steps, Just completed
+Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-07 11:35, Immediate next steps, Just completed
 
 ### Community 38 - "BM25"
 Cohesion: 0.07
@@ -426,8 +431,8 @@ Cohesion: 0.06
 Nodes (34): Accessibility, Available Domains, Available Stacks, Common Rules for Professional UI, Common Sticking Points, Example Workflow, How to Use This Skill, Icons & Visual Elements (+26 more)
 
 ### Community 46 - "spacing"
-Cohesion: 0.06
-Nodes (34): $type, $value, $type, $value, $type, $value, $type, $value (+26 more)
+Cohesion: 0.09
+Nodes (22): $type, $value, $type, $value, $type, $value, $type, $value (+14 more)
 
 ### Community 47 - "Form & Input Components"
 Cohesion: 0.06
@@ -623,7 +628,7 @@ Nodes (3): detect_domain(), Auto-detect the most relevant domain from query.    
 
 ### Community 96 - ".generate"
 Cohesion: 0.12
-Nodes (25): OnboardingScreen(), Option, Question, QUESTIONS, styles, AstronautAvatar(), AstronautAvatarProps, styles (+17 more)
+Nodes (25): OnboardingScreen(), Option, Question, QUESTIONS, styles, SpaceChoiceBadge(), SpaceChoiceBadgeProps, styles (+17 more)
 
 ### Community 97 - "Banner Design - Multi-Format Creative Banner System"
 Cohesion: 0.14
@@ -686,16 +691,16 @@ Cohesion: 0.18
 Nodes (10): Bold Dynamic, CIP Design Style Guide, Classic Traditional, Color Psychology, Corporate Minimal, Fresh Modern, Luxury Premium, Modern Tech (+2 more)
 
 ### Community 112 - "primitive"
-Cohesion: 0.18
-Nodes (11): fast, normal, slow, $type, $value, $type, $value, primitive (+3 more)
+Cohesion: 0.20
+Nodes (10): fast, normal, slow, $type, $value, $type, $value, duration (+2 more)
 
 ### Community 113 - "test_tailwind_config_gen.py"
 Cohesion: 0.20
 Nodes (7): Tests for tailwind_config_gen.py, Reduce a generated TS/JS config to a bare assignable object so it can be     ha, Regression guard for the missing-comma bug between the ``theme`` block and, The property preceding ``plugins`` must end with a comma (pure-Python         c, The emitted config parses as valid JS via ``node --check``., _strip_to_object(), TestGeneratedConfigIsValidJs
 
 ### Community 114 - "TestStyleTaxonomy"
-Cohesion: 0.29
-Nodes (8): $type, $value, $type, $value, radius, default, full, default
+Cohesion: 0.19
+Nodes (14): $type, $value, $type, $value, $type, $value, primitive, radius (+6 more)
 
 ### Community 115 - "Brand"
 Cohesion: 0.20
@@ -770,8 +775,8 @@ Cohesion: 0.22
 Nodes (3): read_rows(), TestTextLayoutDataContracts, TestTextLayoutRetrieval
 
 ### Community 133 - "shadow"
-Cohesion: 0.47
-Nodes (6): sm, shadow, sm, sm, $type, $value
+Cohesion: 0.60
+Nodes (5): sm, sm, sm, $type, $value
 
 ### Community 134 - "Slides"
 Cohesion: 0.33
@@ -786,8 +791,8 @@ Cohesion: 0.40
 Nodes (4): Brand Guidelines Template, Document Structure, Extractable Fields, Usage
 
 ### Community 137 - "$type"
-Cohesion: 0.09
-Nodes (26): AITutorChatScreen(), ChatMessage, hasInternet(), styles, MessageIn(), AtmosphericJourneyProps, LAYERS, styles (+18 more)
+Cohesion: 0.07
+Nodes (33): styles, TabsLayout(), AITutorChatScreen(), ChatMessage, hasInternet(), styles, AnimatedXPBar(), AnimatedXPBarProps (+25 more)
 
 ### Community 138 - "radius"
 Cohesion: 0.60
@@ -803,7 +808,7 @@ Nodes (44): dependencies, expo, expo-asset, expo-constants, expo-font, @expo-goo
 
 ### Community 141 - "xl"
 Cohesion: 0.12
-Nodes (20): styles, styles, EASE_IN_OUT, LanguageSwitch(), OPTIONS, styles, ProgressRing(), ProgressRingProps (+12 more)
+Nodes (21): styles, ProfileScreen(), styles, EASE_IN_OUT, LanguageSwitch(), OPTIONS, styles, ProgressRing() (+13 more)
 
 ### Community 142 - "md"
 Cohesion: 0.05
@@ -814,20 +819,20 @@ Cohesion: 0.33
 Nodes (4): NightSkyCanvas(), STARS_LAYER_1, STARS_LAYER_2, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }
 
 ### Community 146 - "destructive"
-Cohesion: 0.67
-Nodes (4): $type, $value, md, md
+Cohesion: 0.15
+Nodes (16): BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), xpForScore(), react, CosmicTopicIllustration() (+8 more)
 
 ### Community 147 - "destructive-foreground"
-Cohesion: 0.09
-Nodes (35): LessonReaderScreen(), styles, BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), xpForScore() (+27 more)
+Cohesion: 0.11
+Nodes (27): LessonReaderScreen(), styles, BN_DIGITS, QuizHubScreen(), styles, toBn(), LessonsScreen(), styles (+19 more)
 
 ### Community 148 - "muted"
 Cohesion: 0.67
 Nodes (4): xl, xl, $type, $value
 
 ### Community 149 - "primary-foreground"
-Cohesion: 0.06
-Nodes (56): DashboardScreen(), styles, CosmicTopicIllustration(), CosmicTopicIllustrationProps, styles, GentleButtonProps, styles, MascotFeedbackPopupProps (+48 more)
+Cohesion: 0.10
+Nodes (41): DashboardScreen(), MissionScreen(), styles, GentleButton(), PlanetaryMissionSimulator(), PlanetaryMissionSimulatorProps, styles, BENGALI_DIGITS (+33 more)
 
 ### Community 150 - "ring"
 Cohesion: 0.67
@@ -886,8 +891,8 @@ Cohesion: 0.12
 Nodes (16): 10. SECTION RHYTHM RULE, 12. DENSITY & SPACING DISCIPLINE, 14. IMAGE / MEDIA DIRECTION, 16. MULTI-IMAGE CONSISTENCY RULE, 17. CLARITY CHECK, 19. RESPONSE BEHAVIOR, 1. ACTIVE BASELINE CONFIGURATION, 21. FINAL GOAL (+8 more)
 
 ### Community 189 - "lucide-react-native"
-Cohesion: 0.07
-Nodes (56): styles, TabsLayout(), MissionScreen(), ProfileScreen(), react, DoubleBezelCard(), GentleButton(), MascotReaction() (+48 more)
+Cohesion: 0.08
+Nodes (48): DoubleBezelCard(), DoubleBezelCardProps, styles, MascotReaction(), AstronautSuitUpGame(), AtmosphericJourney(), AtmosphericJourneyProps, LAYERS (+40 more)
 
 ### Community 190 - "SKILL: Industrial Brutalism & Tactical Telemetry UI"
 Cohesion: 0.12
@@ -1011,7 +1016,7 @@ Nodes (5): 21. MOBILE ANTI-AI-TELLS RULE, Copy AI tells, Layout AI tells, UI clu
 
 ### Community 220 - "default"
 Cohesion: 0.07
-Nodes (30): RootLayout(), styles, AnimatedXPBar(), AnimatedXPBarProps, BENGALI_DIGITS, styles, toBengaliNumber(), AnimatedCircle (+22 more)
+Nodes (32): RootLayout(), styles, AnimatedMascot(), AnimatedMascotProps, styles, AppLogo(), AppLogoProps, COS_TILT (+24 more)
 
 ### Community 221 - "7. DIAL DEFINITIONS (Technical Reference)"
 Cohesion: 0.50
@@ -1057,9 +1062,25 @@ Nodes (3): secondary-foreground, $type, $value
 Cohesion: 0.10
 Nodes (19): 1. 🪐 Interactive Space Destination Hub, 2. 🌕 5-Stage Realistic Moon Mission Game (*Chondro Ovijan*), 3. 📖 Illustrated NASA Curriculum & Storybook Reader, 4. 🤖 Captain Rover — Offline & Online AI Space Tutor, 5. 🧠 Cadet Psychometric Assessment & Archetypes, 6. 🌐 Instant Bilingual Localization Engine (Bangla 🇧🇩 & English 🇺🇸), 7. 🛡️ Zero-Friction Local-First Architecture, 8. 🎨 "Illustrated Cosmos 2.0" Design System (+11 more)
 
+### Community 232 - "GentleButton.tsx"
+Cohesion: 0.14
+Nodes (11): GentleButtonProps, styles, AstronautSuitUpGameProps, styles, SuitItemId, RocketFuelingStationProps, styles, PressScaleView() (+3 more)
+
+### Community 235 - "16"
+Cohesion: 0.67
+Nodes (3): $type, $value, 16
+
+### Community 236 - "1"
+Cohesion: 0.67
+Nodes (3): $type, $value, 1
+
 ### Community 237 - "6"
 Cohesion: 0.11
 Nodes (18): 1. Define the Atmosphere, 2. Map the Color Palette, 3. Establish Typography Rules, 4. Define the Hero Section, 5. Describe Component Stylings, 6. Define Layout Principles, 7. Define Responsive Rules, 8. Encode Motion Philosophy (+10 more)
+
+### Community 238 - "3"
+Cohesion: 0.67
+Nodes (3): $type, $value, 3
 
 ### Community 239 - "Agent Skill: Principal UI/UX Architect & Motion Choreographer (Awwwards-Tier)"
 Cohesion: 0.11
@@ -1092,6 +1113,10 @@ Nodes (4): padding-y, padding-y, $type, $value
 ### Community 246 - "none"
 Cohesion: 0.67
 Nodes (4): $type, $value, none, none
+
+### Community 247 - "8"
+Cohesion: 0.67
+Nodes (3): $type, $value, 8
 
 ### Community 248 - "destructive"
 Cohesion: 0.67

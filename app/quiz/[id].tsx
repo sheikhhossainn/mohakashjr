@@ -16,7 +16,7 @@ import { getQuizQuestionsByLessonId, saveQuizAttempt } from '../../src/services/
 import { useAppStore } from '../../src/state/useAppStore';
 import {
   RotateCcw,
-  Sparkles,
+  Star,
   Zap,
   CheckCircle2,
   AlertCircle,
@@ -185,10 +185,11 @@ export default function QuizScreen() {
           {/* Star Rating Display */}
           <View style={styles.starsRow}>
             {[...Array(questions.length)].map((_, i) => (
-              <Sparkles
+              <Star
                 key={i}
                 size={28}
                 color={i < finalScore ? Colors.gold : 'rgba(255, 255, 255, 0.15)'}
+                fill={i < finalScore ? Colors.gold : 'transparent'}
               />
             ))}
           </View>
@@ -502,21 +503,21 @@ const styles = StyleSheet.create({
   },
   optionCardSelected: {
     borderColor: Colors.primary,
-    borderWidth: 2,
+    borderWidth: 1.5,
     backgroundColor: Colors.backgroundTertiary,
   },
   optionCardCorrect: {
-    borderColor: Colors.emerald,
-    borderWidth: 2,
-    backgroundColor: 'rgba(93, 211, 158, 0.20)',
+    borderColor: 'rgba(93, 211, 158, 0.45)',
+    borderWidth: 1.5,
+    backgroundColor: 'rgba(93, 211, 158, 0.16)',
   },
   optionCardIncorrect: {
-    borderColor: Colors.coral,
-    borderWidth: 2,
-    backgroundColor: 'rgba(255, 122, 144, 0.20)',
+    borderColor: 'rgba(255, 122, 144, 0.40)',
+    borderWidth: 1.5,
+    backgroundColor: 'rgba(255, 122, 144, 0.14)',
   },
   optionCardDimmed: {
-    opacity: 0.52,
+    opacity: 0.45,
   },
   optionBadge: {
     width: 36,

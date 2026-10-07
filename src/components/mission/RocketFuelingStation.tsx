@@ -9,7 +9,7 @@ import { useAppStore } from '../../state/useAppStore';
 import { getTranslation } from '../../i18n/translations';
 import {
   Fuel,
-  Sparkles,
+  BookOpen,
   Droplets,
   Gauge,
   Thermometer,
@@ -333,7 +333,7 @@ export const RocketFuelingStation: React.FC<RocketFuelingStationProps> = ({
       {/* NASA Scientific Insight */}
       <StoryCard accent="gold" style={styles.factCard}>
         <View style={styles.factHeader}>
-          <Sparkles size={16} color={Colors.gold} />
+          <BookOpen size={16} color={Colors.gold} />
           <Text style={styles.factTitle}>বৈজ্ঞানিক তথ্য • NASA SCIENCE</Text>
         </View>
         <Text style={styles.factContent}>{t.fact}</Text>

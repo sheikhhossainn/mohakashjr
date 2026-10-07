@@ -11,7 +11,6 @@ import { getTranslation } from '../../i18n/translations';
 import { LunarRegion } from '../../content/missionData';
 import {
   Award,
-  Sparkles,
   Flag,
   Footprints,
   Gem,

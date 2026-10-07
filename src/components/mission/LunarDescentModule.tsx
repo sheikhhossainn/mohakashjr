@@ -14,7 +14,7 @@ import {
 import {
   Rocket,
   Flame,
-  Sparkles,
+  BookOpen,
   MapPin,
   Compass,
   CheckCircle2,
@@ -341,7 +341,7 @@ export const LunarDescentModule: React.FC<LunarDescentModuleProps> = ({
       {/* NASA Scientific Insight */}
       <StoryCard accent="gold" style={styles.factCard}>
         <View style={styles.factHeader}>
-          <Sparkles size={16} color={Colors.gold} />
+          <BookOpen size={16} color={Colors.gold} />
           <Text style={styles.factTitle}>বৈজ্ঞানিক তথ্য • NASA SCIENCE</Text>
         </View>
         <Text style={styles.factContent}>{t.fact}</Text>

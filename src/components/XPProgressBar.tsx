@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
 import { useAppStore } from '../state/useAppStore';
-import { Zap, Sparkles, Star } from 'lucide-react-native';
+import { Zap, Star } from 'lucide-react-native';
 
 interface XPProgressBarProps {
   showRankLabel?: boolean;
@@ -97,7 +97,7 @@ export const XPProgressBar: React.FC<XPProgressBarProps> = ({
       {/* Cheerful Milestone Encouragement */}
       {rank !== 'Commander' && !compact && (
         <View style={styles.encouragementRow}>
-          <Sparkles size={13} color={Colors.gold} />
+          <Star size={13} color={Colors.gold} fill={Colors.gold} />
           <Text style={styles.encouragementText}>
             {language === 'en' ? (
               <>Only <Text style={styles.highlightText}>{remainingXP} XP</Text> needed to unlock next rank!</>

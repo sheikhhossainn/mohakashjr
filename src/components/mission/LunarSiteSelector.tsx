@@ -17,7 +17,7 @@ import {
   Droplets,
   AlertTriangle,
   Award,
-  Sparkles,
+  Lightbulb,
   Info,
   Check,
 } from 'lucide-react-native';
@@ -324,7 +324,7 @@ export const LunarSiteSelector: React.FC<LunarSiteSelectorProps> = ({
 
               {/* Optimal Gear Hint */}
               <View style={styles.hintSnippet}>
-                <Sparkles size={12} color={region.accentColor} />
+                <Lightbulb size={12} color={region.accentColor} />
                 <Text style={styles.hintSnippetText}>{region.optimalEquipmentHint_bn}</Text>
               </View>
             </Pressable>

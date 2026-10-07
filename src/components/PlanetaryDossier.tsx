@@ -27,7 +27,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Rocket,
-  Sparkles,
+  Zap,
   Scale,
   Clock,
   Compass,
@@ -352,7 +352,7 @@ export const PlanetaryDossier: React.FC<PlanetaryDossierProps> = ({
 
           {/* Sensation Callout */}
           <View style={styles.sensationBox}>
-            <Sparkles size={16} color={Colors.gold} style={styles.sensationIcon} />
+            <Compass size={16} color={Colors.gold} style={styles.sensationIcon} />
             <Text style={styles.sensationText}>{getWeightSensation()}</Text>
           </View>
         </StoryCard>
@@ -582,7 +582,7 @@ export const PlanetaryDossier: React.FC<PlanetaryDossierProps> = ({
               </Text>
               {currentQuizState.solved && (
                 <View style={styles.xpAwardRow}>
-                  <Sparkles size={14} color={Colors.gold} />
+                  <Zap size={14} color={Colors.gold} fill={Colors.gold} />
                   <Text style={styles.xpAwardText}>{t.xpEarned}</Text>
                 </View>
               )}

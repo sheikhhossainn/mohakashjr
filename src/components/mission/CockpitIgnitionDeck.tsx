@@ -9,7 +9,7 @@ import { useAppStore } from '../../state/useAppStore';
 import { getTranslation } from '../../i18n/translations';
 import {
   Flame,
-  Sparkles,
+  BookOpen,
   ToggleLeft,
   ToggleRight,
   ShieldCheck,
@@ -253,7 +253,7 @@ export const CockpitIgnitionDeck: React.FC<CockpitIgnitionDeckProps> = ({
           <View style={styles.cockpitStatus}>
             {isLaunched ? (
               <View style={styles.launchConfirmedRow}>
-                <Sparkles size={16} color={Colors.emerald} />
+                <CheckCircle2 size={16} color={Colors.emerald} />
                 <Text style={styles.launchConfirmedText}>{t.liftoff}</Text>
               </View>
             ) : isIgniting ? (
@@ -381,7 +381,7 @@ export const CockpitIgnitionDeck: React.FC<CockpitIgnitionDeckProps> = ({
       {/* NASA Scientific Insight */}
       <StoryCard accent="gold" style={styles.factCard}>
         <View style={styles.factHeader}>
-          <Sparkles size={16} color={Colors.gold} />
+          <BookOpen size={16} color={Colors.gold} />
           <Text style={styles.factTitle}>বৈজ্ঞানিক তথ্য • NASA SCIENCE</Text>
         </View>
         <Text style={styles.factContent}>{t.fact}</Text>

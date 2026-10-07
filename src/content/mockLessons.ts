@@ -123,7 +123,7 @@ export const MOCK_LESSONS: Lesson[] = [
     summary_bn: 'নাসার আর্টেমিস (Artemis) মিশন কেন চাঁদের দক্ষিণ মেরুতে যাচ্ছে? সেখানে কী লুকানো আছে?',
     read_time_minutes: 4,
     xp_reward: 20,
-    icon_name: 'Sparkles',
+    icon_name: 'Droplets',
     nasa_source: 'https://science.nasa.gov/moon/water-on-the-moon/',
     content_bn: `চাঁদের দক্ষিণ মেরুতে এমন কিছু গভীর খাদ (Crater) রয়েছে যেখানে উঁচু পর্বতপ্রাচীরের ছায়ার কারণে শত কোটি বছর ধরে সূর্যের এক ফোঁটাও আলো পৌঁছায়নি। প্রচণ্ড ঠান্ডার কারণে (-২৪৬°C) সেখানে আদিম বরফ অক্ষত অবস্থায় জমাট বেঁধে রয়েছে!
 

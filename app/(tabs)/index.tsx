@@ -11,7 +11,7 @@ import { PlanetImage } from '../../src/components/PlanetImage';
 import { CosmicTopicIllustration } from '../../src/components/CosmicTopicIllustration';
 import { ProgressRing } from '../../src/components/ProgressRing';
 import { StarField } from '../../src/components/StarField';
-import { useAppStore, RANK_THRESHOLDS } from '../../src/state/useAppStore';
+import { useAppStore, RANK_THRESHOLDS, getTodayDateKey } from '../../src/state/useAppStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getLessons } from '../../src/services/lessonService';
 import { SPACE_FACTS } from '../../src/content/spaceFacts';
@@ -37,10 +37,11 @@ export default function DashboardScreen() {
   const {
     rank,
     xp,
-    addXP,
     completedLessonIds,
     quizAttempts,
     language,
+    lastBonusClaimDate,
+    claimDailyBonus,
   } = useAppStore();
 
   const t = getTranslation(language);
@@ -48,7 +49,9 @@ export default function DashboardScreen() {
 
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [factIndex, setFactIndex] = useState(() => Math.floor(Math.random() * SPACE_FACTS.length));
-  const [bonusClaimed, setBonusClaimed] = useState(false);
+
+  const todayKey = getTodayDateKey();
+  const bonusClaimed = lastBonusClaimDate === todayKey;
 
   const factFade = useRef(new Animated.Value(1)).current;
 
@@ -107,9 +110,10 @@ export default function DashboardScreen() {
 
   const claimBonus = () => {
     if (bonusClaimed) return;
-    successHaptic();
-    addXP(25);
-    setBonusClaimed(true);
+    const success = claimDailyBonus();
+    if (success) {
+      successHaptic();
+    }
   };
 
   const startNext = () => {

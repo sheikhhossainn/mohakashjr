@@ -11,7 +11,7 @@ import {
   CheckCircle2,
   Lock,
   Clock,
-  Sparkles,
+  Zap,
   ChevronRight,
   BookOpen,
 } from 'lucide-react-native';
@@ -93,7 +93,7 @@ export default function LessonsScreen() {
               </View>
             ) : (
               <View style={styles.xpBadge}>
-                <Sparkles size={12} color={Colors.gold} />
+                <Zap size={12} color={Colors.gold} fill={Colors.gold} />
                 <Text style={styles.xpBadgeText}>+{item.xp_reward} XP</Text>
               </View>
             )}

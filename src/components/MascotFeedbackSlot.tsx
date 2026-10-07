@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
-import { Lightbulb, ChevronDown, ChevronUp, CheckCircle, Sparkles, AlertCircle } from 'lucide-react-native';
+import { Lightbulb, ChevronDown, ChevronUp, CheckCircle2, AlertCircle, Trophy, HelpCircle } from 'lucide-react-native';
 import { AnimatedMascot } from './AnimatedMascot';
 
 interface MascotFeedbackSlotProps {
@@ -26,17 +26,17 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
     switch (state) {
       case 'correct':
         return {
-          border: 'rgba(16, 185, 129, 0.45)',
-          bg: '#14273E',
+          border: 'rgba(93, 211, 158, 0.32)',
+          bg: 'rgba(93, 211, 158, 0.08)',
           text: Colors.emerald,
           defaultTitle: 'দারুণ বলেছ, নভোচারী!',
-          icon: <CheckCircle size={18} color={Colors.emerald} />,
+          icon: <CheckCircle2 size={18} color={Colors.emerald} />,
           mood: 'excited' as const,
         };
       case 'incorrect':
         return {
-          border: 'rgba(255, 71, 87, 0.45)',
-          bg: '#2C1B33',
+          border: 'rgba(255, 122, 144, 0.32)',
+          bg: 'rgba(255, 122, 144, 0.08)',
           text: Colors.coral,
           defaultTitle: 'একটু ভুল হয়েছে, চলো শিখি!',
           icon: <AlertCircle size={18} color={Colors.coral} />,
@@ -44,21 +44,21 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
         };
       case 'celebrate':
         return {
-          border: 'rgba(255, 184, 0, 0.45)',
-          bg: '#2E271E',
+          border: 'rgba(255, 201, 77, 0.32)',
+          bg: 'rgba(255, 201, 77, 0.08)',
           text: Colors.gold,
           defaultTitle: 'অসাধারণ পারফরম্যান্স!',
-          icon: <Sparkles size={18} color={Colors.gold} />,
+          icon: <Trophy size={18} color={Colors.gold} />,
           mood: 'waving' as const,
         };
       case 'neutral':
       default:
         return {
-          border: 'rgba(56, 189, 248, 0.45)',
-          bg: '#181E52',
+          border: 'rgba(76, 201, 224, 0.32)',
+          bg: 'rgba(76, 201, 224, 0.08)',
           text: Colors.cyan,
           defaultTitle: 'অ্যাস্ট্রো-বন্ধুর মহাকাশ পরামর্শ',
-          icon: <Sparkles size={18} color={Colors.cyan} />,
+          icon: <HelpCircle size={18} color={Colors.cyan} />,
           mood: 'happy' as const,
         };
     }
@@ -78,13 +78,13 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
           </View>
         </View>
 
-        {/* Mascot + Speech Body */}
+        {/* Mascot + Speech Body (natural story layout, no nested text input box) */}
         <View style={styles.bodyRow}>
           {customComponent ? (
             <View style={styles.avatarSlot}>{customComponent}</View>
           ) : (
             <View style={styles.avatarSlot}>
-              <AnimatedMascot size={54} mood={theme.mood} />
+              <AnimatedMascot size={52} mood={theme.mood} />
             </View>
           )}
 
@@ -130,27 +130,27 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
 
 const styles = StyleSheet.create({
   outerContainer: {
-    marginVertical: 12,
+    marginVertical: 10,
     width: '100%',
     alignSelf: 'stretch',
   },
   bubbleCard: {
     width: '100%',
     alignSelf: 'stretch',
-    borderRadius: 22,
-    borderWidth: 2,
+    borderRadius: 18,
+    borderWidth: 1,
     padding: 16,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowColor: Colors.text,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   headerLeft: {
     flexDirection: 'row',
@@ -160,13 +160,13 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: Typography.size.bodySmall,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.heading,
     flexShrink: 1,
   },
   bodyRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    gap: 12,
     width: '100%',
   },
   avatarSlot: {
@@ -177,25 +177,21 @@ const styles = StyleSheet.create({
   speechTextCol: {
     flex: 1,
     minWidth: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 16,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    justifyContent: 'center',
   },
   speechText: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
     lineHeight: Typography.lineHeight.body,
-    fontWeight: Typography.weight.medium,
+    fontFamily: Typography.family.notoRegular,
     flexWrap: 'wrap',
   },
   hintBox: {
     marginTop: 12,
-    backgroundColor: 'rgba(255, 184, 0, 0.1)',
-    borderRadius: 14,
+    backgroundColor: 'rgba(255, 201, 77, 0.08)',
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 184, 0, 0.25)',
+    borderColor: 'rgba(255, 201, 77, 0.20)',
     overflow: 'hidden',
   },
   hintTrigger: {
@@ -213,7 +209,7 @@ const styles = StyleSheet.create({
   hintTriggerText: {
     color: Colors.gold,
     fontSize: Typography.size.caption,
-    fontWeight: Typography.weight.bold,
+    fontFamily: Typography.family.heading,
   },
   hintContent: {
     paddingHorizontal: 12,
@@ -223,5 +219,6 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
     lineHeight: Typography.lineHeight.caption,
+    fontFamily: Typography.family.notoRegular,
   },
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
-import { ChevronRight, Clock, Rocket, Sparkles } from 'lucide-react-native';
+import { ChevronRight, Clock, Rocket, BookOpen } from 'lucide-react-native';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
 import { Radius, Space, Gutter } from '../theme/layout';
@@ -78,7 +78,7 @@ export const SpaceHub: React.FC<SpaceHubProps> = ({
                       </View>
                     ) : (
                       <View style={styles.dossierBadge}>
-                        <Sparkles size={11} color={Colors.primary} />
+                        <BookOpen size={11} color={Colors.primary} />
                         <Text style={styles.dossierBadgeText} numberOfLines={1}>
                           {t.exploreDossier}
                         </Text>

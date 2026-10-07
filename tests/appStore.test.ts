@@ -199,3 +199,23 @@ test('useAppStore: loads saved progress and deleteLocalData wipes it', async () 
   assert.strictEqual(state.hasCompletedOnboarding, false);
   assert.strictEqual(await profileStorage.loadProfile(), null);
 });
+
+test('useAppStore: claimDailyBonus awards 25 XP once per day and blocks second claim', () => {
+  useAppStore.getState().resetProgress();
+  let state = useAppStore.getState();
+  assert.strictEqual(state.xp, 0);
+  assert.strictEqual(state.lastBonusClaimDate, null);
+
+  // First claim should succeed and add 25 XP
+  const firstClaim = useAppStore.getState().claimDailyBonus();
+  assert.strictEqual(firstClaim, true);
+  state = useAppStore.getState();
+  assert.strictEqual(state.xp, 25);
+  assert.notStrictEqual(state.lastBonusClaimDate, null);
+
+  // Second claim on the same date should be rejected and XP should stay 25
+  const secondClaim = useAppStore.getState().claimDailyBonus();
+  assert.strictEqual(secondClaim, false);
+  state = useAppStore.getState();
+  assert.strictEqual(state.xp, 25);
+});

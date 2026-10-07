@@ -27,7 +27,7 @@ import {
   Plus,
   Minus,
   ArrowLeft,
-  Sparkles,
+  Radio,
   Info,
   Check,
 } from 'lucide-react-native';
@@ -517,7 +517,7 @@ export const CargoPackingGame: React.FC<CargoPackingGameProps> = ({
       {selectedSite.id === 'shackleton-crater' && (
         <View style={styles.tipCard}>
           <View style={styles.tipHeaderRow}>
-            <Sparkles size={16} color={Colors.gold} />
+            <Radio size={16} color={Colors.gold} />
             <Text style={styles.tipTitle}>মিশন কন্ট্রোল অন্তর্দৃষ্টি • দক্ষিণ মেরু</Text>
           </View>
           <Text style={styles.tipDescription}>

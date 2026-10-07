@@ -13,7 +13,7 @@ import { getLessonById } from '../../src/services/lessonService';
 import { useAppStore } from '../../src/state/useAppStore';
 import {
   Clock,
-  Sparkles,
+  Zap,
   ExternalLink,
   BookOpen,
 } from 'lucide-react-native';
@@ -101,7 +101,7 @@ export default function LessonReaderScreen() {
               <Text style={styles.metaBadgeText}>{lesson.read_time_minutes} মিনিট পাঠ</Text>
             </View>
             <View style={styles.xpBadge}>
-              <Sparkles size={13} color={Colors.gold} />
+              <Zap size={13} color={Colors.gold} fill={Colors.gold} />
               <Text style={styles.xpBadgeText}>+{lesson.xp_reward} XP</Text>
             </View>
           </View>

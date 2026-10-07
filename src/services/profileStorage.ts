@@ -15,6 +15,7 @@ export interface SavedProfile {
   cadetArchetype: CadetArchetype;
   psychometricAnswers: Record<number, number[]>;
   hasCompletedOnboarding: boolean;
+  lastBonusClaimDate?: string;
 }
 
 const STORAGE_PROFILE_KEY = '@mohakashjr_profile_v1';

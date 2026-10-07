@@ -16,7 +16,7 @@ import {
   ChevronRight,
   CheckCircle2,
   Zap,
-  Sparkles,
+  Award,
 } from 'lucide-react-native';
 
 const BN_DIGITS = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
@@ -45,7 +45,7 @@ export default function QuizHubScreen() {
       <DoubleBezelCard glow="gold" style={styles.bannerMargin}>
         <View style={styles.bannerTagRow}>
           <View style={styles.bannerTag}>
-            <Sparkles size={13} color={Colors.gold} />
+            <Award size={13} color={Colors.gold} />
             <Text style={styles.bannerTagText}>নাসা স্পেস চ্যালেঞ্জ</Text>
           </View>
           <View style={styles.xpBonusBadge}>

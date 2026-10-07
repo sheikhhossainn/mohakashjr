@@ -21,7 +21,7 @@ import {
   Compass,
   Award,
   Play,
-  Sparkles,
+  BookOpen,
   ChevronRight,
   ChevronLeft,
   UserCheck,
@@ -238,7 +238,7 @@ export default function MissionScreen() {
           accessibilityRole="button"
           accessibilityLabel={hubT.viewDossier}
         >
-          <Sparkles size={13} color={Colors.gold} />
+          <BookOpen size={13} color={Colors.gold} />
           <Text style={styles.moonDossierBtnText}>{hubT.viewDossier}</Text>
         </Pressable>
       </View>

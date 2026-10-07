@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import { Colors } from '../theme/colors';
 import { Typography } from '../theme/typography';
-import { Lightbulb, Compass, Sparkles, HelpCircle } from 'lucide-react-native';
+import { Lightbulb, Compass, HelpCircle } from 'lucide-react-native';
 
 export type WonderBoxType = 'analogy' | 'fact' | 'wonder' | 'curiosity';
 
@@ -48,7 +48,7 @@ export const WonderBox: React.FC<WonderBoxProps> = ({
           border: 'rgba(94, 214, 192, 0.25)',
           titleColor: Colors.emerald,
           defaultTitle: 'মহাকাশের রহস্য',
-          icon: <Sparkles size={18} color={Colors.emerald} />,
+          icon: <Compass size={18} color={Colors.emerald} />,
         };
       case 'fact':
       default:

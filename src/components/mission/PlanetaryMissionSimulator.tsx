@@ -27,7 +27,7 @@ import {
   ChevronLeft,
   Flame,
   Camera,
-  Sparkles,
+  Zap,
   ToggleLeft,
   ToggleRight,
   Award,
@@ -183,7 +183,7 @@ export const PlanetaryMissionSimulator: React.FC<PlanetaryMissionSimulatorProps>
 
             {/* XP Award Showcase Box */}
             <View style={styles.xpRewardBox}>
-              <Sparkles size={24} color={Colors.gold} fill={Colors.gold} />
+              <Zap size={22} color={Colors.gold} fill={Colors.gold} />
               <View>
                 <Text style={styles.xpRewardTitle}>
                   {isEn ? '+120 XP Awarded!' : '+১২০ XP অর্জিত হয়েছে!'}
@@ -330,7 +330,7 @@ export const PlanetaryMissionSimulator: React.FC<PlanetaryMissionSimulatorProps>
           </Text>
 
           <View style={styles.scienceFactSubBox}>
-            <Sparkles size={14} color={Colors.gold} />
+            <Compass size={14} color={Colors.gold} />
             <Text style={styles.scienceFactText}>
               {isEn ? currentStage.nasaScienceFact_en : currentStage.nasaScienceFact_bn}
             </Text>

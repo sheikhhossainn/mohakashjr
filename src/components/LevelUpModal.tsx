@@ -6,7 +6,7 @@ import { useAppStore } from '../state/useAppStore';
 import { TactileButton } from './TactileButton';
 import { AstronautAvatar } from './AstronautAvatar';
 import { ConfettiEffect } from './ConfettiEffect';
-import { Sparkles, ArrowRight, Zap, Star } from 'lucide-react-native';
+import { ArrowRight, Zap, Star } from 'lucide-react-native';
 
 export const LevelUpModal: React.FC = () => {
   const { activeLevelUp, dismissLevelUp } = useAppStore();
@@ -23,11 +23,11 @@ export const LevelUpModal: React.FC = () => {
       <View style={styles.overlay}>
         <ConfettiEffect active />
         <View style={styles.dialogCard}>
-          {/* Top Cosmic Confetti Header */}
+          {/* Top Cosmic Header */}
           <View style={styles.sparkleHeader}>
-            <Sparkles size={20} color={Colors.gold} />
+            <Star size={18} color={Colors.gold} fill={Colors.gold} />
             <Text style={styles.eyebrow}>অভিনন্দন! পদোন্নতি বার্তা</Text>
-            <Sparkles size={20} color={Colors.gold} />
+            <Star size={18} color={Colors.gold} fill={Colors.gold} />
           </View>
 
           {/* Cute Astronaut Avatar with Halo */}

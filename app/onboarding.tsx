@@ -21,7 +21,6 @@ import { SpaceChoiceBadge } from '../src/components/SpaceChoiceBadge';
 import { ConfettiEffect } from '../src/components/ConfettiEffect';
 import { useAppStore, ARCHETYPES, calculateArchetype, CadetArchetype } from '../src/state/useAppStore';
 import {
-  Sparkles,
   ArrowRight,
   ArrowLeft,
   Check,
@@ -204,9 +203,8 @@ export default function OnboardingScreen() {
         {step === 0 && (
           <View style={styles.welcomeWrapper}>
             <View style={styles.topBadgeRow}>
-              <Sparkles size={13} color={Colors.gold} />
+              <Compass size={13} color={Colors.gold} />
               <Text style={styles.topBadgeText}>মহাকাশ একাডেমি ওরিয়েন্টেশন</Text>
-              <Sparkles size={13} color={Colors.gold} />
             </View>
 
             <StoryCard accent="primary" style={styles.welcomeCard}>
@@ -274,7 +272,7 @@ export default function OnboardingScreen() {
 
             <StoryCard accent="primary" style={styles.scenarioCard}>
               <View style={styles.scenarioIconHeader}>
-                <Sparkles size={16} color={Colors.primaryLight} />
+                <Compass size={16} color={Colors.primaryLight} />
                 <Text style={styles.scenarioSubtitle}>{currentQ.topicTitle_bn}</Text>
               </View>
               <Text style={styles.scenarioText}>{currentQ.scenario_bn}</Text>
@@ -352,9 +350,8 @@ export default function OnboardingScreen() {
             <ConfettiEffect active />
 
             <View style={styles.topBadgeRow}>
-              <Sparkles size={13} color={Colors.gold} />
+              <Award size={13} color={Colors.gold} />
               <Text style={styles.topBadgeText}>অফিসিয়াল স্পেস ক্যাডেট পরিচয়পত্র</Text>
-              <Sparkles size={13} color={Colors.gold} />
             </View>
 
             <StoryCard accent="gold" style={styles.archetypeCard}>

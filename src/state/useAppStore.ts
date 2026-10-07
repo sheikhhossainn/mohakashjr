@@ -119,6 +119,14 @@ export interface LevelUpEvent {
   unlockedTitle_bn: string;
 }
 
+export function getTodayDateKey(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 export interface AppState {
   // User Profile & Rank
   displayName: string;
@@ -135,6 +143,9 @@ export interface AppState {
   cadetArchetype: CadetArchetype;
   psychometricAnswers: Record<number, number[]>;
 
+  // Daily Bonus
+  lastBonusClaimDate: string | null;
+
   // Active Level-Up Celebration
   activeLevelUp: LevelUpEvent | null;
 
@@ -145,6 +156,7 @@ export interface AppState {
   completeOnboarding: (name?: string) => void;
   resetOnboarding: () => void;
   addXP: (amount: number) => void;
+  claimDailyBonus: () => boolean;
   completeLesson: (lessonId: string) => void;
   recordQuizAttempt: (attempt: QuizAttemptRecord) => void;
   dismissLevelUp: () => void;
@@ -185,6 +197,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   hasCompletedOnboarding: false,
   cadetArchetype: 'pilot',
   psychometricAnswers: {},
+  lastBonusClaimDate: null,
   language: 'bn',
 
   setLanguage: async (lang: AppLanguage) => {
@@ -214,6 +227,16 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   resetOnboarding: () => set({ hasCompletedOnboarding: false }),
+
+  claimDailyBonus: () => {
+    const today = getTodayDateKey();
+    if (get().lastBonusClaimDate === today) {
+      return false;
+    }
+    set({ lastBonusClaimDate: today });
+    get().addXP(25);
+    return true;
+  },
 
   addXP: (amount: number) => {
     const currentXP = get().xp;
@@ -285,6 +308,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       hasCompletedOnboarding: false,
       cadetArchetype: 'pilot',
       psychometricAnswers: {},
+      lastBonusClaimDate: null,
     });
   },
 
@@ -305,6 +329,7 @@ export const useAppStore = create<AppState>((set, get) => ({
           quizAttempts: saved.quizAttempts || {},
           cadetArchetype: saved.cadetArchetype || 'pilot',
           psychometricAnswers: saved.psychometricAnswers || {},
+          lastBonusClaimDate: saved.lastBonusClaimDate || null,
         });
       }
     } catch {
@@ -332,6 +357,7 @@ function pickSavedProfile(state: AppState): SavedProfile {
     cadetArchetype: state.cadetArchetype,
     psychometricAnswers: state.psychometricAnswers,
     hasCompletedOnboarding: state.hasCompletedOnboarding,
+    lastBonusClaimDate: state.lastBonusClaimDate || undefined,
   };
 }
 
@@ -347,7 +373,8 @@ useAppStore.subscribe((state, prev) => {
     state.quizAttempts !== prev.quizAttempts ||
     state.cadetArchetype !== prev.cadetArchetype ||
     state.psychometricAnswers !== prev.psychometricAnswers ||
-    state.hasCompletedOnboarding !== prev.hasCompletedOnboarding;
+    state.hasCompletedOnboarding !== prev.hasCompletedOnboarding ||
+    state.lastBonusClaimDate !== prev.lastBonusClaimDate;
   if (changed) {
     profileStorage.saveProfile(pickSavedProfile(state));
   }

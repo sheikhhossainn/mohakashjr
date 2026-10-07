@@ -40,7 +40,7 @@ import { useAppStore } from '../../state/useAppStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Flame,
-  Sparkles,
+  Award,
   Compass,
   Gauge,
   ChevronRight,
@@ -124,8 +124,8 @@ const LAYERS = [
     bgTo: '#030712',
     titleEn: 'Thermosphere + ISS',
     titleBn: 'থার্মোস্ফিয়ার + আইএসএস',
-    factEn: "The International Space Station orbits right here at 400 km altitude, flying at an incredible 28,000 km/h! Shimmering auroras dance below us in the upper atmosphere! 🛸✨",
-    factBn: 'আন্তর্জাতিক মহাকাশ স্টেশন (ISS) মাত্র ৪০০ কিমি উচ্চতায় ঘণ্টায় ২৮,০০০ কিমি গতিতে আমাদের সামনে দিয়ে যাচ্ছে! নিচে দেখা যাচ্ছে মেরুজ্যোতি (Aurora)! 🛸✨',
+    factEn: "The International Space Station orbits right here at 400 km altitude, flying at an incredible 28,000 km/h! Shimmering auroras dance below us in the upper atmosphere! 🛸",
+    factBn: 'আন্তর্জাতিক মহাকাশ স্টেশন (ISS) মাত্র ৪০০ কিমি উচ্চতায় ঘণ্টায় ২৮,০০০ কিমি গতিতে আমাদের সামনে দিয়ে যাচ্ছে! নিচে দেখা যাচ্ছে মেরুজ্যোতি (Aurora)! 🛸',
     hasISS: true,
     hasAuroras: true,
     hasVacuumPlume: true,
@@ -558,7 +558,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
 
           {/* Milestone Banner */}
           <View style={styles.milestoneBanner}>
-            <Sparkles size={12} color={Colors.goldLight} />
+            <Award size={12} color={Colors.goldLight} />
             <Text style={styles.milestoneText} numberOfLines={1}>
               {language === 'en' ? currentLayer.milestoneEn : currentLayer.milestoneBn}
             </Text>

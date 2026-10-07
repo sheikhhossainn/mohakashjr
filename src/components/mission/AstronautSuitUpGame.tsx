@@ -10,7 +10,7 @@ import { getTranslation } from '../../i18n/translations';
 import {
   CheckCircle2,
   Circle as CircleIcon,
-  Sparkles,
+  BookOpen,
   Info,
   Shield,
   Wind,
@@ -215,7 +215,7 @@ export const AstronautSuitUpGame: React.FC<AstronautSuitUpGameProps> = ({
           </View>
           {isAllEquipped && (
             <View style={styles.readyBadge}>
-              <Sparkles size={13} color={Colors.gold} />
+              <CheckCircle2 size={13} color={Colors.gold} />
               <Text style={styles.readyBadgeText}>১০০%</Text>
             </View>
           )}
@@ -232,7 +232,7 @@ export const AstronautSuitUpGame: React.FC<AstronautSuitUpGameProps> = ({
               },
             ]}
           >
-            <Sparkles size={14} color={Colors.gold} />
+            <CheckCircle2 size={14} color={Colors.gold} />
             <Text style={styles.equipPopupText}>
               {language === 'en' ? `Equipped: ${justEquippedName}!` : `সজ্জিত: ${justEquippedName}!`}
             </Text>
@@ -448,7 +448,7 @@ export const AstronautSuitUpGame: React.FC<AstronautSuitUpGameProps> = ({
       {/* Educational NASA Insight Box for the selected gear */}
       <StoryCard accent="gold" style={styles.factCard}>
         <View style={styles.factHeader}>
-          <Sparkles size={16} color={Colors.gold} />
+          <BookOpen size={16} color={Colors.gold} />
           <Text style={styles.factTitle}>বৈজ্ঞানিক তথ্য • NASA SCIENCE</Text>
         </View>
         <Text style={styles.factContent}>{activeItem.fact}</Text>
