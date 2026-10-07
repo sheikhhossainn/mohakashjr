@@ -1,28 +1,23 @@
-# HANDOFF — 2026-10-07 20:05
+# HANDOFF — 2026-10-07 20:45
 
 ## Current task status
-Completed Quiz Ovijan UI text-box highlight fix, universal Gemini/AI sparkle icon removal, and single-claim daily bonus enforcement. All 42 tests pass with 0 TypeScript errors.
+Completely eliminated the square box artifact inside MCQ option selections, added auto-scroll to reveal the explanation and Next Question button immediately upon submission, standardized button styling, and fixed summary screen button hierarchy. All 42 tests pass with 0 TypeScript errors.
 
 ## Just completed
-1. **Quiz Ovijan UI Fixes (`app/quiz/[id].tsx`, `src/components/MascotFeedbackSlot.tsx`)**:
-   - Eliminated the deep greenish and red "text box field" appearance on selected quiz answers by replacing harsh 2px borders with refined 1.5px soft borders (`rgba(93, 211, 158, 0.45)` and `rgba(255, 122, 144, 0.40)`) and delicate background tints.
-   - Removed the nested text-box container (`speechTextCol` with 1px border and grey input background) from `MascotFeedbackSlot`, transforming the answer explanation into a clean, floating storybook feedback card.
-2. **Gemini / AI-like Sparkle Icon Purge**:
-   - Replaced all generic `Sparkles` / `✨` icons across 20+ screens and components with purposeful, theme-accurate space icons:
-     - `Zap` for XP bonuses and energy tubes.
-     - `Star` for ratings, milestones, and celestial rewards.
-     - `Award` & `Shield` for cadet ranks and mastery badges.
-     - `BookOpen` & `Compass` for NASA cosmic facts and planetary science dossiers.
-     - `Bot` for Captain Rover's AI tutor badge.
-     - `CheckCircle2` for readiness status.
-     - `Lightbulb` & `Radio` for mission equipment and diagnostic telemetry.
-     - `Droplets` for water & ice science topics in `mockLessons.ts` & `seed.json`.
-3. **Daily Bonus 1x Per Day Claim Enforcement (`src/state/useAppStore.ts`, `src/services/profileStorage.ts`, `app/(tabs)/index.tsx`)**:
-   - Added `lastBonusClaimDate` string tracking (`YYYY-MM-DD` calendar format) saved in local profile storage.
-   - Built atomic `claimDailyBonus()` store action that checks whether today's calendar date matches `lastBonusClaimDate`. Only awards +25 XP on the first claim of the day; subsequent taps return false and are ignored.
-   - Integrated dynamic button state on the dashboard (`app/(tabs)/index.tsx`): disables the button and updates the label to "আজকের রিচার্জ শেষ!" ("Fuel cell charged for today") once claimed.
+1. **Root Cause Analysis & Square Box Elimination (`app/quiz/[id].tsx`, `src/components/MascotFeedbackSlot.tsx`)**:
+   - Diagnosed root causes: Android native `TextView` rendering an opaque background canvas with sharp 90° square corners on dynamic text changes, missing `backgroundColor: 'transparent'`, unclipped child bounds due to missing `overflow: 'hidden'`, and hardware layer contrast discrepancies between translucent `rgba()` card fills and opaque Android text.
+   - Enforced `backgroundColor: 'transparent'` on `optionText`, `optionTextCol`, `badgeLabel`, `speechTextCol`, and `speechText`.
+   - Isolated option text inside dedicated layout wrapper `<View style={styles.optionTextCol}>`.
+   - Added `overflow: 'hidden'` to `optionCard`, `optionBadge`, and `bubbleCard` to strictly clip all native child layers to the 18px rounded corner radius.
+   - Replaced translucent `rgba()` states with calibrated solid cosmic surfaces (`#142938` for correct, `#2F1B2B` for incorrect, `#1E2858` for selected, `#102830` and `#251724` for feedback cards) ensuring consistent, flawless rendering across all Android OEM skins.
+2. **Auto-Scroll to Feedback & Next CTA**:
+   - Added `scrollViewRef.current?.scrollToEnd({ animated: true })` on answer selection, automatically gliding the viewport down to reveal the explanation and "পরবর্তী প্রশ্ন" button without child confusion.
+   - Resets scroll position to top (`scrollTo({ y: 0 })`) upon transitioning to the next question.
+3. **Button Hierarchy & Inversion Fix**:
+   - Standardized "পরবর্তী প্রশ্ন" progression button to consistent primary Nebula Blue (`variant="primary"`), eliminating confusing green-to-purple color shifts.
+   - Inverted summary screen CTA buttons to place primary forward progress ("পরবর্তী পাঠশালায় চলো") on top as the gold button, and retry ("আবার বোঝার চেষ্টা করো") underneath as the outline button.
 4. **Verification**:
-   - Verified 42/42 unit tests pass (`npm test`) including new test for daily bonus claiming in `tests/appStore.test.ts`.
+   - Verified 42/42 unit tests pass (`npm test`).
    - Verified 0 TypeScript compilation errors (`npx tsc --noEmit`).
 
 ## Active blockers

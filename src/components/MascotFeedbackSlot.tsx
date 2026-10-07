@@ -26,8 +26,8 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
     switch (state) {
       case 'correct':
         return {
-          border: 'rgba(93, 211, 158, 0.32)',
-          bg: 'rgba(93, 211, 158, 0.08)',
+          border: 'rgba(93, 211, 158, 0.45)',
+          bg: '#102830',
           text: Colors.emerald,
           defaultTitle: 'দারুণ বলেছ, নভোচারী!',
           icon: <CheckCircle2 size={18} color={Colors.emerald} />,
@@ -35,8 +35,8 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
         };
       case 'incorrect':
         return {
-          border: 'rgba(255, 122, 144, 0.32)',
-          bg: 'rgba(255, 122, 144, 0.08)',
+          border: 'rgba(255, 122, 144, 0.45)',
+          bg: '#251724',
           text: Colors.coral,
           defaultTitle: 'একটু ভুল হয়েছে, চলো শিখি!',
           icon: <AlertCircle size={18} color={Colors.coral} />,
@@ -44,8 +44,8 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
         };
       case 'celebrate':
         return {
-          border: 'rgba(255, 201, 77, 0.32)',
-          bg: 'rgba(255, 201, 77, 0.08)',
+          border: 'rgba(255, 201, 77, 0.45)',
+          bg: '#231E18',
           text: Colors.gold,
           defaultTitle: 'অসাধারণ পারফরম্যান্স!',
           icon: <Trophy size={18} color={Colors.gold} />,
@@ -54,8 +54,8 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
       case 'neutral':
       default:
         return {
-          border: 'rgba(76, 201, 224, 0.32)',
-          bg: 'rgba(76, 201, 224, 0.08)',
+          border: 'rgba(76, 201, 224, 0.40)',
+          bg: '#122238',
           text: Colors.cyan,
           defaultTitle: 'অ্যাস্ট্রো-বন্ধুর মহাকাশ পরামর্শ',
           icon: <HelpCircle size={18} color={Colors.cyan} />,
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 6,
     elevation: 2,
+    overflow: 'hidden',
   },
   cardHeader: {
     flexDirection: 'row',
@@ -178,6 +179,7 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
     justifyContent: 'center',
+    backgroundColor: 'transparent',
   },
   speechText: {
     color: Colors.text,
@@ -185,6 +187,7 @@ const styles = StyleSheet.create({
     lineHeight: Typography.lineHeight.body,
     fontFamily: Typography.family.notoRegular,
     flexWrap: 'wrap',
+    backgroundColor: 'transparent',
   },
   hintBox: {
     marginTop: 12,

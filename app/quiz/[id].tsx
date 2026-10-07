@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '../../src/theme/colors';
@@ -55,6 +55,7 @@ export default function QuizScreen() {
   const [answersHistory, setAnswersHistory] = useState<QuizAttemptRecord['answers']>([]);
   const [isQuizComplete, setIsQuizComplete] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     if (id) {
@@ -115,6 +116,11 @@ export default function QuizScreen() {
         is_correct: correct,
       },
     ]);
+
+    // Smooth auto-scroll to reveal the explanation card and Next button immediately
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 120);
   };
 
   const handleNextQuestion = () => {
@@ -122,6 +128,7 @@ export default function QuizScreen() {
       setCurrentIndex((i) => i + 1);
       setSelectedOption(null);
       setIsAnswerSubmitted(false);
+      scrollViewRef.current?.scrollTo({ y: 0, animated: false });
     } else {
       // `score` already counts the answer just given
       const finalScore = score;
@@ -225,17 +232,17 @@ export default function QuizScreen() {
           {/* Action CTAs */}
           <View style={styles.summaryActions}>
             <GentleButton
+              title="পরবর্তী পাঠশালায় চলো"
+              onPress={() => router.push('/(tabs)/lessons')}
+              variant="gold"
+              size="normal"
+            />
+            <GentleButton
               title="আবার বোঝার চেষ্টা করো"
               onPress={handleRetry}
               variant="outline"
               size="normal"
               icon={<RotateCcw size={16} color={Colors.text} />}
-            />
-            <GentleButton
-              title="পরবর্তী পাঠশালায় চলো"
-              onPress={() => router.push('/(tabs)/lessons')}
-              variant="gold"
-              size="normal"
             />
           </View>
         </StoryCard>
@@ -248,7 +255,12 @@ export default function QuizScreen() {
   return (
     <View style={styles.root}>
     <ScreenHeader title="কুইজ অভিযান" subtitle={id === 'placement' ? 'অভিযাত্রা সূচনা' : 'কৌতূহল যাচাই'} />
-    <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      ref={scrollViewRef}
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+    >
       <StatusBar barStyle="light-content" />
 
       {/* Calm Stepper Header */}
@@ -333,7 +345,9 @@ export default function QuizScreen() {
               <View style={badgeStyle}>
                 <Text style={badgeTextStyle}>{OPTION_PREFIXES[idx]}</Text>
               </View>
-              <Text style={optionTextStyle}>{option}</Text>
+              <View style={styles.optionTextCol}>
+                <Text style={optionTextStyle}>{option}</Text>
+              </View>
 
               {isAnswerSubmitted && isCorrectAnswer && (
                 <CheckCircle2 size={22} color={Colors.emerald} style={styles.indicatorIcon} />
@@ -363,10 +377,10 @@ export default function QuizScreen() {
             <GentleButton
               title={currentIndex + 1 < questions.length ? 'পরবর্তী প্রশ্ন' : 'ফলাফল দেখো'}
               onPress={handleNextQuestion}
-              variant={isCorrect ? 'emerald' : 'primary'}
+              variant="primary"
               size="large"
               fullWidth
-              icon={<ArrowRight size={18} color={isCorrect ? Colors.textDark : '#FFFFFF'} />}
+              icon={<ArrowRight size={18} color="#FFFFFF" />}
             />
           </View>
         </View>
@@ -500,21 +514,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 6,
     elevation: 2,
+    overflow: 'hidden',
   },
   optionCardSelected: {
     borderColor: Colors.primary,
     borderWidth: 1.5,
-    backgroundColor: Colors.backgroundTertiary,
+    backgroundColor: '#1E2858',
   },
   optionCardCorrect: {
-    borderColor: 'rgba(93, 211, 158, 0.45)',
+    borderColor: '#5DD39E',
     borderWidth: 1.5,
-    backgroundColor: 'rgba(93, 211, 158, 0.16)',
+    backgroundColor: '#142938',
   },
   optionCardIncorrect: {
-    borderColor: 'rgba(255, 122, 144, 0.40)',
+    borderColor: '#FF7A90',
     borderWidth: 1.5,
-    backgroundColor: 'rgba(255, 122, 144, 0.14)',
+    backgroundColor: '#2F1B2B',
   },
   optionCardDimmed: {
     opacity: 0.45,
@@ -529,6 +544,7 @@ const styles = StyleSheet.create({
     marginRight: 14,
     borderWidth: 1,
     borderColor: Colors.borderMedium,
+    overflow: 'hidden',
   },
   optionBadgeSelected: {
     backgroundColor: Colors.primary,
@@ -546,13 +562,19 @@ const styles = StyleSheet.create({
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
     fontFamily: Typography.family.heading,
+    backgroundColor: 'transparent',
+  },
+  optionTextCol: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
   },
   optionText: {
-    flex: 1,
     color: Colors.text,
     fontSize: Typography.size.body,
     lineHeight: Typography.lineHeight.body,
     fontFamily: Typography.family.notoRegular,
+    backgroundColor: 'transparent',
   },
   indicatorIcon: {
     marginLeft: 8,
