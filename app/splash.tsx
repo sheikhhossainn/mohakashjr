@@ -24,7 +24,7 @@ import Svg, {
 import { Colors } from '../src/theme/colors';
 import { Typography } from '../src/theme/typography';
 import { GentleButton } from '../src/components/GentleButton';
-import { AnimatedMascot } from '../src/components/AnimatedMascot';
+import { AppLogo } from '../src/components/AppLogo';
 import { useAppStore } from '../src/state/useAppStore';
 import { Rocket } from 'lucide-react-native';
 
@@ -122,15 +122,17 @@ export default function SplashScreen() {
       )
     ).start();
 
-    // The scene (Earth, Bangladesh, Moon) fades in first
-    Animated.timing(sceneOp, { toValue: 1, duration: 600, delay: 500, easing: Easing.out(Easing.ease), useNativeDriver: true }).start();
+    // The scene (Earth, Bangladesh, Moon) fades in promptly
+    Animated.timing(sceneOp, { toValue: 1, duration: 450, delay: 100, easing: Easing.out(Easing.ease), useNativeDriver: true }).start();
 
-    // Then the logo and tagline, then the button
+    // Logo and tagline appear smoothly
     Animated.parallel([
-      Animated.timing(brandOp, { toValue: 1, duration: 500, delay: 1300, easing: Easing.out(Easing.ease), useNativeDriver: true }),
-      Animated.timing(brandY, { toValue: 0, duration: 500, delay: 1300, easing: Easing.out(Easing.ease), useNativeDriver: true }),
+      Animated.timing(brandOp, { toValue: 1, duration: 400, delay: 200, easing: Easing.out(Easing.ease), useNativeDriver: true }),
+      Animated.timing(brandY, { toValue: 0, duration: 400, delay: 200, easing: Easing.out(Easing.ease), useNativeDriver: true }),
     ]).start();
-    Animated.timing(buttonOp, { toValue: 1, duration: 400, delay: 3200, easing: Easing.out(Easing.ease), useNativeDriver: true }).start();
+
+    // Button "অভিযান শুরু করো" appears fast (sub-second responsiveness)
+    Animated.timing(buttonOp, { toValue: 1, duration: 350, delay: 450, easing: Easing.out(Easing.ease), useNativeDriver: true }).start();
 
     // Launch pulse over Dhaka, then the rocket flies to the Moon on a loop
     Animated.loop(
@@ -298,9 +300,10 @@ export default function SplashScreen() {
         </Animated.View>
       </Animated.View>
 
-      {/* Logo and one line of copy */}
+      {/* Logo, title, and tagline */}
       <Animated.View style={[styles.brandingContainer, { opacity: brandOp, transform: [{ translateY: brandY }] }]}>
-        <AnimatedMascot size={132} mood="waving" />
+        <AppLogo size={124} animated />
+        <Text style={styles.brandTitle}>মহাকাশ জুনিয়র</Text>
         <Text style={styles.subtitleText}>বাংলাদেশ থেকে চাঁদে, তোমার মহাকাশ অভিযান শুরু হোক!</Text>
       </Animated.View>
 
@@ -359,8 +362,17 @@ const styles = StyleSheet.create({
   },
   brandingContainer: {
     alignItems: 'center',
-    gap: 8,
+    gap: 4,
     paddingHorizontal: 10,
+  },
+  brandTitle: {
+    fontFamily: Typography.family.heading,
+    fontSize: 26,
+    lineHeight: 34,
+    color: '#FFE9A8',
+    letterSpacing: 0.5,
+    marginTop: 4,
+    textAlign: 'center',
   },
   subtitleText: {
     color: Colors.textOnDarkMuted,
