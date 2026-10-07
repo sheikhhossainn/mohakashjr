@@ -1,4 +1,4 @@
-/**
+﻿/**
  * AtmosphericJourney.tsx
  *
  * Full 6-layer atmospheric crossing scene for MohaKash Jr. Moon Mission.
@@ -34,9 +34,12 @@ import Svg, {
   Ellipse,
 } from 'react-native-svg';
 import { Colors } from '../../theme/colors';
+import { RealisticRocket } from './RealisticRocket';
+import { PLANETARY_MISSIONS, PlanetaryMissionStage } from '../../content/planetaryMissionsData';
+import { DestinationId } from '../../content/spaceDestinations';
+import { AlertTriangle } from 'lucide-react-native';
 import { Typography } from '../../theme/typography';
 import { GentleButton } from '../GentleButton';
-import { RealisticRocket } from './RealisticRocket';
 import { useAppStore } from '../../state/useAppStore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -51,149 +54,27 @@ import {
 
 const { width: W, height: H } = Dimensions.get('window');
 
-// 6 Atmospheric layers with authentic NASA scientific data and telemetry
-const LAYERS = [
-  {
-    id: 'troposphere',
-    altitudeRange: '০–১২ কিমি',
-    altitudeRangeEn: '0–12 km',
-    bgFrom: '#38BDF8',
-    bgTo: '#0284C7',
-    titleEn: 'Troposphere',
-    titleBn: 'ট্রপোস্ফিয়ার',
-    factEn: "We're in the Troposphere — where weather happens! As we punch through Mach 1, aerodynamic pressure creates a visible supersonic condensation vapor cone around the rocket nose! 🌧️💨",
-    factBn: 'আমরা এখন ট্রপোস্ফিয়ারে! এখানেই মেঘ ও ঝড়-বৃষ্টি হয়। রকেট যখন শব্দের চেয়ে দ্রুত (ম্যাক ১) ছোটে, তখন নাকের চারপাশে মেঘের মতো ট্রানসনিক শকওয়েভ রিং তৈরি হয়! 🌧️💨',
-    hasClouds: true,
-    hasSRBs: true,
-    hasShockCone: true,
-    speed: 'ম্যাক ১.২ (১,৪৮০ কিমি/ঘণ্টা)',
-    speedEn: 'Mach 1.2 (1,480 km/h)',
-    altitude: '৮.৫ কিমি',
-    altitudeEn: '8.5 km',
-    gForce: '২.৮ G',
-    pressure: '০.৬৫ atm',
-    milestoneBn: 'সাউন্ড ব্যারিয়ার ব্রেক! ট্রানসনিক কনডেনসেশন রিং!',
-    milestoneEn: 'Sound Barrier Broken! Transonic Vapor Cone!',
-  },
-  {
-    id: 'stratosphere',
-    altitudeRange: '১২–৫০ কিমি',
-    altitudeRangeEn: '12–50 km',
-    bgFrom: '#1E40AF',
-    bgTo: '#172554',
-    titleEn: 'Stratosphere',
-    titleBn: 'স্ট্র্যাটোস্ফিয়ার',
-    factEn: "The Ozone Layer lives here, protecting Earth from harsh solar radiation. Both Solid Rocket Boosters (SRBs) have emptied their fuel and now separate, drifting away as the core stage fires! ☀️🚀",
-    factBn: 'এখানেই আছে ওজোন স্তর যা সূর্যের ক্ষতিকর রশ্মি আটকায়। সলিড রকেট বুস্টার দুটির (SRB) জ্বালানি শেষ হয়ে গেছে — এখন সফলভাবে মূল রকেট থেকে আলাদা হয়ে খসে পড়ছে! ☀️🚀',
-    hasClouds: false,
-    hasSRBSeparation: true,
-    speed: 'ম্যাক ৫.৪ (৬,৬০০ কিমি/ঘণ্টা)',
-    speedEn: 'Mach 5.4 (6,600 km/h)',
-    altitude: '৩৫ কিমি',
-    altitudeEn: '35 km',
-    gForce: '৩.৬ G',
-    pressure: '০.০২ atm',
-    milestoneBn: 'বুস্টার সেপারেশন (SRB)! কোর স্টেজ একাকী জ্বলছে!',
-    milestoneEn: 'Booster Separation! Core stage powering into orbit!',
-  },
-  {
-    id: 'mesosphere',
-    altitudeRange: '৫০–৮০ কিমি',
-    altitudeRangeEn: '50–80 km',
-    bgFrom: '#0F172A',
-    bgTo: '#090D1A',
-    titleEn: 'Mesosphere',
-    titleBn: 'মেসোস্ফিয়ার',
-    factEn: "Meteors burn up here from intense atmospheric friction, appearing as shooting stars! Because air is so thin, the rocket engine plume expands widely into a luminous bell! 🌠🔥",
-    factBn: 'এখানেই উল্কাপিণ্ড বাতাসের ঘর্ষণে পুড়ে ছাই হয়ে যায় — যা আমরা তারা খসা বলি! বাতাস খুব পাতলা হওয়ায় রকেটের ইঞ্জিনের অগ্নিশিখা ভ্যাকুয়ামে বিশাল ফুলের মতো ছড়িয়ে পড়ছে! 🌠🔥',
-    hasMeteors: true,
-    hasVacuumPlume: true,
-    speed: 'ম্যাক ১২.০ (১৪,৮০০ কিমি/ঘণ্টা)',
-    speedEn: 'Mach 12.0 (14,800 km/h)',
-    altitude: '৭০ কিমি',
-    altitudeEn: '70 km',
-    gForce: '২.১ G',
-    pressure: '০.০০০১ atm',
-    milestoneBn: 'ভ্যাকুয়াম এক্সপানশন! ইঞ্জিন প্লাজমা বিস্তৃত হচ্ছে!',
-    milestoneEn: 'Vacuum Plume Expansion! Engines flare widely!',
-  },
-  {
-    id: 'thermosphere',
-    altitudeRange: '৮০–৭০০ কিমি',
-    altitudeRangeEn: '80–700 km',
-    bgFrom: '#090D1A',
-    bgTo: '#030712',
-    titleEn: 'Thermosphere + ISS',
-    titleBn: 'থার্মোস্ফিয়ার + আইএসএস',
-    factEn: "The International Space Station orbits right here at 400 km altitude, flying at an incredible 28,000 km/h! Shimmering auroras dance below us in the upper atmosphere! 🛸",
-    factBn: 'আন্তর্জাতিক মহাকাশ স্টেশন (ISS) মাত্র ৪০০ কিমি উচ্চতায় ঘণ্টায় ২৮,০০০ কিমি গতিতে আমাদের সামনে দিয়ে যাচ্ছে! নিচে দেখা যাচ্ছে মেরুজ্যোতি (Aurora)! 🛸',
-    hasISS: true,
-    hasAuroras: true,
-    hasVacuumPlume: true,
-    speed: '২৮,০০০ কিমি/ঘণ্টা (অরবিটাল বেগ)',
-    speedEn: '28,000 km/h (Orbital Speed)',
-    altitude: '৪০০ কিমি',
-    altitudeEn: '400 km',
-    gForce: '০.০ G (জিরো-গ্র্যাভিটি)',
-    pressure: '১০⁻⁷ atm',
-    milestoneBn: 'আন্তর্জাতিক মহাকাশ স্টেশন (ISS) দৃশ্যমান! পৃথিবী প্রদক্ষিণ!',
-    milestoneEn: 'ISS in Sight! Orbital Trajectory Active!',
-  },
-  {
-    id: 'exosphere',
-    altitudeRange: '৭০০–১০,০০০ কিমি',
-    altitudeRangeEn: '700–10,000 km',
-    bgFrom: '#030712',
-    bgTo: '#000000',
-    titleEn: 'Exosphere',
-    titleBn: 'এক্সোস্ফিয়ার',
-    factEn: "Space officially begins! Earth now appears as a breathtaking Blue Marble sphere below us. All aerodynamic drag is gone as we coast in pure microgravity! 🌍🌌",
-    factBn: 'এখান থেকে নিখাদ মহাশূন্য শুরু! নিচে পুরো পৃথিবীকে একটি নীল মার্বেল গোলকের মতো অপূর্ব দেখাচ্ছে। বায়ুমণ্ডলের বাধা শেষ, এখন আমরা মহাকর্ষীয় ভারসাম্যে উড়ছি! 🌍🌌',
-    hasEarthMarble: true,
-    hasVacuumPlume: true,
-    speed: '৩২,০০০ কিমি/ঘণ্টা',
-    speedEn: '32,000 km/h',
-    altitude: '১,২০০ কিমি',
-    altitudeEn: '1,200 km',
-    gForce: '০.০ G (মাইক্রোগ্র্যাভিটি)',
-    pressure: 'মহাশূন্য',
-    milestoneBn: 'অরবিট ইনজেকশন সম্পন্ন! চাঁদের ট্র্যাজেক্টরি লকড!',
-    milestoneEn: 'Orbital Injection Complete! Trajectory locked on Moon!',
-  },
-  {
-    id: 'deepspace',
-    altitudeRange: '→ ৩,৮৪,৪০০ কিমি',
-    altitudeRangeEn: '→ 384,400 km',
-    bgFrom: '#000000',
-    bgTo: '#000000',
-    titleEn: 'Deep Space — Moon Ahead!',
-    titleBn: 'গভীর মহাকাশ — চাঁদ সামনে!',
-    factEn: "Trans-Lunar Injection fired! We are traveling across 384,400 km to the Moon. The Moon's giant craters and ancient lava seas (Maria) are filling the viewport! 🌕🚀",
-    factBn: 'ট্রান্স-লুনার বার্ন সফল! আমরা ৩,৮৪,৪০০ কিলোমিটার পথ পাড়ি দিয়ে চাঁদের দিকে ধেয়ে চলেছি। চাঁদের রহস্যময় গর্ত ও শান্ত সাগর এখন উইন্ডশীল্ডে জ্বলজ্বল করছে! 🌕🚀',
-    hasMoon: true,
-    hasVacuumPlume: true,
-    speed: '৩৯,০০০ কিমি/ঘণ্টা (এসকেপ স্পিড)',
-    speedEn: '39,000 km/h (Escape Speed)',
-    altitude: '৩,৮৪,৪০০ কিমি',
-    altitudeEn: '384,400 km',
-    gForce: '০.০ G (চন্দ্রাভিযান)',
-    pressure: 'মহাজাগতিক শূন্যতা',
-    milestoneBn: 'চাঁদের মহাকর্ষ টান শুরু! অবতরণ মডিউল সক্রিয়!',
-    milestoneEn: 'Moon Gravity Capture! Landing Module Armed!',
-  },
-];
 
-interface AtmosphericJourneyProps {
-  onMissionComplete: () => void;
+
+interface InterplanetaryJourneyProps {
+  destinationId: DestinationId; onMissionComplete: (xp: number) => void;
   onBack?: () => void;
 }
 
-export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
+export const InterplanetaryJourney: React.FC<InterplanetaryJourneyProps> = ({
+  destinationId,
   onMissionComplete,
   onBack,
 }) => {
   const language = useAppStore((s) => s.language);
   const insets = useSafeAreaInsets();
+  const mission = PLANETARY_MISSIONS[destinationId] || PLANETARY_MISSIONS.mars;
+  const LAYERS = mission.stages;
+
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [selectedQuizOption, setSelectedQuizOption] = useState<number | null>(null);
+  const [quizAnsweredCorrectly, setQuizAnsweredCorrectly] = useState(false);
+  const [quizFailed, setQuizFailed] = useState(false);
 
   const [currentLayerIndex, setCurrentLayerIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -214,6 +95,31 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
   const meteorSlide = useRef(new Animated.Value(-100)).current;
 
   const currentLayer = LAYERS[currentLayerIndex];
+
+  // Destination-specific color palette for each visual layer
+  const DEST_COLORS: Record<string, { launch: string; cruise: string; entry: string; descent: string; surface: string }> = {
+    mars:    { launch: '#38BDF8', cruise: '#0A0F1E', entry: '#7C2D12', descent: '#A16207', surface: '#B45309' },
+    mercury: { launch: '#38BDF8', cruise: '#050810', entry: '#1C1917', descent: '#44403C', surface: '#57534E' },
+    venus:   { launch: '#38BDF8', cruise: '#0A0F1E', entry: '#7C3A00', descent: '#854D0E', surface: '#713F12' },
+    jupiter: { launch: '#38BDF8', cruise: '#0C0B1A', entry: '#7C2D12', descent: '#A16207', surface: '#854D0E' },
+    saturn:  { launch: '#38BDF8', cruise: '#06081A', entry: '#451A03', descent: '#78350F', surface: '#92400E' },
+    uranus:  { launch: '#38BDF8', cruise: '#061A20', entry: '#0E4A52', descent: '#0F4F5C', surface: '#155E75' },
+    neptune: { launch: '#38BDF8', cruise: '#060D1A', entry: '#1E3A5F', descent: '#1E40AF', surface: '#1D4ED8' },
+    moon:    { launch: '#38BDF8', cruise: '#090D1A', entry: '#1F1F2E', descent: '#2D2D3D', surface: '#374151' },
+  };
+  const dc = DEST_COLORS[destinationId] || DEST_COLORS.mars;
+
+  const getVisuals = (layerType: string) => {
+    switch (layerType) {
+      case 'launch_pad':        return { bgFrom: dc.launch,   hasClouds: true,  hasEarthMarble: false, hasStars: false, hasAsteroids: false, isSurface: false };
+      case 'transfer_orbit':    return { bgFrom: dc.cruise,   hasClouds: false, hasEarthMarble: true,  hasStars: true,  hasAsteroids: (destinationId === 'mars' || destinationId === 'jupiter'), isSurface: false };
+      case 'atmospheric_entry': return { bgFrom: dc.entry,    hasClouds: false, hasEarthMarble: false, hasStars: false, hasAsteroids: false, hasFlames: true, isSurface: false };
+      case 'descent_sequence':  return { bgFrom: dc.descent,  hasClouds: false, hasEarthMarble: false, hasStars: false, hasAsteroids: false, isSurface: false };
+      case 'surface_operations':return { bgFrom: dc.surface,  hasClouds: false, hasEarthMarble: false, hasStars: false, hasAsteroids: false, isSurface: true  };
+      default:                  return { bgFrom: dc.cruise,   hasClouds: false, hasEarthMarble: false, hasStars: true,  hasAsteroids: false, isSurface: false };
+    }
+  };
+  const visuals = getVisuals(currentLayer.visualLayer);
 
   // Engine exhaust flame loop
   useEffect(() => {
@@ -261,7 +167,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
     }
 
     // 3. ISS flyby in Thermosphere
-    if (currentLayer.hasISS) {
+    if (visuals.hasEarthMarble) {
       issOpacity.setValue(1);
       issTranslate.setValue(W + 80);
       issAnim = Animated.timing(issTranslate, {
@@ -276,7 +182,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
     }
 
     // 4. Stars fade in from Mesosphere onward
-    if (currentLayerIndex >= 2) {
+    if (visuals.hasStars) {
       Animated.timing(starOpacity, {
         toValue: Math.min((currentLayerIndex - 1) / 3, 1),
         duration: 900,
@@ -285,7 +191,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
     }
 
     // 5. Moon grows large in Deep Space
-    if (currentLayer.hasMoon) {
+    if (visuals.isSurface) {
       Animated.parallel([
         Animated.spring(moonScale as any, { toValue: 1, friction: 6, tension: 25, useNativeDriver: true }),
         Animated.timing(moonOpacity, { toValue: 1, duration: 1200, useNativeDriver: true }),
@@ -324,7 +230,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
     });
   };
 
-  const advanceLayer = () => {
+  const proceedToNextStage = () => {
     if (isTransitioning) return;
 
     if (currentLayerIndex >= LAYERS.length - 1) {
@@ -345,6 +251,9 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
     ]).start(() => {
       setCurrentLayerIndex((prev) => prev + 1);
       factSlide.setValue(24);
+      setSelectedQuizOption(null);
+      setQuizAnsweredCorrectly(false);
+      setQuizFailed(false);
 
       Animated.parallel([
         Animated.timing(factOpacity, { toValue: 1, duration: 320, useNativeDriver: true }),
@@ -353,6 +262,46 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
         setIsTransitioning(false);
       });
     });
+  };
+
+  const advanceLayer = () => {
+    if (isTransitioning) return;
+
+    if (currentLayerIndex >= LAYERS.length - 1) {
+      setJourneyComplete(true);
+      return;
+    }
+
+    // If current layer has a quiz checkpoint and cadet hasn't answered yet
+    if (currentLayer.quiz && !quizAnsweredCorrectly) {
+      setShowQuiz(true);
+      return;
+    }
+
+    proceedToNextStage();
+  };
+
+  const handleSelectQuizOption = (optIndex: number) => {
+    if (!currentLayer.quiz || quizAnsweredCorrectly) return;
+    setSelectedQuizOption(optIndex);
+
+    if (optIndex === currentLayer.quiz.correctIndex) {
+      setQuizAnsweredCorrectly(true);
+      setQuizFailed(false);
+      // Small celebratory thrust and proceed
+      setTimeout(() => {
+        setShowQuiz(false);
+        proceedToNextStage();
+      }, 750);
+    } else {
+      setQuizFailed(true);
+      // Rocket shake turbulence
+      Animated.sequence([
+        Animated.timing(rocketShake, { toValue: 8, duration: 50, useNativeDriver: true }),
+        Animated.timing(rocketShake, { toValue: -8, duration: 50, useNativeDriver: true }),
+        Animated.timing(rocketShake, { toValue: 0, duration: 50, useNativeDriver: true }),
+      ]).start();
+    }
   };
 
   // Parallax stars
@@ -377,7 +326,8 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
   });
 
   return (
-    <View style={[styles.container, { backgroundColor: currentLayer.bgFrom }]}>
+    <View style={[styles.container, { backgroundColor: visuals.bgFrom }]}>
+
       {/* ── Space Starfield */}
       <Animated.View style={[styles.starField, { opacity: starOpacity }]}>
         {SPACE_STARS.map((s, i) => (
@@ -392,7 +342,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
       </Animated.View>
 
       {/* ── Mesosphere Shooting Meteor */}
-      {currentLayer.hasMeteors && (
+      {visuals.hasAsteroids && (
         <Animated.View
           style={[
             styles.meteorStreak,
@@ -407,7 +357,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
       )}
 
       {/* ── Troposphere Atmospheric Clouds & Ground Tower */}
-      {currentLayer.hasClouds && (
+      {visuals.hasClouds && (
         <View style={styles.cloudLayer}>
           <Svg width={W} height={160} viewBox={`0 0 ${W} 160`}>
             {/* Soft billowy clouds */}
@@ -423,7 +373,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
       )}
 
       {/* ── Thermosphere Aurora Borealis Curtains */}
-      {currentLayer.hasAuroras && (
+      {false && (
         <View style={styles.auroraLayer}>
           <Svg width={W} height={140} viewBox={`0 0 ${W} 140`}>
             <Defs>
@@ -442,7 +392,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
       )}
 
       {/* ── ISS Space Station Flyby at 400 km */}
-      {currentLayer.hasISS && (
+      {visuals.hasEarthMarble && (
         <Animated.View
           style={[
             styles.issContainer,
@@ -472,7 +422,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
       )}
 
       {/* ── Exosphere: Earth as the Blue Marble */}
-      {currentLayer.hasEarthMarble && (
+      {visuals.hasEarthMarble && (
         <View style={styles.earthMarbleWrapper}>
           <Svg width={220} height={220} viewBox="0 0 220 220">
             <Defs>
@@ -493,7 +443,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
       )}
 
       {/* ── Deep Space: Glowing Moon */}
-      {currentLayer.hasMoon && (
+      {visuals.isSurface && (
         <Animated.View
           style={[
             styles.moonContainer,
@@ -526,26 +476,21 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
       {/* ── Cockpit Flight Telemetry HUD (Pinned Top) */}
       <View style={[styles.topHUD, { paddingTop: insets.top + 8 }]}>
         <View style={styles.hudCard}>
-          {/* Top Row: Mission Stage Title, Back Button & G-Force */}
+          {/* Top Row: Mission Stage Title & G-Force */}
           <View style={styles.hudTopRow}>
-            {onBack && (
-              <Pressable
-                style={styles.hudBackBtn}
-                onPress={onBack}
-                accessibilityRole="button"
-                accessibilityLabel="পেছনে"
-              >
-                <Text style={styles.hudBackBtnText}>← {language === 'en' ? 'Back' : 'পেছনে'}</Text>
-              </Pressable>
-            )}
+              {onBack && (
+                <Pressable onPress={onBack} style={styles.hudBackBtn} accessibilityRole="button">
+                  <Text style={styles.hudBackBtnText}>{language === 'en' ? '← Back' : '← পেছনে'}</Text>
+                </Pressable>
+              )}
             <View style={styles.hudStageTag}>
               <View style={styles.livePulseDot} />
               <Text style={styles.hudStageText}>
-                {language === 'en' ? currentLayer.titleEn : currentLayer.titleBn}
+                {language === 'en' ? currentLayer.title_en : currentLayer.title_bn}
               </Text>
             </View>
             <View style={styles.gForcePill}>
-              <Text style={styles.gForceText}>G-FORCE: {currentLayer.gForce}</Text>
+              <Text style={styles.gForceText}>TEMP: {(language === 'en' ? currentLayer.telemetry.temperature_en : currentLayer.telemetry.temperature).split(' ')[0]}</Text>
             </View>
           </View>
 
@@ -554,7 +499,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
             <View style={styles.telemetryItem}>
               <Text style={styles.telemetryLabel}>উচ্চতা (ALTITUDE)</Text>
               <Text style={[styles.telemetryValue, { color: Colors.cyanLight }]}>
-                {language === 'en' ? currentLayer.altitudeEn : currentLayer.altitude}
+                {language === 'en' ? currentLayer.telemetry.altitude_en : currentLayer.telemetry.altitude}
               </Text>
             </View>
 
@@ -563,7 +508,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
             <View style={styles.telemetryItem}>
               <Text style={styles.telemetryLabel}>গতিবেগ (VELOCITY)</Text>
               <Text style={[styles.telemetryValue, { color: Colors.goldLight }]}>
-                {language === 'en' ? currentLayer.speedEn : currentLayer.speed}
+                {language === 'en' ? currentLayer.telemetry.velocity_en : currentLayer.telemetry.velocity}
               </Text>
             </View>
           </View>
@@ -572,25 +517,22 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
           <View style={styles.milestoneBanner}>
             <Award size={12} color={Colors.goldLight} />
             <Text style={styles.milestoneText} numberOfLines={1}>
-              {language === 'en' ? currentLayer.milestoneEn : currentLayer.milestoneBn}
+              {language === 'en' ? currentLayer.historicEvent_en : currentLayer.historicEvent_bn}
             </Text>
           </View>
         </View>
       </View>
 
-      {/* ── High-Fidelity Realistic Moon Rocket Centerpiece ── */}
+      {/* ── Ultra-Realistic Spacecraft Centerpiece ── */}
       <View style={styles.rocketPositioner}>
         <RealisticRocket
           translateY={rocketY}
           translateX={rocketShake}
           isBoosting={isBoosting}
-          hasSRBs={currentLayer.hasSRBs}
-          hasSRBSeparation={currentLayer.hasSRBSeparation}
-          srbLeftX={srbLeftX}
-          srbRightX={srbRightX}
-          srbOpacity={srbOpacity}
-          hasShockCone={currentLayer.hasShockCone}
-          hasVacuumPlume={currentLayer.hasVacuumPlume}
+          hasSRBs={currentLayer.visualLayer === 'launch_pad'}
+          hasSRBSeparation={false}
+          hasShockCone={currentLayer.visualLayer === 'launch_pad'}
+          hasVacuumPlume={currentLayer.visualLayer !== 'launch_pad'}
         />
       </View>
 
@@ -610,20 +552,20 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
           <View style={styles.factLayerHeader}>
             <View style={styles.altitudeBadge}>
               <Text style={styles.altitudeText}>
-                {language === 'en' ? currentLayer.altitudeRangeEn : currentLayer.altitudeRange}
+                {language === 'en' ? currentLayer.telemetry.altitude_en : currentLayer.telemetry.altitude}
               </Text>
             </View>
             <Text style={styles.layerName}>
-              {language === 'en' ? currentLayer.titleEn : currentLayer.titleBn}
+              {language === 'en' ? currentLayer.title_en : currentLayer.title_bn}
             </Text>
           </View>
 
           {/* Scientific Fact Content */}
           <Text style={styles.factText}>
-            {language === 'en' ? currentLayer.factEn : currentLayer.factBn}
+            {language === 'en' ? currentLayer.nasaScienceFact_en : currentLayer.nasaScienceFact_bn}
           </Text>
 
-          {/* Action Row */}
+          {/* Action Button: Advance or Touchdown */}
           <View style={styles.factActionRow}>
             {/* Interactive Thruster Boost Button */}
             {!journeyComplete && (
@@ -648,11 +590,8 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
 
             {journeyComplete ? (
               <GentleButton
-                title={language === 'en' ? 'Begin Lunar Descent!' : 'চন্দ্রে অবতরণ শুরু করো!'}
-                onPress={() => {
-                  useAppStore.getState().completeMission('moon');
-                  onMissionComplete();
-                }}
+                title={language === 'en' ? 'Complete Mission!' : 'মিশন সম্পূর্ণ করো!'}
+                onPress={() => onMissionComplete(120)}
                 variant="gold"
                 size="large"
                 fullWidth
@@ -661,8 +600,8 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
               <GentleButton
                 title={
                   currentLayerIndex < LAYERS.length - 1
-                    ? (language === 'en' ? `Enter ${LAYERS[currentLayerIndex + 1]?.titleEn ?? 'Next Layer'} →` : `পরবর্তী স্তরে প্রবেশ করো`)
-                    : (language === 'en' ? 'Begin Lunar Descent!' : 'চন্দ্রে অবতরণ শুরু করো!')
+                    ? (language === 'en' ? `Enter ${LAYERS[currentLayerIndex + 1]?.title_en ?? 'Next Stage'} →` : 'পরবর্তী ধাপে প্রবেশ করো')
+                    : (language === 'en' ? 'Complete Mission!' : 'মিশন সম্পূর্ণ করো!')
                 }
                 onPress={advanceLayer}
                 disabled={isTransitioning}
@@ -674,6 +613,71 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
           </View>
         </View>
       </Animated.View>
+      {/* ── Interactive Flight Checkpoint Quiz Modal ── */}
+      {showQuiz && currentLayer.quiz && (
+        <View style={styles.quizOverlay}>
+          <View style={styles.quizCard}>
+            <View style={styles.quizHeader}>
+              <View style={styles.quizBadge}>
+                <AlertTriangle size={14} color={Colors.gold} />
+                <Text style={styles.quizBadgeText}>
+                  {language === 'en' ? 'FLIGHT CHECKPOINT' : 'ফ্লাইট ডেক চেকিং'}
+                </Text>
+              </View>
+              <Pressable
+                onPress={() => setShowQuiz(false)}
+                style={styles.quizCloseBtn}
+                accessibilityRole="button"
+              >
+                <Text style={styles.quizCloseText}>✕</Text>
+              </Pressable>
+            </View>
+
+            <Text style={styles.quizQuestion}>
+              {language === 'en' ? currentLayer.quiz.question_en : currentLayer.quiz.question_bn}
+            </Text>
+
+            <View style={styles.quizOptionsList}>
+              {(language === 'en' ? currentLayer.quiz.options_en : currentLayer.quiz.options_bn).map((opt, idx) => {
+                const isSelected = selectedQuizOption === idx;
+                const isCorrect = idx === currentLayer.quiz?.correctIndex;
+                const showSuccess = isSelected && isCorrect;
+                const showFailure = isSelected && !isCorrect;
+
+                return (
+                  <Pressable
+                    key={idx}
+                    onPress={() => handleSelectQuizOption(idx)}
+                    style={[
+                      styles.quizOptionCard,
+                      showSuccess && styles.quizOptionCorrect,
+                      showFailure && styles.quizOptionWrong,
+                    ]}
+                    accessibilityRole="button"
+                  >
+                    <View style={styles.quizOptionIndex}>
+                      <Text style={styles.quizOptionIndexText}>{idx + 1}</Text>
+                    </View>
+                    <Text style={[styles.quizOptionText, showSuccess && styles.quizOptionTextSuccess]}>
+                      {opt}
+                    </Text>
+                    {showSuccess && <CheckCircle2 size={16} color={Colors.emerald} />}
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            {quizFailed && (
+              <View style={styles.quizFailureNotice}>
+                <AlertTriangle size={14} color={Colors.coral} />
+                <Text style={styles.quizFailureText}>
+                  {language === 'en' ? currentLayer.quiz.failureExplanation_en : currentLayer.quiz.failureExplanation_bn}
+                </Text>
+              </View>
+            )}
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -744,10 +748,9 @@ const styles = StyleSheet.create({
   },
   moonContainer: {
     position: 'absolute',
-    top: H * 0.14,
-    left: W * 0.5 - 75,
-    zIndex: 5,
-    alignItems: 'center',
+    top: H * 0.18,
+    right: 24,
+    zIndex: 3,
   },
   topHUD: {
     position: 'absolute',
@@ -769,27 +772,11 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 8,
   },
-  hudTopRow: {
+  hudBackBtn: { backgroundColor: 'rgba(239, 68, 68, 0.15)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, borderWidth: 1, borderColor: Colors.coral }, hudBackBtnText: { color: Colors.coral, fontSize: Typography.size.caption, fontFamily: Typography.family.headingSemi }, hudTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 8,
-  },
-  hudBackBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
-  },
-  hudBackBtnText: {
-    color: '#F8FAFC',
-    fontSize: 12,
-    fontFamily: Typography.family.headingMedium,
   },
   hudStageTag: {
     flexDirection: 'row',
@@ -864,14 +851,6 @@ const styles = StyleSheet.create({
     fontFamily: Typography.family.notoRegular,
     flex: 1,
   },
-  rocketPositioner: {
-    position: 'absolute',
-    top: H * 0.36,
-    left: 0,
-    right: 0,
-    zIndex: 20,
-    alignItems: 'center',
-  },
   boostInlineBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -899,6 +878,60 @@ const styles = StyleSheet.create({
     fontSize: Typography.size.bodySmall,
     fontFamily: Typography.family.heading,
     letterSpacing: 0.5,
+  },
+  rocketPositioner: {
+    position: 'absolute',
+    top: H * 0.36,
+    left: 0,
+    right: 0,
+    zIndex: 20,
+    alignItems: 'center',
+  },
+  shockwaveCone: {
+    position: 'absolute',
+    top: 6,
+    alignSelf: 'center',
+    zIndex: 22,
+  },
+  rocketAssemblyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  srbWrapper: {
+    marginHorizontal: -4,
+  },
+  boostButtonWrapper: {
+    position: 'absolute',
+    bottom: H * 0.28,
+    alignSelf: 'center',
+    zIndex: 25,
+  },
+  boostButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#EA580C',
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 22,
+    borderBottomWidth: 3,
+    borderBottomColor: '#9A3412',
+    shadowColor: '#EA580C',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.45,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  boostButtonPressed: {
+    backgroundColor: '#C2410C',
+    transform: [{ translateY: 2 }],
+    borderBottomWidth: 1,
+  },
+  boostButtonText: {
+    color: '#FFFFFF',
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.heading,
   },
   factPanel: {
     position: 'absolute',
@@ -970,5 +1003,158 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: Typography.size.caption,
     fontFamily: Typography.family.headingSemi,
+  },
+  actionButtonsInline: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  boostPillBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: '#EA580C',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 14,
+    borderBottomWidth: 3,
+    borderBottomColor: '#9A3412',
+  },
+  boostPillBtnPressed: {
+    backgroundColor: '#C2410C',
+    transform: [{ translateY: 2 }],
+    borderBottomWidth: 1,
+  },
+  boostPillBtnActive: {
+    backgroundColor: '#0284C7',
+    borderBottomColor: '#0369A1',
+  },
+  boostPillBtnText: {
+    color: '#FFFFFF',
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.heading,
+  },
+  quizOverlay: {
+    ...(StyleSheet.absoluteFill as object),
+    backgroundColor: 'rgba(5, 8, 22, 0.78)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    zIndex: 100,
+  },
+  quizCard: {
+    backgroundColor: '#0F172A',
+    borderRadius: 20,
+    padding: 18,
+    width: '100%',
+    maxWidth: 440,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    elevation: 12,
+  },
+  quizHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  quizBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(245, 159, 0, 0.15)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(245, 159, 0, 0.3)',
+  },
+  quizBadgeText: {
+    color: Colors.goldLight,
+    fontSize: Typography.size.micro,
+    fontFamily: Typography.family.heading,
+    letterSpacing: 0.5,
+  },
+  quizCloseBtn: {
+    padding: 6,
+  },
+  quizCloseText: {
+    color: '#94A3B8',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  quizQuestion: {
+    color: '#FFFFFF',
+    fontSize: Typography.size.body,
+    fontFamily: Typography.family.headingSemi,
+    lineHeight: 22,
+    marginBottom: 14,
+  },
+  quizOptionsList: {
+    gap: 8,
+  },
+  quizOptionCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    gap: 10,
+  },
+  quizOptionCorrect: {
+    backgroundColor: 'rgba(16, 185, 129, 0.18)',
+    borderColor: Colors.emerald,
+  },
+  quizOptionWrong: {
+    backgroundColor: 'rgba(239, 68, 68, 0.18)',
+    borderColor: Colors.coral,
+  },
+  quizOptionIndex: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  quizOptionIndexText: {
+    color: '#FFFFFF',
+    fontSize: Typography.size.micro,
+    fontFamily: Typography.family.heading,
+  },
+  quizOptionText: {
+    color: '#E2E8F0',
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.notoRegular,
+    flex: 1,
+  },
+  quizOptionTextSuccess: {
+    color: '#FFFFFF',
+    fontFamily: Typography.family.headingSemi,
+  },
+  quizFailureNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(239, 68, 68, 0.12)',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.3)',
+  },
+  quizFailureText: {
+    color: '#FCA5A5',
+    fontSize: 12,
+    fontFamily: Typography.family.notoRegular,
+    flex: 1,
+    lineHeight: 16,
   },
 });

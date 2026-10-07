@@ -11,6 +11,7 @@ export interface SavedProfile {
   rank: RankTier;
   xp: number;
   completedLessonIds: string[];
+  completedMissions: string[];
   quizAttempts: Record<string, QuizAttemptRecord[]>;
   cadetArchetype: CadetArchetype;
   psychometricAnswers: Record<number, number[]>;

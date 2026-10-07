@@ -15,6 +15,7 @@ import {
   LunarRegion,
   LUNAR_REGIONS,
 } from '../../content/missionData';
+import { useAppStore } from '../../state/useAppStore';
 
 export type MissionStage =
   | 'suit_up'
@@ -86,7 +87,11 @@ export const MoonLandingMission: React.FC<MoonLandingMissionProps> = ({
   if (currentStage === 'atmospheric_flight') {
     return (
       <AtmosphericJourney
-        onMissionComplete={() => setCurrentStage('lunar_descent')}
+        onMissionComplete={() => {
+          useAppStore.getState().completeMission('moon');
+          onMissionComplete?.(120);
+          setCurrentStage('lunar_descent');
+        }}
         onBack={() => setCurrentStage('cockpit_ignition')}
       />
     );
@@ -97,6 +102,7 @@ export const MoonLandingMission: React.FC<MoonLandingMissionProps> = ({
     return (
       <LunarDescentModule
         onProceed={(site) => {
+          useAppStore.getState().completeMission('moon');
           setSelectedSite(site);
           setCurrentStage('moonwalk');
         }}
@@ -105,13 +111,17 @@ export const MoonLandingMission: React.FC<MoonLandingMissionProps> = ({
     );
   }
 
-  // 5. Stage 5: Moonwalk, Flag & Scientific Discovery
+  // 6. Stage 6: Moonwalk, Flag & Scientific Discovery
   if (currentStage === 'moonwalk') {
     return (
       <MoonwalkCelebration
         selectedSite={selectedSite}
         onPlayAgain={() => setCurrentStage('suit_up')}
-        onExit={handleExit}
+        onExit={() => {
+          useAppStore.getState().completeMission('moon');
+          onMissionComplete?.(120);
+          handleExit();
+        }}
       />
     );
   }

@@ -179,6 +179,7 @@ test('useAppStore: loads saved progress and deleteLocalData wipes it', async () 
     rank: 'Astronaut',
     xp: 250,
     completedLessonIds: ['lesson-1'],
+    completedMissions: [],
     quizAttempts: {},
     cadetArchetype: 'engineer',
     psychometricAnswers: {},

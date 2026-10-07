@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable, ScrollView, Animated } from 'react-native';
 import Svg, { Rect, Circle, Path, Defs, LinearGradient, Stop, G, Line, Polygon } from 'react-native-svg';
 import { Colors } from '../../theme/colors';
@@ -47,6 +47,7 @@ export const MoonwalkCelebration: React.FC<MoonwalkCelebrationProps> = ({
   useEffect(() => {
     if (allActionsDone && !hasAwardedXP) {
       addXP(120);
+      useAppStore.getState().completeMission('moon');
       setHasAwardedXP(true);
     }
   }, [allActionsDone, hasAwardedXP, addXP]);

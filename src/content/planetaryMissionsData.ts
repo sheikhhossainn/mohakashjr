@@ -39,10 +39,29 @@ export interface InteractiveTaskDef {
   requiredToggles?: { id: string; label_bn: string; label_en: string }[];
 }
 
+export type VisualLayerType =
+  | 'launch_pad'
+  | 'transfer_orbit'
+  | 'atmospheric_entry'
+  | 'descent_sequence'
+  | 'surface_operations';
+
+export interface MissionQuiz {
+  question_bn: string;
+  question_en: string;
+  options_bn: string[];
+  options_en: string[];
+  correctIndex: number;
+  failureExplanation_bn: string;
+  failureExplanation_en: string;
+}
+
 export interface PlanetaryMissionStage {
   id: string;
   order: number;
   stageNumber: string;
+  visualLayer: VisualLayerType;
+  quiz?: MissionQuiz;
   title_bn: string;
   title_en: string;
   subtitle_bn: string;
@@ -94,6 +113,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'mars-stage-1',
         order: 1,
+        visualLayer: 'launch_pad',
+        quiz: {
+          question_bn: "মঙ্গলের ধূলিঝড়ে সোলার প্যানেল ঢেকে গেলেও পারসিভিয়ারেন্স কীভাবে বিদ্যুৎ পায়?",
+          question_en: "How does Perseverance get power when Martian dust storms cover solar panels?",
+          options_bn: ["প্লুটোনিয়াম-২৩৮ আরটিজি পারমাণবিক ব্যাটারি থেকে","বাতাসে উইন্ডমিল চালিয়ে","পৃথিবী থেকে দীর্ঘ বৈদ্যুতিক তার দিয়ে"],
+          options_en: ["MMRTG Plutonium-238 Nuclear Battery","Windmill turbines","Tether cable from Earth"],
+          correctIndex: 0,
+          failureExplanation_bn: "ধূলিঝড়ে সূর্যের আলো আটকে যায়; আরটিজি ব্যাটারি ছাড়া রোভারের সব সিস্টেম বিদ্যুৎ হারিয়ে ফ্রিজ হয়ে যেত!",
+          failureExplanation_en: "Solar panels get covered in dust; without the MMRTG nuclear generator the rover would freeze and lose power!"
+        },
         stageNumber: '০১',
         title_bn: 'রোভার পেলোড ও পাওয়ার অন',
         title_en: 'Payload Integration & Power On',
@@ -135,6 +164,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'mars-stage-2',
         order: 2,
+        visualLayer: 'transfer_orbit',
+        quiz: {
+          question_bn: "পৃথিবী থেকে মঙ্গলে সরাসরি সোজা পথে না গিয়ে বাঁকা উপবৃত্তাকার পথে কেন ভ্রমণ করতে হয়?",
+          question_en: "Why do spacecraft fly in a curved Hohmann ellipse rather than a straight line to Mars?",
+          options_bn: ["উভয় গ্রহ নিজ নিজ কক্ষপথে অবিরাম গতিশীল","মহাকাশে কোনো সোজা পথ নেই","রকেটের ইঞ্জিন বাঁকানো ছাড়া চলতে পারে না"],
+          options_en: ["Both planets are continuously orbiting the Sun","No straight routes exist in space","Rocket engines can only burn in curves"],
+          correctIndex: 0,
+          failureExplanation_bn: "পৃথিবী ও মঙ্গল উভয়ই গতিশীল; হোম্যান উপবৃত্তাকার ট্র্যাজেক্টরি ছাড়া রকেট মহাশূন্যে দিক হারিয়ে ফেলত!",
+          failureExplanation_en: "Both planets are moving around the Sun; without a Hohmann transfer ellipse the craft would miss Mars entirely!"
+        },
         stageNumber: '০২',
         title_bn: 'আন্তঃগ্রহীয় ক্রুজ ও গতিপথ সংশোধন',
         title_en: 'Interplanetary Cruise & TCM Burn',
@@ -171,6 +210,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'mars-stage-3',
         order: 3,
+        visualLayer: 'atmospheric_entry',
+        quiz: {
+          question_bn: "মঙ্গলে নামার সময় (Seven Minutes of Terror) পৃথিবীতে বসে বিজ্ঞানীরা কেন রকেট নিয়ন্ত্রণ করতে পারেন না?",
+          question_en: "Why can’t mission controllers on Earth steer the spacecraft during Mars atmospheric entry?",
+          options_bn: ["রেডিও সিগন্যাল পৃথিবীতে পৌঁছাতে প্রায় ১১ মিনিট দেরি হয়","নাসার বিজ্ঞানীদের কোনো মনিটর থাকে না","মঙ্গলের বাতাস সংকেত আটকে দেয়"],
+          options_en: ["Radio signals take ~11 minutes light-time delay","NASA engineers have no telemetry screens","Martian atmosphere blocks all radio waves"],
+          correctIndex: 0,
+          failureExplanation_bn: "১১ মিনিটের বিলম্বের কারণে মানুষের রিমোট কন্ট্রোল অসম্ভব; রোভারের অনবোর্ড এআই কম্পিউটার একাই স্বয়ংক্রিয় অবতরণ সম্পন্ন করে!",
+          failureExplanation_en: "The 11-minute one-way light delay means real-time control is impossible; the onboard flight computer must land autonomously!"
+        },
         stageNumber: '০৩',
         title_bn: 'ভীষণ সাত মিনিট (Seven Minutes of Terror)',
         title_en: 'Atmospheric Entry & Supersonic Parachute',
@@ -207,6 +256,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'mars-stage-4',
         order: 4,
+        visualLayer: 'descent_sequence',
+        quiz: {
+          question_bn: "স্কাই ক্রেন (Sky Crane) রকেট প্যাক রোভারটিকে জেজেরো ক্রেটারে নিরাপদে নামাতে কী প্রযুক্তি ব্যবহার করে?",
+          question_en: "What mechanism does the Sky Crane use to set the rover down gently in Jezero Crater?",
+          options_bn: ["নাইলন ব্রিডল ক্যাবল দিয়ে রোভারকে আলতো করে ঝুলিয়ে নামায়","রোভারকে প্যারাস্যুটসহ মাটিতে আছড়ে ফেলে","সরাসরি রকেট দিয়ে মাটিতে ধাক্কা দেয়"],
+          options_en: ["Lowers the rover gently on 7.6m nylon bridle cables","Crashes the rover with a parachute","Pushes the rover directly with rocket exhaust"],
+          correctIndex: 0,
+          failureExplanation_bn: "রকেট নিষ্কাশন যেন রোভারের সেন্সরে ধুলো না ছিটায়, সেজন্য স্কাই ক্রেন নাইলন দড়িতে ঝুলিয়ে নামিয়ে দড়ি কেটে উড়ে যায়!",
+          failureExplanation_en: "To keep rocket exhaust from coating the rover sensors in debris, the Sky Crane lowers it on cables and flies away!"
+        },
         stageNumber: '০৪',
         title_bn: 'স্কাই ক্রেন রকেট নামানো ও টাচডাউন',
         title_en: 'Sky Crane Descent & Touchdown',
@@ -243,6 +302,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'mars-stage-5',
         order: 5,
+        visualLayer: 'surface_operations',
+        quiz: {
+          question_bn: "মঙ্গলের অতি পাতলা বাতাসে লিফট তৈরি করতে ইনজেনুইটি হেলিকপ্টারের ব্লেড কত দ্রুত ঘোরে?",
+          question_en: "How fast must Ingenuity helicopter blades spin to fly in Mars ultra-thin atmosphere?",
+          options_bn: ["মিনিটে ২,৪০০ বার (পৃথিবীর চপারের ৫ গুণ দ্রুত)","মিনিটে মাত্র ৬০ বার","ঘোরার কোনো প্রয়োজন হয় না"],
+          options_en: ["2,400 RPM (5x faster than Earth helicopters)","Only 60 RPM","Blades do not need to rotate"],
+          correctIndex: 0,
+          failureExplanation_bn: "মঙ্গলে বায়ুর ঘনত্ব পৃথিবীর মাত্র ১%; প্রচণ্ড গতিতে ব্লেড না ঘোরালে পাতলা বাতাসে ওড়ার কোনো ক্ষমতা তৈরি হয় না!",
+          failureExplanation_en: "Mars air density is just 1% of Earth; blades must spin at 2,400 RPM to produce enough lift to fly!"
+        },
         stageNumber: '০৫',
         title_bn: 'ইনজেনুইটি প্রথম উড্ডয়ন ও ড্রিলিং',
         title_en: 'Ingenuity Historic Flight & Core Drill',
@@ -300,6 +369,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'venus-stage-1',
         order: 1,
+        visualLayer: 'launch_pad',
+        quiz: {
+          question_bn: "শুক্র গ্রহের পৃষ্ঠে বায়ুচাপ পানির নিচে ১ কিমি গভীরে থাকার মতো (৯২ atm); ভেনেরা ল্যান্ডারকে কীভাবে তৈরি করা হয়?",
+          question_en: "Venus surface pressure is like 1 km underwater (92 atm); how was the Venera lander built to survive?",
+          options_bn: ["ডাবল-ওয়াল পুরু টাইটানিয়াম প্রেসার স্ফিয়ার দিয়ে","সাধারণ অ্যালুমিনিয়াম ফয়েল দিয়ে","কাঁচের তৈরি পাতলা ঢাকনা দিয়ে"],
+          options_en: ["Double-walled heavy titanium spherical pressure vessel","Lightweight aluminum baking foil","Thin glass observation dome"],
+          correctIndex: 0,
+          failureExplanation_bn: "শুক্রের চরম বায়ুচাপে যেকোনো সাধারণ মহাকাশযান সেকেন্ডেই টিনের ক্যানের মতো চ্যাপ্টা হয়ে ধ্বংস হয়ে যেত!",
+          failureExplanation_en: "Venus surface pressure of 92 atmospheres would instantly crush standard spacecraft like a soda can!"
+        },
         stageNumber: '০১',
         title_bn: 'টাইটানিয়াম প্রেসার সেল সিলিং',
         title_en: 'Titanium Pressure Sphere Sealing',
@@ -341,6 +420,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'venus-stage-2',
         order: 2,
+        visualLayer: 'transfer_orbit',
+        quiz: {
+          question_bn: "শুক্রের ৫০ থেকে ৭০ কিমি উচ্চতার ঘন মেঘের প্রধান উপাদান কী?",
+          question_en: "What is the primary toxic component of the thick clouds surrounding Venus at 50–70 km altitude?",
+          options_bn: ["বিশুদ্ধ সালফিউরিক অ্যাসিডের ফোঁটা (H2SO4)","মিষ্টি বৃষ্টির পানি","অক্সিজেন ও নাইট্রোজেন"],
+          options_en: ["Concentrated sulfuric acid droplets (H2SO4)","Sweet fresh rainwater","Clean oxygen and nitrogen"],
+          correctIndex: 0,
+          failureExplanation_bn: "শুক্রের ঘন হলুদ মেঘ অ্যাসিডের তৈরি; মহাকাশযানের ধাতব আবরণে ক্ষয়রোধক কোটিং না থাকলে তা গলে ধ্বংস হয়ে যেত!",
+          failureExplanation_en: "The clouds are concentrated sulfuric acid; without chemical-resistant armor the sensors would dissolve!"
+        },
         stageNumber: '০২',
         title_bn: 'সালফিউরিক অ্যাসিড মেঘ ভেদ',
         title_en: 'Sulfuric Acid Cloud Entry',
@@ -377,6 +466,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'venus-stage-3',
         order: 3,
+        visualLayer: 'atmospheric_entry',
+        quiz: {
+          question_bn: "শুক্রের তাপমাত্রা সীসা গলিয়ে ফেলার মতো (+৪৭০°C); ল্যান্ডারের যন্ত্রপাতিকে শীতল রাখতে কী ব্যবহার করা হয়?",
+          question_en: "Venus surface temperature melts lead (+470°C); how did Soviet Venera probes keep internal instruments cool?",
+          options_bn: ["লিথিয়াম নাইট্রেট ফেজ-চেঞ্জ কুল্যান্ট ও প্রি-কুলিং রেফ্রিজারেশন","বাতাস দিয়ে ফ্যান চালানো","সূর্যের আলো দিয়ে এসি চালানো"],
+          options_en: ["Lithium nitrate phase-change thermal heat sinks pre-chilled to -10°C","Blowing ambient air with an electric fan","Solar-powered air conditioning"],
+          correctIndex: 0,
+          failureExplanation_bn: "বাইরের তাপমাত্রা ৪৭০°C; ফ্যান চালালে ভেতরে আরও আগুন ঢুকে যন্ত্রপাতি পুড়ে যেত! ফেজ-চেঞ্জ রাসায়নিক তাপ শোষণ করে!",
+          failureExplanation_en: "Ambient air is 470°C; fans would pump fire inside! Pre-chilled phase-change chemical sinks absorbed the lethal heat!"
+        },
         stageNumber: '০৩',
         title_bn: 'অ্যারোডাইনামিক ড্র্যাগ ডিস্ক ফ্রিফল',
         title_en: 'Aerodynamic Drag Disc Gliding',
@@ -413,6 +512,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'venus-stage-4',
         order: 4,
+        visualLayer: 'descent_sequence',
+        quiz: {
+          question_bn: "ভেনেরা ল্যান্ডার মাটিতে নামার পর বায়ুমণ্ডলের ঘনত্বের কারণে প্যারাস্যুট ছাড়াই কীভাবে ধীর গতিতে নামে?",
+          question_en: "Why did Venera ditch its parachute in the lower atmosphere and land safely using just an aerodynamic disc?",
+          options_bn: ["নিচের বাতাস পানির মতো ঘন হওয়ায় ড্র্যাগ ডিস্কই গতি কমিয়ে দেয়","প্যারাস্যুট আগুনে উড়ে যায়","কোনো বাতাস ছিল না"],
+          options_en: ["Supercritical dense lower air acts like liquid soup, slowing the braking disc","Parachute burned in fire","There was zero atmosphere"],
+          correctIndex: 0,
+          failureExplanation_bn: "শুক্রের ঘন বাতাস সুইমিং পুলের পানির মতো আচরণ করে; তাই গোলাকার ড্র্যাগ ডিস্কই অবতরণের ধাক্কা নিরাপদ সীমার মধ্যে রাখে!",
+          failureExplanation_en: "Super-dense carbon dioxide acts like thick soup; the aerodynamic ring provided enough drag for soft touchdown!"
+        },
         stageNumber: '০৪',
         title_bn: 'ব্যাসল্ট সমভূমিতে ক্রাশ রিং টাচডাউন',
         title_en: 'Crush Ring Touchdown on Basalt',
@@ -449,6 +558,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'venus-stage-5',
         order: 5,
+        visualLayer: 'surface_operations',
+        quiz: {
+          question_bn: "১৯৭৫ ও ১৯৮১ সালে ভেনেরা ল্যান্ডার চরম নরকতুল্য শুক্রের পৃষ্ঠ থেকে কয়টি ঐতিহাসিক রঙিন ছবি পৃথিবীতে পাঠায়?",
+          question_en: "What historic feat did Venera 9 and 13 accomplish on the brutal surface of Venus before succumbing to heat?",
+          options_bn: ["অন্য গ্রহের মাটি থেকে মানবজাতির প্রথম রঙিন ছবি ও শব্দ রেকর্ডিং","গাছের চারা রোপণ","মাটিতে সাঁতার কাটা"],
+          options_en: ["Humanity’s first color photos and audio recordings from another planet’s surface","Planted trees and seeds","Swam in surface oceans"],
+          correctIndex: 0,
+          failureExplanation_bn: "১২৭ মিনিট বেঁচে থেকে ভেনেরা ১৩ শুক্রের হলুদাভ কমলা আকাশ ও পাথুরে মাটির ছবি পৃথিবীতে বেতার তরঙ্গে পাঠিয়ে অমর হয়ে থাকে!",
+          failureExplanation_en: "Surviving 127 minutes in 470°C heat, Venera 13 transmitted the first 360-degree color panoramas of Venusian basalt plains!"
+        },
         stageNumber: '০৫',
         title_bn: 'রঙিন প্যানোরামা ছবি ও শিলা ড্রিল',
         title_en: 'Color Panorama & Soil Drill',
@@ -506,6 +625,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'mercury-stage-1',
         order: 1,
+        visualLayer: 'transfer_orbit',
+        quiz: {
+          question_bn: "চাঁদে যাওয়ার পথে রকেটের অ্যাপোলো কমান্ড মডিউল ও সার্ভিস মডিউল কোন শক্তি ব্যবহার করে?",
+          question_en: "What engine powers the Command/Service Module during translunar flight?",
+          options_bn: ["অ্যারোজিন-৫০ ও নাইট্রোজেন টেট্রক্সাইড সার্ভিস প্রপালশন ইঞ্জিন (SPS)","ডিজেল ফুয়েল ইঞ্জিন","প্যাডল স্টিমার চাকা"],
+          options_en: ["Service Propulsion System (SPS) hypergolic engine","Diesel truck motor","Paddle steamer wheel"],
+          correctIndex: 0,
+          failureExplanation_bn: "মহাশূন্যের চরম শূন্যতায় কোনো বাতাস নেই; হাইপারগোলিক রাসায়নিক স্বতঃস্ফূর্ত সংযোগে ইঞ্জিন স্টার্ট করে!",
+          failureExplanation_en: "Hypergolic fuels ignite on contact with zero spark required, vital for returning astronauts safely from the Moon!"
+        },
         stageNumber: '০১',
         title_bn: 'সিরামিক সানশিল্ড ওরিয়েন্টেশন',
         title_en: 'Ceramic Sunshield Orientation',
@@ -547,6 +676,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'mercury-stage-2',
         order: 2,
+        visualLayer: 'transfer_orbit',
+        quiz: {
+          question_bn: "চাঁদের কক্ষপথে প্রবেশের জন্য সার্ভিস মডিউল ইঞ্জিন কোন দিকে ফায়ার করে?",
+          question_en: "In which direction must the rocket engine burn to enter lunar orbit (Lunar Orbit Insertion)?",
+          options_bn: ["গতির বিপরীত দিকে (Retrograde Burn) গতিবেগ কমানোর জন্য","গতির দিকে সোজা জোরে চালিয়ে","চাঁদের সোজা ওপর থেকে নিচে"],
+          options_en: ["Retrograde burn opposite to flight velocity to decelerate","Full forward throttle acceleration","Pointing straight at Earth"],
+          correctIndex: 0,
+          failureExplanation_bn: "গতিবেগ না কমালে চাঁদের মহাকর্ষ মহাকাশযানকে টেনে রাখতে পারবে না; এটি ছিটকে মহাশূন্যে হারিয়ে যাবে!",
+          failureExplanation_en: "To allow the Moon’s gentle gravity to capture the spacecraft, a retrograde burn slows velocity to orbit speed!"
+        },
         stageNumber: '০২',
         title_bn: '৬টি গ্র্যাভিটি অ্যাসিস্ট স্লিং শট',
         title_en: 'Gravity Assist Slingshot Maneuvers',
@@ -583,6 +722,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'mercury-stage-3',
         order: 3,
+        visualLayer: 'atmospheric_entry',
+        quiz: {
+          question_bn: "লুনার মডিউলের ডিসেন্ট ইঞ্জিন অবতরণের সময় গতিবেগ কমানোর প্রধান চ্যালেঞ্জ কী?",
+          question_en: "What is the main engineering challenge of the Lunar Module descent engine during landing?",
+          options_bn: ["থ্রোটল নিয়ন্ত্রণ করে আলতোভাবে স্পর্শ করা যেন ল্যান্ডিং লেগ ভেঙে না যায়","যত দ্রুত সম্ভব মাটিতে আছড়ে পড়া","প্যারাস্যুট খুলে বাতাস খোঁজা"],
+          options_en: ["Throttling thrust smoothly to touch down under 1 meter/sec vertical speed","Crashing as fast as possible","Looking for air for parachutes"],
+          correctIndex: 0,
+          failureExplanation_bn: "চাঁদে কোনো বাতাস নেই, তাই প্যারাস্যুট কাজ করে না; সম্পূর্ণ অবতরণ একমাত্র রকেট থ্রাস্টের নিখুঁত থ্রোটলিংয়ে করতে হয়!",
+          failureExplanation_en: "With zero air for parachutes, variable-thrust rocket engines are the only lifeline to brake from orbital velocity to touchdown!"
+        },
         stageNumber: '০৩',
         title_bn: 'বুধের কক্ষপথ সন্নিবেশ (MOI)',
         title_en: 'Mercury Orbit Insertion (MOI)',
@@ -619,6 +768,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'mercury-stage-4',
         order: 4,
+        visualLayer: 'descent_sequence',
+        quiz: {
+          question_bn: "চাঁদের বুকে হাঁটার সময় নভোচারীদের স্পেসস্যুটে কুলিং ওয়াটার সার্কুলেশন কেন অপরিহার্য?",
+          question_en: "Why is liquid cooling garment circulation vital inside spacesuits during a moonwalk?",
+          options_bn: ["চাঁদে রোদে তাপমাত্রা +১২০°C ছাড়িয়ে যায় এবং নভোচারীর শরীরের তাপ বের হতে পারে না","গোসল করার জন্য","পানি পান করার জন্য"],
+          options_en: ["Direct lunar sunlight exceeds 120°C and body heat cannot escape in vacuum","For taking a shower","For drinking water only"],
+          correctIndex: 0,
+          failureExplanation_bn: "বায়ুশূন্য মহাশূন্যে তাপ বিকিরণ ছাড়া ছড়ায় না; ওয়াটার কুলিং আন্ডারগার্মেন্ট নভোচারীকে হিটস্ট্রোক থেকে রক্ষা করে!",
+          failureExplanation_en: "In vacuum, human metabolic heat is trapped inside the insulated suit; liquid cooling tubes continuously carry heat away!"
+        },
         stageNumber: '০৪',
         title_bn: 'মেরু গহ্বরে বরফ অনুসন্ধান ও ক্যালোরিস বেসিন',
         title_en: 'Polar Shadowed Ice Discovery',
@@ -655,6 +814,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'mercury-stage-5',
         order: 5,
+        visualLayer: 'surface_operations',
+        quiz: {
+          question_bn: "চাঁদ থেকে পৃথিবীতে ফেরার সময় লুনার মডিউলের ওপরের অ্যাসেন্ট স্টেজ কীভাবে উৎক্ষেপিত হয়?",
+          question_en: "How does the upper Ascent Stage liftoff from the Moon to return to the orbiting mothership?",
+          options_bn: ["নিচের ডিসেন্ট স্টেজকে লঞ্চপ্যাড হিসেবে ব্যবহার করে রকেট ফায়ার করে","হাতে ধাক্কা দিয়ে","লাফ দিয়ে"],
+          options_en: ["Fires its hypergolic ascent engine using the descent base as a launchpad","Pushed by astronaut hands","Bouncing on a trampoline"],
+          correctIndex: 0,
+          failureExplanation_bn: "ডিসেন্ট স্টেজটি চাঁদের বুকে স্মৃতিস্তম্ভ হিসেবে থেকে যায় এবং এর ওপর থেকেই অ্যাসেন্ট ক্যাপসুল কক্ষপথে উড়ে যায়!",
+          failureExplanation_en: "The golden octagonal descent stage serves as a stable launch platform as the ascent cabin blasts back into lunar orbit!"
+        },
         stageNumber: '০৫',
         title_bn: 'পৃষ্ঠদেশের ইমপ্যাক্ট ও চূড়ান্ত বিজ্ঞান রিপোর্ট',
         title_en: 'Surface Impact & Final Science Downlink',
@@ -712,6 +881,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'jup-stage-1',
         order: 1,
+        visualLayer: 'launch_pad',
+        quiz: {
+          question_bn: "সৌরজগতের বৃহত্তম গ্রহ বৃহস্পতির বিষুবরেখা দিয়ে কতগুলো পৃথিবী পাশাপাশি সাজানো সম্ভব?",
+          question_en: "How many Earths could fit side-by-side across the equator of giant Jupiter?",
+          options_bn: ["প্রায় ১১টি পৃথিবী (এবং ভেতরের আয়তনে ১,৩০০টি পৃথিবী)","মাত্র ২টি পৃথিবী","১০০টি পৃথিবী"],
+          options_en: ["Approximately 11 Earths across (and over 1,300 Earths inside its volume)","Only 2 Earths","Over 100 Earths"],
+          correctIndex: 0,
+          failureExplanation_bn: "বৃহস্পতি এক বিশাল গ্যাস দানব; এর আয়তন সৌরজগতের বাকি সব গ্রহকে একসাথে যোগ করলেও তার চেয়ে আড়াই গুণ ভারী!",
+          failureExplanation_en: "Jupiter is a gas giant 11 Earths wide; its mass is 2.5 times all other planets in the solar system combined!"
+        },
         stageNumber: '০১',
         title_bn: 'টাইটানিয়াম রেডিয়েশন ভল্ট সিলিং',
         title_en: 'Titanium Radiation Vault Sealing',
@@ -753,6 +932,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'jup-stage-2',
         order: 2,
+        visualLayer: 'transfer_orbit',
+        quiz: {
+          question_bn: "বৃহস্পতির চারপাশের তেজস্ক্রিয় বিকিরণ বেল্ট থেকে জুনো মহাকাশযান কীভাবে নিজেকে সুরক্ষিত রাখে?",
+          question_en: "How does NASA Juno protect its sensitive computer brain from Jupiter’s intense radiation belts?",
+          options_bn: ["১৮০ কেজি ওজনের ১ সেন্টিমিটার পুরু টাইটানিয়াম রেডিয়েশন ভল্ট দিয়ে","প্লাস্টিকের ব্যাগ জড়িয়ে","ছাতা খুলে রেখে"],
+          options_en: ["An armored 180 kg titanium vault with 1 cm thick solid walls","Wrapping in plastic grocery bags","Deploying a canvas umbrella"],
+          correctIndex: 0,
+          failureExplanation_bn: "বৃহস্পতির রেডিয়েশন বেল্ট লক্ষ লক্ষ ডেন্টাল এক্স-রের সমান মারাত্মক; টাইটানিয়াম ভল্ট ছাড়া কম্পিউটার চিপ কয়েক ঘণ্টাতেই নষ্ট হয়ে যেত!",
+          failureExplanation_en: "Jupiter’s radiation belt emits lethal cosmic rays; the titanium vault shields delicate microprocessors from being fried!"
+        },
         stageNumber: '০২',
         title_bn: 'বৃহস্পতির কক্ষপথ সন্নিবেশ (JOI Burn)',
         title_en: 'Jupiter Orbit Insertion (JOI)',
@@ -789,6 +978,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'jup-stage-3',
         order: 3,
+        visualLayer: 'atmospheric_entry',
+        quiz: {
+          question_bn: "বৃহস্পতির বিখ্যাত \"গ্রেট রেড স্পট\" (Great Red Spot) আসলে কী?",
+          question_en: "What is Jupiter’s iconic Great Red Spot scientifically identified as?",
+          options_bn: ["একটি বিশাল অ্যান্টিসাইক্লোনিক ঝড় যা ৩০০ বছরেরও বেশি সময় ধরে জ্বলছে","একটি জ্বলন্ত আগ্নেয়গিরি","একটি বিশাল রক্তিম সাগর"],
+          options_en: ["A colossal anticyclonic storm that has raged for over 300 years","An active fiery volcano","A sea of crimson water"],
+          correctIndex: 0,
+          failureExplanation_bn: "গ্রেট রেড স্পট একটি প্রাচীন ঝড় যা পৃথিবীর চেয়েও বড়! এর বাতাস ঘণ্টায় ৬৪০ কিলোমিটার গতিতে অবিরাম ঘুরছে!",
+          failureExplanation_en: "The Great Red Spot is an immense storm wider than Earth, driven by 640 km/h counter-clockwise winds for centuries!"
+        },
         stageNumber: '০৩',
         title_bn: 'বায়ুমণ্ডলীয় প্রোব প্রবেশ (১,৭০,০০০ কিমি/ঘণ্টা)',
         title_en: 'Galileo Atmospheric Entry (170,000 km/h)',
@@ -825,6 +1024,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'jup-stage-4',
         order: 4,
+        visualLayer: 'descent_sequence',
+        quiz: {
+          question_bn: "বৃহস্পতির চাঁদ \"ইউরোপা\"-র হিমশীতল বরফের খোলসের নিচে বিজ্ঞানীরা কীসের অস্তিত্ব পেয়েছেন?",
+          question_en: "What lies hidden beneath the fractured global ice crust of Jupiter’s moon Europa?",
+          options_bn: ["পৃথিবীর সব সাগরের চেয়ে দ্বিগুণ পানির এক সুবিশাল তরল মহাসমুদ্র","লাভার ফুটন্ত নদী","ফাঁকা বাতাসশূন্য গুহা"],
+          options_en: ["A global subsurface liquid ocean holding 2x all Earth water combined","Rivers of boiling lava","Empty hollow vacuum caverns"],
+          correctIndex: 0,
+          failureExplanation_bn: "বৃহস্পতির মহাকর্ষীয় জোয়ারি টানে বরফের নিচে পানি তরল থাকে; ইউরোপার এই সাগরে ভিনগ্রহের প্রাণের খোঁজে নাসা অভিযান পাঠাচ্ছে!",
+          failureExplanation_en: "Tidal flexing from Jupiter keeps Europa’s interior ocean warm and liquid, making it a prime candidate for extraterrestrial life!"
+        },
         stageNumber: '০৪',
         title_bn: 'গ্রেট রেড স্পট ও অ্যামোনিয়া মেঘের গভীরে',
         title_en: 'Descent into Great Red Spot & Storms',
@@ -861,6 +1070,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'jup-stage-5',
         order: 5,
+        visualLayer: 'surface_operations',
+        quiz: {
+          question_bn: "গ্যাস দানব বৃহস্পতির গভীরে হাইড্রোজেন গ্যাস প্রচণ্ড চাপে কীসে রূপান্তরিত হয়?",
+          question_en: "Under millions of atmospheres of pressure inside Jupiter, what exotic state does hydrogen turn into?",
+          options_bn: ["তরল ধাতব হাইড্রোজেন (Liquid Metallic Hydrogen) যা বিদ্যুৎ পরিবাহী","হীরার মতো শক্ত পাথর","কাঠের কয়লা"],
+          options_en: ["Liquid Metallic Hydrogen acting like an electrical conductor","Diamond rocks","Carbon charcoal"],
+          correctIndex: 0,
+          failureExplanation_bn: "চরম চাপে হাইড্রোজেন ধাতু হয়ে গলে তরল অবস্থায় বিদ্যুৎ পরিবহন করে, যা বৃহস্পতির দানবীয় চৌম্বক ক্ষেত্র তৈরি করে!",
+          failureExplanation_en: "Crushing internal pressure turns hydrogen into a liquid metal whose currents generate Jupiter’s colossal magnetosphere!"
+        },
         stageNumber: '০৫',
         title_bn: 'ইউরোপা বরফ চাঁদের সমুদ্র অন্বেষণ',
         title_en: 'Europa Ocean Moon Flyby & Science',
@@ -918,6 +1137,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'sat-stage-1',
         order: 1,
+        visualLayer: 'launch_pad',
+        quiz: {
+          question_bn: "শনির অপূর্ব ও দৃষ্টিনন্দন বলয়গুলো মূলত কী উপাদান দিয়ে তৈরি?",
+          question_en: "What are the magnificent rings of Saturn primarily composed of?",
+          options_bn: ["কোটি কোটি বরফের টুকরো ও পাথরের কণা (Water Ice)","চকচকে রূপালী তারের জালি","প্লাস্টিকের রঙিন চুড়ি"],
+          options_en: ["Billions of water ice chunks and dust grains","Silver metal wires","Colorful plastic rings"],
+          correctIndex: 0,
+          failureExplanation_bn: "শনির বলয় প্রায় পুরোটাই বিশুদ্ধ পানির বরফ দিয়ে গঠিত; ধূলিকণা থেকে শুরু করে পাহাড়সমান বড় বরফখণ্ড এতে রয়েছে!",
+          failureExplanation_en: "Saturn’s rings are 99% pure water ice, spanning 282,000 km across but astonishingly only about 10 meters thick on average!"
+        },
         stageNumber: '০১',
         title_bn: 'শনির বলয় অতিক্রম ও অ্যান্টেনা ছাতা',
         title_en: 'Ring Plane Crossing & Antenna Shield',
@@ -959,6 +1188,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'sat-stage-2',
         order: 2,
+        visualLayer: 'transfer_orbit',
+        quiz: {
+          question_bn: "শনির সবচেয়ে বড় চাঁদ \"টাইটান\"-এর পৃষ্ঠে কীসের নদী ও সমুদ্র রয়েছে?",
+          question_en: "What fills the vast lakes and river valleys discovered on Saturn’s giant moon Titan?",
+          options_bn: ["তরল মিথেন ও ইথেন হাইড্রোকার্বন গ্যাস","গরম ফুটন্ত চা ও কফি","বিশুদ্ধ মিষ্টি পানি"],
+          options_en: ["Liquid methane and ethane hydrocarbons","Hot boiling tea","Pure fresh drinking water"],
+          correctIndex: 0,
+          failureExplanation_bn: "টাইটানে -১৭৯°C ঠান্ডায় মিথেন গ্যাস তরল হয়ে বৃষ্টি আকারে ঝরে নদী ও সাগরে প্রবাহিত হয়!",
+          failureExplanation_en: "At -179°C on Titan, methane exists as a liquid, forming weather cycles, rain, rivers, and lakes of liquid natural gas!"
+        },
         stageNumber: '০২',
         title_bn: 'হাইগেনস প্রোব স্পিন রিলিজ',
         title_en: 'Huygens Probe Spin & Separation',
@@ -995,6 +1234,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'sat-stage-3',
         order: 3,
+        visualLayer: 'atmospheric_entry',
+        quiz: {
+          question_bn: "শনির ক্ষুদ্র চাঁদ \"এনসেলাডাস\"-এর দক্ষিণ মেরুর বরফ ফেটে মহাকাশে কী ছিটকে বের হয়?",
+          question_en: "What erupts dramatically into space from the \"tiger stripe\" fractures on Saturn’s moon Enceladus?",
+          options_bn: ["লবণাক্ত পানির বিশাল বরফ-গিজার (Cryogeysers)","ধোঁয়া ও ছাই","অগ্নিশিখা"],
+          options_en: ["Towering cryogeysers of saltwater vapor and organic molecules","Smoke and soot","Fiery flames"],
+          correctIndex: 0,
+          failureExplanation_bn: "এনসেলাডাসের ভূগর্ভস্থ সমুদ্র থেকে এই বরফের ফোয়ারা ছিটকে শনির E-রিং তৈরি করে এবং এতে জৈব উপাদান পাওয়া গেছে!",
+          failureExplanation_en: "Enceladus erupts warm ocean geysers through its south polar ice, containing salt, silica, and complex organic molecules!"
+        },
         stageNumber: '০৩',
         title_bn: 'টাইটানের কমলা মিথেন ধোঁয়ায় প্যারাশুট ড্রপ',
         title_en: 'Titan Methane Smog Parachute Descent',
@@ -1031,6 +1280,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'sat-stage-4',
         order: 4,
+        visualLayer: 'descent_sequence',
+        quiz: {
+          question_bn: "শনির উত্তর মেরুতে ঘূর্ণায়মান মেঘমালার মাঝে কোন আশ্চর্য জ্যামিতিক কাঠামো দেখা যায়?",
+          question_en: "What bizarre 6-sided geometric weather feature sits permanently at Saturn’s north pole?",
+          options_bn: ["একটি বিশাল ষড়ভুজাকার ঝড় (Saturn Hexagon)","একটি বৃত্তাকার গোলক","একটি চারকোনা বাক্স"],
+          options_en: ["A giant persistent 6-sided jet stream storm (Saturn’s Hexagon)","A circular vortex","A square box"],
+          correctIndex: 0,
+          failureExplanation_bn: "শনির উত্তর মেরুর এই হেক্সাগন ঝড়টি এত বড় যে এর একটি বাহুর ভেতরেই দুটি পৃথিবী এঁটে যাবে!",
+          failureExplanation_en: "Saturn’s north pole hosts a 30,000 km-wide hexagonal atmospheric jet stream with winds exceeding 320 km/h!"
+        },
         stageNumber: '০৪',
         title_bn: 'হাইড্রোকার্বন বালুতীরে প্রথম অবতরণ',
         title_en: 'Touchdown on Methane Sand Shore',
@@ -1067,6 +1326,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'sat-stage-5',
         order: 5,
+        visualLayer: 'surface_operations',
+        quiz: {
+          question_bn: "২০১৭ সালে ক্যাসিনি মহাকাশযান তার ২০ বছরের মিশন শেষ করতে \"গ্র্যান্ড ফিনালে\"-তে কী করেছিল?",
+          question_en: "What historic sacrifice did the Cassini spacecraft make during its Grand Finale in September 2017?",
+          options_bn: ["টাইটান ও এনসেলাডাসের বরফদূষণ এড়াতে শনির বায়ুমণ্ডলে পুড়ে ছাই হয়ে যায়","চাঁদে গিয়ে ঘুমিয়ে পড়ে","সূর্যের দিকে উড়ে যায়"],
+          options_en: ["Plunged into Saturn’s atmosphere to disintegrate, protecting icy moons from contamination","Parked safely on Moon","Flew into the Sun"],
+          correctIndex: 0,
+          failureExplanation_bn: "পৃথিবীর ব্যাকটেরিয়া যেন প্রাণের সম্ভাবনা থাকা চাঁদে ছড়িয়ে না পড়ে, সেজন্য ক্যাসিনি সাহসিকতার সাথে শনির বুকে শেষ ডুব দেয়!",
+          failureExplanation_en: "To avoid biological contamination of potentially habitable moons Titan and Enceladus, Cassini burned up intentionally in Saturn!"
+        },
         stageNumber: '০৫',
         title_bn: 'এনসেলাডাসের বরফ ফোয়ারার ভেতর ডাইভ',
         title_en: 'Enceladus Geyser Plume Flyby',
@@ -1124,6 +1393,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'ura-stage-1',
         order: 1,
+        visualLayer: 'launch_pad',
+        quiz: {
+          question_bn: "ইউরেনাস গ্রহের ঘূর্ণন অক্ষ অন্যান্য সব গ্রহের চেয়ে কেন সম্পূর্ণ অদ্ভুত ও ব্যতিক্রম?",
+          question_en: "Why is the rotational tilt of planet Uranus uniquely peculiar compared to all other worlds?",
+          options_bn: ["এটি প্রায় ৯৮ ডিগ্রি কাত হয়ে একপাশে শুয়ে শুয়ে সূর্যকে প্রদক্ষিণ করে","এটি কখনই ঘোরে না","এটি পেছনের দিকে সোজা চলে"],
+          options_en: ["It rotates tilted on its side at an extreme 98-degree angle","It never rotates at all","It moves backward in a straight line"],
+          correctIndex: 0,
+          failureExplanation_bn: "কোটি কোটি বছর আগে এক বিশাল গ্রহের ধাক্কায় ইউরেনাস কাত হয়ে শুয়ে পড়ে; এর ফলে এর প্রতিটি মেরু ৪২ বছর একটানা দিন ও রাতে থাকে!",
+          failureExplanation_en: "A colossal protoplanet collision knocked Uranus sideways to a 98° tilt, causing extreme 42-year long polar days and nights!"
+        },
         stageNumber: '০১',
         title_bn: 'আরটিজি পারমাণবিক পাওয়ার গ্রিড টিউনিং',
         title_en: 'RTG Nuclear Deep Space Calibration',
@@ -1165,6 +1444,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'ura-stage-2',
         order: 2,
+        visualLayer: 'transfer_orbit',
+        quiz: {
+          question_bn: "ইউরেনাস গ্রহের আকাশকে মনোরম ফিরোজা-সবুজাভ নীল (Cyan) রঙে রাঙায় কোন গ্যাস?",
+          question_en: "Which atmospheric gas absorbs red sunlight to give Uranus its pale cyan-aquamarine appearance?",
+          options_bn: ["উচ্চ বায়ুমণ্ডলের মিথেন গ্যাস (Methane)","কার্বন মনোক্সাইড","হলুদ সালফার ডাইঅক্সাইড"],
+          options_en: ["Upper atmospheric methane gas absorbing red light","Carbon monoxide","Yellow sulfur dioxide"],
+          correctIndex: 0,
+          failureExplanation_bn: "মিথেন গ্যাস সূর্যের লাল আলোকে শোষণ করে নীল ও সবুজ আলোকে প্রতিফলিত করে, ফলে ইউরেনাসকে শান্ত নীল দেখায়!",
+          failureExplanation_en: "Methane gas in Uranus’s cold atmosphere absorbs red wavelengths of sunlight, reflecting the calming cyan-blue hue!"
+        },
         stageNumber: '০২',
         title_bn: '৯৮ ডিগ্রি কাত অক্ষ ও ম্যাগনেটোস্ফিয়ার ভেদ',
         title_en: '98° Sideways Tilt & Corkscrew Magnetosphere',
@@ -1201,6 +1490,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'ura-stage-3',
         order: 3,
+        visualLayer: 'atmospheric_entry',
+        quiz: {
+          question_bn: "সৌরজগতের সব গ্রহের মধ্যে সবচেয়ে শীতলতম রেকর্ডকৃত তাপমাত্রা (-২২৪°C) কোন গ্রহে পাওয়া গেছে?",
+          question_en: "Which icy world holds the record for the lowest recorded temperature (-224°C) in the solar system?",
+          options_bn: ["বরফ দানব ইউরেনাস (Ice Giant Uranus)","সূর্যের কাছে বুধ","বৃহস্পতি"],
+          options_en: ["Ice giant Uranus (-224°C / 49 Kelvin)","Mercury near Sun","Jupiter"],
+          correctIndex: 0,
+          failureExplanation_bn: "ইউরেনাসের অভ্যন্তরীণ তাপের উৎস খুবই দুর্বল; নেপচুনের চেয়ে সূর্যের কাছে হলেও এটি সৌরজগতের সবচেয়ে ঠান্ডা গ্রহ!",
+          failureExplanation_en: "Uranus releases extraordinarily little internal heat, making its atmosphere plunge to -224°C, colder than more distant Neptune!"
+        },
         stageNumber: '০৩',
         title_bn: 'টারকোয়েজ মিথেন বায়ুমণ্ডলে প্রোব প্রবেশ',
         title_en: 'Turquoise Atmosphere Entry Simulation',
@@ -1237,6 +1536,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'ura-stage-4',
         order: 4,
+        visualLayer: 'descent_sequence',
+        quiz: {
+          question_bn: "ইউরেনাসের অদ্ভুত চাঁদ \"মিরান্ডা\"-র পৃষ্ঠে কোন বিশ্বরেকর্ড সৃষ্টিকারী প্রাকৃতিক খাঁদ রয়েছে?",
+          question_en: "What dramatic world-record geological cliff face was photographed on Uranus’s fractured moon Miranda?",
+          options_bn: ["ভেরোনা রুপেস (Verona Rupes) — ২০ কিমি উঁচু সৌরজগতের সর্বোচ্চ খাড়া খাড়া খাদ","একটি বালুর টিলা","একটি সমতল মাঠ"],
+          options_en: ["Verona Rupes — a 20 km tall sheer drop, tallest cliff in the solar system","A rolling sand dune","A flat soccer field"],
+          correctIndex: 0,
+          failureExplanation_bn: "ভেরোনা রুপেস এত খাড়া যে এর ওপর থেকে কোনো বস্তু ফেললে মাটিতে পড়তে প্রায় ১২ মিনিট সময় লাগবে!",
+          failureExplanation_en: "Verona Rupes on Miranda is a 20 km sheer cliff; in its low gravity, dropping an object would take 12 minutes to hit bottom!"
+        },
         stageNumber: '০৪',
         title_bn: 'মিরান্ডা চাঁদের ২০ কিমি খাঁদ ভেরোনা রুপিজ',
         title_en: 'Miranda Moon & Verona Rupes 20-km Cliff',
@@ -1273,6 +1582,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'ura-stage-5',
         order: 5,
+        visualLayer: 'surface_operations',
+        quiz: {
+          question_bn: "১৯৮৬ সালে ভয়েজার ২ মহাকাশযানের ঐতিহাসিক ফ্লাইবাই ইউরেনাস সম্পর্কে কী তথ্য উন্মোচন করেছিল?",
+          question_en: "What critical discoveries did Voyager 2 reveal during its singular flyby of Uranus in January 1986?",
+          options_bn: ["১০টি নতুন চাঁদ, ১১টি অদৃশ্য অন্ধকার বলয় ও এক অদ্ভুত তির্যক চৌম্বক ক্ষেত্র","একটি মাটির রাস্তা","মানুষের তৈরি শহর"],
+          options_en: ["10 new moons, 11 dark rings, and a tilted off-center magnetic field","A paved highway","Urban civilization"],
+          correctIndex: 0,
+          failureExplanation_bn: "ভয়েজার ২ মানবজাতির একমাত্র যান যা ইউরেনাসকে কাছ থেকে দেখেছে এবং এর রহস্যময় বরফ বলয় ও চাঁদের মানচিত্র এঁকেছে!",
+          failureExplanation_en: "Voyager 2 remains humanity’s only close visitor to Uranus, discovering 10 moons, dark carbon rings, and its tilted magnetic axis!"
+        },
         stageNumber: '০৫',
         title_bn: '১১টি বলয় আবিষ্কার ও ডিপ স্পেস রেডিও লিংক',
         title_en: '11 Ring System Discovery & Radio Downlink',
@@ -1330,6 +1649,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'nep-stage-1',
         order: 1,
+        visualLayer: 'launch_pad',
+        quiz: {
+          question_bn: "সৌরজগতের সবচেয়ে দূরবর্তী গ্রহ নেপচুনের বাতাসে ঝড়ের গতিবেগ কত পর্যন্ত পৌঁছাতে পারে?",
+          question_en: "How fast can supersonic atmospheric storm winds roar on distant Neptune?",
+          options_bn: ["ঘণ্টায় ২,১০০ কিলোমিটার (শব্দের গতির চেয়েও দ্রুত supersonic!)","ঘণ্টায় মাত্র ১০ কিলোমিটার","কোনো বাতাস থাকে না"],
+          options_en: ["Up to 2,100 km/h (Mach 1.7 supersonic jet streams!)","Only 10 km/h gentle breeze","Zero wind movement"],
+          correctIndex: 0,
+          failureExplanation_bn: "নেপচুনের বাতাস সৌরজগতের যেকোনো গ্রহের চেয়ে দ্রুততম; সুপারসনিক ঝড়ে যেকোনো অনিয়ন্ত্রিত মহাকাশযান চূর্ণ হয়ে যাবে!",
+          failureExplanation_en: "Neptune hosts the fastest winds in the Solar System, exceeding 2,100 km/h (faster than the speed of sound on Earth)!"
+        },
         stageNumber: '০১',
         title_bn: 'সৌরজগতের শেষ প্রান্তের দীর্ঘ যাত্রা',
         title_en: 'Voyage to the Solar System Frontier',
@@ -1371,6 +1700,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'nep-stage-2',
         order: 2,
+        visualLayer: 'transfer_orbit',
+        quiz: {
+          question_bn: "১৮৪৬ সালে টেলিস্কোপে দেখার আগেই বিজ্ঞানীরা কীভাবে নিশ্চিত হয়েছিলেন যে নেপচুন গ্রহটি আকাশে আছে?",
+          question_en: "How did astronomers discover Neptune in 1846 before ever spotting it through a telescope?",
+          options_bn: ["ইউরেনাসের কক্ষপথের বিচ্যুতি পর্যবেক্ষণ করে নিখুঁত গণিত ও পদার্থবিদ্যার সাহায্যে","লটারি জিতে","ভাগ্য পরীক্ষা করে"],
+          options_en: ["Using pure math and gravity laws by tracking perturbations in Uranus’s orbit","Winning a lottery","Random guessing in the dark"],
+          correctIndex: 0,
+          failureExplanation_bn: "ফরাসি গণিতবিদ উর্বা লে ভেরিয়ে খাতা-কলমে অংক কষে যেখানে নেপচুন থাকার কথা বলেছিলেন, ঠিক সেখানেই টেলিস্কোপে গ্রহটি ধরা পড়ে!",
+          failureExplanation_en: "Neptune was discovered by pure mathematics: irregularities in Uranus’s motion led astronomers directly to its coordinates!"
+        },
         stageNumber: '০২',
         title_bn: 'গ্রেট ডার্ক স্পট ও ২,১০০ কিমি/ঘণ্টা বাতাস',
         title_en: 'Great Dark Spot & Supersonic 2,100 km/h Winds',
@@ -1407,6 +1746,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'nep-stage-3',
         order: 3,
+        visualLayer: 'atmospheric_entry',
+        quiz: {
+          question_bn: "নেপচুনের সবচেয়ে বড় চাঁদ \"ট্রাইটন\"-এর প্রধান অদ্ভুত বৈশিষ্ট্য কী?",
+          question_en: "What is the most unique orbital characteristic of Neptune’s giant moon Triton?",
+          options_bn: ["এটি নেপচুনের ঘূর্ণনের বিপরীত দিকে ঘোরে (Retrograde Orbit) যা এক কুয়াইপার বেল্ট শিকার","এটি প্রতি মিনিটে দিক বদলায়","এটি সোজা সূর্যের দিকে ছোটে"],
+          options_en: ["Retrograde orbit (orbits backward), captured from the Kuiper Belt","Changes direction every minute","Flies directly toward Sun"],
+          correctIndex: 0,
+          failureExplanation_bn: "ট্রাইটন সৌরজগতের একমাত্র বড় চাঁদ যা গ্রহের উল্টো দিকে ঘোরে; নেপচুন এর মহাকর্ষ দিয়ে কুয়াইপার বেল্ট থেকে একে বন্দি করেছিল!",
+          failureExplanation_en: "Triton is the only large moon in retrograde motion; its composition proves it was an ancient Kuiper Belt dwarf planet captured by Neptune!"
+        },
         stageNumber: '০৩',
         title_bn: 'গভীর স্তরে হীরক বৃষ্টি (Diamond Rain)',
         title_en: 'Atmospheric Diamond Rain Sounding',
@@ -1443,6 +1792,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'nep-stage-4',
         order: 4,
+        visualLayer: 'descent_sequence',
+        quiz: {
+          question_bn: "ট্রাইটনের চরম ঠান্ডায় (-২৩৫°C) জমাট বরফের ওপর কোন আশ্চর্য অগ্ন্যুৎপাত ঘটে?",
+          question_en: "What dramatic cryovolcanic phenomenon occurs across the frozen nitrogen plains of Triton?",
+          options_bn: ["তরল নাইট্রোজেন ও কালো ধূলিকণার ৮ কিমি উঁচু গিজার ফোয়ারা","আগুনের লাভা ফোয়ারা","গরম পানির স্প্রিং"],
+          options_en: ["Geysers erupting liquid nitrogen and dark organic soot 8 km into space","Blazing lava fountains","Hot mineral hot springs"],
+          correctIndex: 0,
+          failureExplanation_bn: "সূর্যের দুর্বল তাপে নাইট্রোজেন বরফ বাষ্পীভূত হয়ে ৮ কিলোমিটার উচ্চতায় মহাকাশে ফোয়ারার মতো বিস্ফোরিত হয়!",
+          failureExplanation_en: "Subsurface solar warming boils liquid nitrogen beneath clear nitrogen ice, venting 8-kilometer high cryogeysers into space!"
+        },
         stageNumber: '০৪',
         title_bn: 'ট্রাইটনের বরফ আগ্নেয়গিরি ও নাইট্রোজেন ফোয়ারা',
         title_en: 'Triton Nitrogen Cryovolcanoes',
@@ -1479,6 +1838,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'nep-stage-5',
         order: 5,
+        visualLayer: 'surface_operations',
+        quiz: {
+          question_bn: "নেপচুনের গভীর অভ্যন্তরে চরম চাপ ও তাপ মিথেন গ্যাসকে ভেঙে কীসে রূপান্তর করতে পারে?",
+          question_en: "Deep inside the mantle of Neptune, what precious gemstones are hypothesized to precipitate as rain?",
+          options_bn: ["খাঁটি হীরার বৃষ্টি (Diamond Rain) যা ম্যান্টলে ঝরে পড়ে","সোনার কয়েন","কাঁচের মার্বেল"],
+          options_en: ["Diamond Rain created from extreme pressure compressing carbon atoms","Gold coins","Glass beads"],
+          correctIndex: 0,
+          failureExplanation_bn: "লাখ লাখ গুণ চাপে মিথেনের কার্বন পরমাণু খাঁটি হীরার স্ফটিকে রূপান্তরিত হয়ে বরফের সমুদ্রে হীরার বৃষ্টি আকারে ঝরে পড়ে!",
+          failureExplanation_en: "Shockwave experiments confirm intense pressure strips hydrogen from carbon, forging solid diamond hail that sinks to the core!"
+        },
         stageNumber: '০৫',
         title_bn: 'আন্তঃনাক্ষত্রিক মহাশূন্যে যাত্রা (Interstellar Space)',
         title_en: 'Departure to Interstellar Space',
@@ -1536,6 +1905,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'moon-stage-1',
         order: 1,
+        visualLayer: 'launch_pad',
+        quiz: {
+          question_bn: "চাঁদে যাওয়ার পথে রকেটের অ্যাপোলো কমান্ড মডিউল ও সার্ভিস মডিউল কোন ইঞ্জিন ব্যবহার করে?",
+          question_en: "What engine powers the Command/Service Module during translunar flight?",
+          options_bn: ["অ্যারোজিন-৫০ ও নাইট্রোজেন টেট্রক্সাইড সার্ভিস প্রপালশন ইঞ্জিন (SPS)","ডিজেল ফুয়েল ইঞ্জিন","প্যাডল স্টিমার চাকা"],
+          options_en: ["Service Propulsion System (SPS) hypergolic engine","Diesel truck motor","Paddle steamer wheel"],
+          correctIndex: 0,
+          failureExplanation_bn: "মহাশূন্যের চরম শূন্যতায় কোনো বাতাস নেই; হাইপারগোলিক রাসায়নিক স্বতঃস্ফূর্ত সংযোগে ইঞ্জিন স্টার্ট করে!",
+          failureExplanation_en: "Hypergolic fuels ignite on contact with zero spark required, vital for returning astronauts safely from the Moon!"
+        },
         stageNumber: '০১',
         title_bn: 'নভোচারীর স্পেসস্যুট প্রস্তুতি',
         title_en: 'Spacesuit Suit-Up Room',
@@ -1577,6 +1956,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'moon-stage-2',
         order: 2,
+        visualLayer: 'transfer_orbit',
+        quiz: {
+          question_bn: "চাঁদের কক্ষপথে প্রবেশের জন্য সার্ভিস মডিউল ইঞ্জিন কোন দিকে ফায়ার করে?",
+          question_en: "In which direction must the rocket engine burn to enter lunar orbit (Lunar Orbit Insertion)?",
+          options_bn: ["গতির বিপরীত দিকে (Retrograde Burn) গতিবেগ কমানোর জন্য","গতির দিকে সোজা জোরে চালিয়ে","চাঁদের সোজা ওপর থেকে নিচে"],
+          options_en: ["Retrograde burn opposite to flight velocity to decelerate","Full forward throttle acceleration","Pointing straight at Earth"],
+          correctIndex: 0,
+          failureExplanation_bn: "গতিবেগ না কমালে চাঁদের মহাকর্ষ মহাকাশযানকে টেনে রাখতে পারবে না; এটি ছিটকে মহাশূন্যে হারিয়ে যাবে!",
+          failureExplanation_en: "To allow the Moon’s gentle gravity to capture the spacecraft, a retrograde burn slows velocity to orbit speed!"
+        },
         stageNumber: '০২',
         title_bn: 'ক্রায়োজেনিক রকেট জ্বালানি লোডিং',
         title_en: 'Cryogenic Rocket Fueling Station',
@@ -1613,6 +2002,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'moon-stage-3',
         order: 3,
+        visualLayer: 'atmospheric_entry',
+        quiz: {
+          question_bn: "লুনার মডিউলের ডিসেন্ট ইঞ্জিন অবতরণের সময় গতিবেগ কমানোর প্রধান চ্যালেঞ্জ কী?",
+          question_en: "What is the main engineering challenge of the Lunar Module descent engine during landing?",
+          options_bn: ["থ্রোটল নিয়ন্ত্রণ করে আলতোভাবে স্পর্শ করা যেন ল্যান্ডিং লেগ ভেঙে না যায়","যত দ্রুত সম্ভব মাটিতে আছড়ে পড়া","প্যারাস্যুট খুলে বাতাস খোঁজা"],
+          options_en: ["Throttling thrust smoothly to touch down under 1 meter/sec vertical speed","Crashing as fast as possible","Looking for air for parachutes"],
+          correctIndex: 0,
+          failureExplanation_bn: "চাঁদে কোনো বাতাস নেই, তাই প্যারাস্যুট কাজ করে না; সম্পূর্ণ অবতরণ একমাত্র রকেট থ্রাস্টের নিখুঁত থ্রোটলিংয়ে করতে হয়!",
+          failureExplanation_en: "With zero air for parachutes, variable-thrust rocket engines are the only lifeline to brake from orbital velocity to touchdown!"
+        },
         stageNumber: '০৩',
         title_bn: 'ককপিট ইগনিশন ও লিফটঅফ',
         title_en: 'Cockpit Flight Deck & Liftoff',
@@ -1649,6 +2048,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'moon-stage-4',
         order: 4,
+        visualLayer: 'descent_sequence',
+        quiz: {
+          question_bn: "চাঁদের বুকে হাঁটার সময় নভোচারীদের স্পেসস্যুটে কুলিং ওয়াটার সার্কুলেশন কেন অপরিহার্য?",
+          question_en: "Why is liquid cooling garment circulation vital inside spacesuits during a moonwalk?",
+          options_bn: ["চাঁদে রোদে তাপমাত্রা +১২০°C ছাড়িয়ে যায় এবং নভোচারীর শরীরের তাপ বের হতে পারে না","গোসল করার জন্য","পানি পান করার জন্য"],
+          options_en: ["Direct lunar sunlight exceeds 120°C and body heat cannot escape in vacuum","For taking a shower","For drinking water only"],
+          correctIndex: 0,
+          failureExplanation_bn: "বায়ুশূন্য মহাশূন্যে তাপ বিকিরণ ছাড়া ছড়ায় না; ওয়াটার কুলিং আন্ডারগার্মেন্ট নভোচারীকে হিটস্ট্রোক থেকে রক্ষা করে!",
+          failureExplanation_en: "In vacuum, human metabolic heat is trapped inside the insulated suit; liquid cooling tubes continuously carry heat away!"
+        },
         stageNumber: '০৪',
         title_bn: 'লুনার ডিসেন্ট ও শান্ত সাগরে অবতরণ',
         title_en: 'Lunar Descent Module Touchdown',
@@ -1685,6 +2094,16 @@ export const PLANETARY_MISSIONS: Record<DestinationId, PlanetaryMission> = {
       {
         id: 'moon-stage-5',
         order: 5,
+        visualLayer: 'surface_operations',
+        quiz: {
+          question_bn: "চাঁদ থেকে পৃথিবীতে ফেরার সময় লুনার মডিউলের ওপরের অ্যাসেন্ট স্টেজ কীভাবে উৎক্ষেপিত হয়?",
+          question_en: "How does the upper Ascent Stage liftoff from the Moon to return to the orbiting mothership?",
+          options_bn: ["নিচের ডিসেন্ট স্টেজকে লঞ্চপ্যাড হিসেবে ব্যবহার করে রকেট ফায়ার করে","হাতে ধাক্কা দিয়ে","লাফ দিয়ে"],
+          options_en: ["Fires its hypergolic ascent engine using the descent base as a launchpad","Pushed by astronaut hands","Bouncing on a trampoline"],
+          correctIndex: 0,
+          failureExplanation_bn: "ডিসেন্ট স্টেজটি চাঁদের বুকে স্মৃতিস্তম্ভ হিসেবে থেকে যায় এবং এর ওপর থেকেই অ্যাসেন্ট ক্যাপসুল কক্ষপথে উড়ে যায়!",
+          failureExplanation_en: "The golden octagonal descent stage serves as a stable launch platform as the ascent cabin blasts back into lunar orbit!"
+        },
         stageNumber: '০৫',
         title_bn: 'মুনওয়াক, পতাকা স্থাপন ও রেগোলিথ সংগ্রহ',
         title_en: 'Historic Moonwalk & Regolith Core',

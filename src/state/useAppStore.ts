@@ -157,8 +157,10 @@ export interface AppState {
   resetOnboarding: () => void;
   addXP: (amount: number) => void;
   claimDailyBonus: () => boolean;
+  completedMissions: string[];
   completeLesson: (lessonId: string) => void;
   recordQuizAttempt: (attempt: QuizAttemptRecord) => void;
+  completeMission: (destinationId: string) => void;
   dismissLevelUp: () => void;
   getRankProgress: () => { current: number; max: number; percentage: number };
   resetProgress: () => void;
@@ -191,6 +193,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   rank: 'Cadet',
   xp: 0,
   completedLessonIds: [],
+  completedMissions: [],
   quizAttempts: {},
   isHydrated: false,
   activeLevelUp: null,
@@ -227,6 +230,14 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
 
   resetOnboarding: () => set({ hasCompletedOnboarding: false }),
+
+  completeMission: (destinationId: string) => {
+    const { completedMissions, addXP } = get();
+    if (!completedMissions.includes(destinationId)) {
+      set({ completedMissions: [...completedMissions, destinationId] });
+      addXP(120); // First completion reward
+    }
+  },
 
   claimDailyBonus: () => {
     const today = getTodayDateKey();
@@ -326,6 +337,7 @@ export const useAppStore = create<AppState>((set, get) => ({
           rank: saved.rank,
           xp: saved.xp,
           completedLessonIds: saved.completedLessonIds || [],
+          completedMissions: saved.completedMissions || [],
           quizAttempts: saved.quizAttempts || {},
           cadetArchetype: saved.cadetArchetype || 'pilot',
           psychometricAnswers: saved.psychometricAnswers || {},
@@ -353,6 +365,7 @@ function pickSavedProfile(state: AppState): SavedProfile {
     rank: state.rank,
     xp: state.xp,
     completedLessonIds: state.completedLessonIds,
+    completedMissions: state.completedMissions,
     quizAttempts: state.quizAttempts,
     cadetArchetype: state.cadetArchetype,
     psychometricAnswers: state.psychometricAnswers,
@@ -370,12 +383,13 @@ useAppStore.subscribe((state, prev) => {
     state.rank !== prev.rank ||
     state.xp !== prev.xp ||
     state.completedLessonIds !== prev.completedLessonIds ||
+    state.completedMissions !== prev.completedMissions ||
     state.quizAttempts !== prev.quizAttempts ||
     state.cadetArchetype !== prev.cadetArchetype ||
     state.psychometricAnswers !== prev.psychometricAnswers ||
     state.hasCompletedOnboarding !== prev.hasCompletedOnboarding ||
     state.lastBonusClaimDate !== prev.lastBonusClaimDate;
   if (changed) {
-    profileStorage.saveProfile(pickSavedProfile(state));
+    profileStorage.saveProfile(pickSavedProfile(state) as any);
   }
 });

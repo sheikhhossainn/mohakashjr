@@ -140,13 +140,13 @@
     "semantic_hash": ""
   },
   "implemented_features.md": {
-    "mtime": 1791384188.371018,
-    "ast_hash": "5747190e78195074c60d5dbf8e891054",
+    "mtime": 1791389839.783692,
+    "ast_hash": "de6597f63d7a056b4819e1b6ab661393",
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1791384217.3993466,
-    "ast_hash": "5e49dd235a5d9e0d9082b672c51435a0",
+    "mtime": 1791389839.7846913,
+    "ast_hash": "4e2b724dba05258539117c084e3bf849",
     "semantic_hash": ""
   },
   "TEAMCONTRIBUTION.md": {
@@ -175,13 +175,13 @@
     "semantic_hash": ""
   },
   "app/(tabs)/mission.tsx": {
-    "mtime": 1791380813.2052019,
-    "ast_hash": "b36d746cbba9525cc2149cf36d547a49",
+    "mtime": 1791389497.1591923,
+    "ast_hash": "368ab6350a5b41c318e39c5d0acec1fb",
     "semantic_hash": ""
   },
   "app/(tabs)/profile.tsx": {
-    "mtime": 1791380846.2310734,
-    "ast_hash": "a11b593f273accdb75676d837ee8f916",
+    "mtime": 1791385428.4183943,
+    "ast_hash": "0f6010e222e13afc376e2cd3661a8375",
     "semantic_hash": ""
   },
   "app/_layout.tsx": {
@@ -255,8 +255,8 @@
     "semantic_hash": ""
   },
   "src/state/useAppStore.ts": {
-    "mtime": 1791380506.2409315,
-    "ast_hash": "53d409868af4f4cf24b0fd9166fcbe4d",
+    "mtime": 1791386875.100229,
+    "ast_hash": "25fb8fa4bbd087d4df3d601fcf67cade",
     "semantic_hash": ""
   },
   "src/theme/colors.ts": {
@@ -270,8 +270,8 @@
     "semantic_hash": ""
   },
   "tests/appStore.test.ts": {
-    "mtime": 1791380582.2604673,
-    "ast_hash": "e90d97e022ce0be0ef626b06205989bd",
+    "mtime": 1791387144.4516208,
+    "ast_hash": "56ae89814931064522962bc36cd2667b",
     "semantic_hash": ""
   },
   "tsconfig.json": {
@@ -280,8 +280,8 @@
     "semantic_hash": ""
   },
   "HANDOFF.md": {
-    "mtime": 1791384240.3733015,
-    "ast_hash": "4daf4b2854f17966c2c2bca79a9cd601",
+    "mtime": 1791389839.786106,
+    "ast_hash": "a2314b1291c1a1f46daeee3febdb64d0",
     "semantic_hash": ""
   },
   "src/components/DoubleBezelCard.tsx": {
@@ -295,8 +295,8 @@
     "semantic_hash": ""
   },
   "src/components/AstronautAvatar.tsx": {
-    "mtime": 1790919813.397424,
-    "ast_hash": "22450abf32c6c1b5347c3f427173a775",
+    "mtime": 1791385336.0246584,
+    "ast_hash": "d9f8dabb56977b61bf079fcd0a3d98ff",
     "semantic_hash": ""
   },
   "src/components/CosmicBackground.tsx": {
@@ -900,8 +900,8 @@
     "semantic_hash": ""
   },
   "tests/content.test.ts": {
-    "mtime": 1791384862.4392936,
-    "ast_hash": "c887658de37f8b0b0a3771afac5c4113",
+    "mtime": 1791385479.1660478,
+    "ast_hash": "7f253029c76c617cb2fabd4f82276c38",
     "semantic_hash": ""
   },
   "docs/AI_TUTOR_PROMPT.md": {
@@ -990,8 +990,8 @@
     "semantic_hash": ""
   },
   "src/components/mission/MoonLandingMission.tsx": {
-    "mtime": 1791147249.6460283,
-    "ast_hash": "1ef031b4fa38f8fc535a09d92f1860c8",
+    "mtime": 1791389486.4754713,
+    "ast_hash": "76d6594e57c3e82a7451f5789c2eb7fd",
     "semantic_hash": ""
   },
   "src/components/mission/index.ts": {
@@ -1065,8 +1065,8 @@
     "semantic_hash": ""
   },
   "src/components/mission/MoonwalkCelebration.tsx": {
-    "mtime": 1791381545.078564,
-    "ast_hash": "36903856d3f23826ded2d79cdfe06008",
+    "mtime": 1791388595.4593349,
+    "ast_hash": "f7a446991156a809692fcf8ae2bf68f0",
     "semantic_hash": ""
   },
   "src/components/mission/RocketFuelingStation.tsx": {
@@ -1080,8 +1080,8 @@
     "semantic_hash": ""
   },
   "src/components/mission/AtmosphericJourney.tsx": {
-    "mtime": 1791381247.5524216,
-    "ast_hash": "7c658f7ba5f341f641bdec904c76afed",
+    "mtime": 1791389644.3747194,
+    "ast_hash": "b2fbc01099a372d300a9528702be9f9b",
     "semantic_hash": ""
   },
   ".claude/skills/ui-ux-pro-max/scripts/core.py": {
@@ -1270,8 +1270,8 @@
     "semantic_hash": ""
   },
   "src/services/profileStorage.ts": {
-    "mtime": 1791380455.5664148,
-    "ast_hash": "5e47897c341b82674de6acbb17f7b880",
+    "mtime": 1791386881.0720778,
+    "ast_hash": "0a941e222ebd7b8132e4af095d8385c6",
     "semantic_hash": ""
   },
   "src/components/PlanetImage.tsx": {
@@ -1280,8 +1280,8 @@
     "semantic_hash": ""
   },
   "src/components/SpaceHub.tsx": {
-    "mtime": 1791381044.3949108,
-    "ast_hash": "1dcb86e4b33e6cd413a4d0b27537b626",
+    "mtime": 1791389443.628554,
+    "ast_hash": "ce7e1661df5be3bbe74364980048ca04",
     "semantic_hash": ""
   },
   "src/content/spaceDestinations.ts": {
@@ -1369,14 +1369,9 @@
     "ast_hash": "cffb0197427deccd5dd55c34d9b8a4f7",
     "semantic_hash": ""
   },
-  "src/components/mission/PlanetaryMissionSimulator.tsx": {
-    "mtime": 1791381461.0363705,
-    "ast_hash": "97086c4f18e08798d78e8991ca6a4337",
-    "semantic_hash": ""
-  },
   "src/content/planetaryMissionsData.ts": {
-    "mtime": 1791347757.607431,
-    "ast_hash": "a5f991f36c736d32fe0a9413f3495bca",
+    "mtime": 1791387259.3831832,
+    "ast_hash": "18b6ac3be6ea27e27eafec57611a7b81",
     "semantic_hash": ""
   },
   "src/utils/cosmicTopics.ts": {
@@ -1385,13 +1380,28 @@
     "semantic_hash": ""
   },
   "tests/planetaryMissions.test.ts": {
-    "mtime": 1791348041.157014,
-    "ast_hash": "47437002fab24e63be3f1d3b3f5dc663",
+    "mtime": 1791390929.7643979,
+    "ast_hash": "d6fe5d1eb104591024802e36f30c0c36",
     "semantic_hash": ""
   },
   "src/components/CelebrationAstronaut.tsx": {
     "mtime": 1791384651.8368976,
     "ast_hash": "b14709c2c7896676249ab346a40730ac",
+    "semantic_hash": ""
+  },
+  "src/components/mission/InterplanetaryJourney.tsx": {
+    "mtime": 1791389727.401679,
+    "ast_hash": "315fd9d58397d5a19f8cac096fb076ec",
+    "semantic_hash": ""
+  },
+  "src/components/mission/RealisticRocket.tsx": {
+    "mtime": 1791389780.1651108,
+    "ast_hash": "e4b727d275535fb0ceeca2b1fe02112f",
+    "semantic_hash": ""
+  },
+  "AGENT.md": {
+    "mtime": 1791389839.7846913,
+    "ast_hash": "2f75e18a76ca303b6fe9ee0145e0e330",
     "semantic_hash": ""
   }
 }

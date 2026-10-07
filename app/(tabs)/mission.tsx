@@ -9,7 +9,7 @@ import { GentleButton } from '../../src/components/GentleButton';
 import { MascotReaction } from '../../src/components/MascotReaction';
 import { AstronautAvatar } from '../../src/components/AstronautAvatar';
 import { MoonLandingMission, MissionStage } from '../../src/components/mission';
-import { PlanetaryMissionSimulator } from '../../src/components/mission/PlanetaryMissionSimulator';
+import { InterplanetaryJourney } from '../../src/components/mission/InterplanetaryJourney';
 import { SpaceHub } from '../../src/components/SpaceHub';
 import { useAppStore } from '../../src/state/useAppStore';
 import { getTranslation } from '../../src/i18n/translations';
@@ -84,9 +84,13 @@ export default function MissionScreen() {
   if (activePlanetMission) {
     return (
       <View style={[styles.activeMissionContainer, { paddingTop: insets.top }]}>
-        <PlanetaryMissionSimulator
+        <InterplanetaryJourney
           destinationId={activePlanetMission}
-          onExit={() => setActivePlanetMission(null)}
+          onBack={() => setActivePlanetMission(null)}
+          onMissionComplete={(xp) => {
+            useAppStore.getState().completeMission(activePlanetMission);
+            setActivePlanetMission(null);
+          }}
         />
       </View>
     );
@@ -99,6 +103,10 @@ export default function MissionScreen() {
         <MoonLandingMission
           initialStage={missionStartStage}
           onExitMission={() => setIsMissionActive(false)}
+          onMissionComplete={(xp) => {
+            useAppStore.getState().completeMission('moon');
+            setIsMissionActive(false);
+          }}
         />
       </View>
     );

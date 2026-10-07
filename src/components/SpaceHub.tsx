@@ -10,6 +10,8 @@ import { ScalePressable } from './ScalePressable';
 import { SPACE_DESTINATIONS, DestinationId } from '../content/spaceDestinations';
 import { getTranslation, AppLanguage } from '../i18n/translations';
 import { tapHaptic } from '../utils/haptics';
+import { useAppStore } from '../state/useAppStore';
+import { Lock } from 'lucide-react-native';
 
 interface SpaceHubProps {
   language: AppLanguage;
@@ -30,6 +32,8 @@ export const SpaceHub: React.FC<SpaceHubProps> = ({
 }) => {
   const t = getTranslation(language).spaceHub;
   const en = language === 'en';
+  const completedMissions = useAppStore((s) => s.completedMissions);
+  const xp = useAppStore((s) => s.xp);
 
   return (
     <View style={styles.root}>
@@ -43,52 +47,55 @@ export const SpaceHub: React.FC<SpaceHubProps> = ({
         <Text style={styles.subtitle}>{t.subtitle}</Text>
 
         <View style={styles.list}>
-          {SPACE_DESTINATIONS.map((d) => {
+          {SPACE_DESTINATIONS.map((d, index) => {
             const name = en ? d.name_en : d.name_bn;
             const summary = en ? d.summary_en : d.summary_bn;
             const fact = en ? d.fact_en : d.fact_bn;
-            const live = !d.comingSoon;
+            const live = true; // All are live now
+
+            // Determine if destination is unlocked
+            // It's unlocked if it's the Moon (index 0) OR the immediately previous destination is completed
+            let isUnlocked = true;
+            if (index > 0) {
+              const previousDestId = SPACE_DESTINATIONS[index - 1].id;
+              const isPrevCompleted =
+                completedMissions.includes(previousDestId) ||
+                (previousDestId === 'moon' && (completedMissions.includes('moon') || xp >= 120));
+              isUnlocked = isPrevCompleted;
+            }
 
             return (
               <ScalePressable
                 key={d.id}
                 onPress={() => {
                   tapHaptic();
-                  onOpenDestination(d.id);
+                  if (isUnlocked) {
+                    onOpenDestination(d.id);
+                  }
                 }}
-                style={[styles.card, live ? styles.cardLive : styles.cardExplorable]}
+                style={[styles.card, isUnlocked ? styles.cardLive : styles.cardLocked]}
                 accessibilityRole="button"
-                accessibilityLabel={`${name}, ${live ? t.liveBadge : t.exploreDossier}`}
+                accessibilityLabel={`${name}, ${isUnlocked ? 'Unlocked' : 'Locked'}`}
               >
-                <View style={styles.imageTile}>
+                <View style={[styles.imageTile, !isUnlocked && styles.imageTileLocked]}>
                   <PlanetImage id={d.id} size={84} />
+                  {!isUnlocked && (
+                    <View style={styles.lockOverlay}>
+                      <Lock size={32} color="rgba(255,255,255,0.8)" />
+                    </View>
+                  )}
                 </View>
 
                 <View style={styles.cardBody}>
                   <View style={styles.titleRow}>
-                    <Text style={styles.name} numberOfLines={1}>
+                    <Text style={[styles.name, !isUnlocked && styles.textLocked]} numberOfLines={1}>
                       {name}
                     </Text>
-                    {live ? (
-                      <View style={styles.liveBadge}>
-                        <View style={styles.liveDot} />
-                        <Text style={styles.liveText} numberOfLines={1}>
-                          {t.liveBadge}
-                        </Text>
-                      </View>
-                    ) : (
-                      <View style={styles.dossierBadge}>
-                        <BookOpen size={11} color={Colors.primary} />
-                        <Text style={styles.dossierBadgeText} numberOfLines={1}>
-                          {t.exploreDossier}
-                        </Text>
-                      </View>
-                    )}
                   </View>
 
-                  <Text style={styles.fact}>{fact}</Text>
-                  <Text style={styles.summary} numberOfLines={2}>
-                    {summary}
+                  <Text style={[styles.fact, !isUnlocked && styles.textLocked]}>{fact}</Text>
+                  <Text style={[styles.summary, !isUnlocked && styles.textLocked]} numberOfLines={2}>
+                    {isUnlocked ? summary : (en ? `Complete ${SPACE_DESTINATIONS[index - 1].name_en} mission to unlock.` : `আগের মিশন (${SPACE_DESTINATIONS[index - 1].name_bn}) শেষ করে এটি আনলক করো।`)}
                   </Text>
 
                   {/* Actions Row */}
@@ -98,36 +105,25 @@ export const SpaceHub: React.FC<SpaceHubProps> = ({
                         onPress={(e) => {
                           e.stopPropagation();
                           tapHaptic();
-                          if (d.id === 'moon' && onLaunchMoon) {
-                            onLaunchMoon();
-                          } else if (onLaunchMission) {
+                          if (!isUnlocked) return;
+                          
+                          if (onLaunchMission) {
                             onLaunchMission(d.id);
+                          } else if (d.id === 'moon' && onLaunchMoon) {
+                            onLaunchMoon();
                           } else {
                             onOpenDestination(d.id);
                           }
                         }}
-                        style={[
-                          styles.launchBtn,
-                          d.id !== 'moon' && styles.launchBtnPlanet,
-                        ]}
-                        accessibilityRole="button"
-                        accessibilityLabel={`${t.playMission} ${name}`}
+                        style={[styles.launchBtn, !isUnlocked && styles.launchBtnLocked]}
+                        disabled={!isUnlocked}
                       >
-                        <Rocket size={13} color={d.id === 'moon' ? Colors.textDark : Colors.primaryDark} />
-                        <Text
-                          style={[
-                            styles.launchBtnText,
-                            d.id !== 'moon' && styles.launchBtnTextPlanet,
-                          ]}
-                        >
-                          {d.id === 'moon' ? t.playMission : (en ? 'Fly Mission' : 'অভিযান শুরু')}
+                        {isUnlocked ? <Rocket size={13} color={Colors.textDark} /> : <Lock size={13} color={Colors.textSecondary} />}
+                        <Text style={[styles.launchBtnText, !isUnlocked && styles.launchBtnTextLocked]}>
+                          {isUnlocked ? (en ? 'Fly Mission' : 'অভিযান শুরু') : (en ? 'Locked' : 'লক করা')}
                         </Text>
                       </Pressable>
 
-                      <View style={styles.dossierLinkRow}>
-                        <Text style={styles.dossierLinkText}>{t.viewDossier}</Text>
-                        <ChevronRight size={14} color={Colors.primary} />
-                      </View>
                     </View>
                   </View>
                 </View>
@@ -307,5 +303,30 @@ const styles = StyleSheet.create({
     fontSize: Typography.size.caption,
     fontFamily: Typography.family.headingMedium,
     color: Colors.primary,
+  },
+  cardLocked: {
+    borderColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    opacity: 0.6,
+  },
+  imageTileLocked: {
+    opacity: 0.4,
+  },
+  lockOverlay: {
+    ...(StyleSheet.absoluteFill as any),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: Radius.md,
+  },
+  textLocked: {
+    color: Colors.textSecondary,
+  },
+  launchBtnLocked: {
+    backgroundColor: Colors.surfaceWarm,
+    opacity: 0.8,
+  },
+  launchBtnTextLocked: {
+    color: Colors.textSecondary,
   },
 });

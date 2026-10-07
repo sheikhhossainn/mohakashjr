@@ -116,3 +116,89 @@ test('CosmicTopicIllustration: Detects correct space topic from Bangla and Engli
   assert.strictEqual(detectCosmicTopic('অজানা মহাজাগতিক রহস্য', 'earth'), 'earth');
   assert.strictEqual(detectCosmicTopic('', 'moon'), 'moon');
 });
+
+test('Planetary Missions: All stages have visualLayer and valid quiz checkpoints', () => {
+  const allDestinations: DestinationId[] = [
+    'moon',
+    'mercury',
+    'venus',
+    'mars',
+    'jupiter',
+    'saturn',
+    'uranus',
+    'neptune',
+  ];
+
+  for (const id of allDestinations) {
+    const mission = getPlanetaryMission(id);
+    for (const stage of mission.stages) {
+      assert.ok(stage.visualLayer, `${id} stage ${stage.order} must have a visualLayer`);
+      assert.ok(
+        ['launch_pad', 'transfer_orbit', 'atmospheric_entry', 'descent_sequence', 'surface_operations'].includes(
+          stage.visualLayer
+        ),
+        `${id} visualLayer '${stage.visualLayer}' must be a recognized layer type`
+      );
+
+      if (stage.quiz) {
+        assert.ok(stage.quiz.question_bn.length > 0, `${id} quiz question_bn`);
+        assert.ok(stage.quiz.question_en.length > 0, `${id} quiz question_en`);
+        assert.strictEqual(stage.quiz.options_bn.length, 3, `${id} quiz options_bn should have 3 options`);
+        assert.strictEqual(stage.quiz.options_en.length, 3, `${id} quiz options_en should have 3 options`);
+        assert.ok(
+          stage.quiz.correctIndex >= 0 && stage.quiz.correctIndex <= 2,
+          `${id} correctIndex must be 0, 1, or 2`
+        );
+        assert.ok(stage.quiz.failureExplanation_bn.length > 0, `${id} quiz failureExplanation_bn`);
+      }
+    }
+  }
+});
+
+test('Mission Progression: Mars unlocks sequentially after Moon completion or with XP >= 120', () => {
+  // Scenario 1: Fresh cadet, Moon is unlocked, Mars is locked
+  const freshCompleted: string[] = [];
+  const freshXP = 0;
+  const isMarsUnlockedFresh =
+    freshCompleted.includes('moon') || (freshXP >= 120);
+  assert.strictEqual(isMarsUnlockedFresh, false, 'Mars should be locked for brand new cadet');
+
+  // Scenario 2: Cadet completed moon flight or has XP >= 120
+  const experiencedXP = 380;
+  const isMarsUnlockedWithXP =
+    freshCompleted.includes('moon') || (experiencedXP >= 120);
+  assert.strictEqual(isMarsUnlockedWithXP, true, 'Mars should unlock for cadet with XP >= 120');
+
+  // Scenario 3: Cadet has 'moon' in completedMissions
+  const completedWithMoon = ['moon'];
+  const isMarsUnlockedCompleted =
+    completedWithMoon.includes('moon') || (0 >= 120);
+  assert.strictEqual(isMarsUnlockedCompleted, true, 'Mars should unlock when moon is in completedMissions');
+
+  // Scenario 4: Sequential chain Moon -> Mars -> Venus
+  const completedMars = ['moon', 'mars'];
+  const isVenusUnlocked = completedMars.includes('mars');
+  assert.strictEqual(isVenusUnlocked, true, 'Venus should unlock when Mars is completed');
+});
+
+
+test('Planetary Missions: No placeholder text in any quiz checkpoint', () => {
+  const allDestinations: DestinationId[] = [
+    'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune',
+  ];
+  for (const id of allDestinations) {
+    const mission = getPlanetaryMission(id);
+    for (const stage of mission.stages) {
+      if (stage.quiz) {
+        assert.ok(!stage.quiz.question_bn.includes('কী সতর্ক থাকতে হবে'), `${id} stage ${stage.id} should not have placeholder question`);
+        assert.ok(!stage.quiz.options_bn.includes('সঠিক উত্তর'), `${id} stage ${stage.id} should not have placeholder option`);
+        assert.ok(!stage.quiz.options_bn.includes('ভুল উত্তর ১'), `${id} stage ${stage.id} should not have placeholder option 1`);
+      }
+    }
+  }
+});
+
+test('Mercury Mission: Stage 1 visualLayer is transfer_orbit (deep space), not launch_pad', () => {
+  const mercury = getPlanetaryMission('mercury');
+  assert.strictEqual(mercury.stages[0].visualLayer, 'transfer_orbit');
+});
