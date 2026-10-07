@@ -2470,7 +2470,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "agents_skills_design_system_templates_design_tokens_starter_radius_md",
-      "community": 238,
+      "community": 114,
       "norm_label": "md"
     },
     {
@@ -2480,7 +2480,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "agents_skills_design_system_templates_design_tokens_starter_md_value",
-      "community": 238,
+      "community": 114,
       "norm_label": "$value"
     },
     {
@@ -2490,7 +2490,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "agents_skills_design_system_templates_design_tokens_starter_md_type",
-      "community": 238,
+      "community": 114,
       "norm_label": "$type"
     },
     {
@@ -2550,7 +2550,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "agents_skills_design_system_templates_design_tokens_starter_primitive_shadow",
-      "community": 133,
+      "community": 114,
       "norm_label": "shadow"
     },
     {
@@ -2590,7 +2590,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "agents_skills_design_system_templates_design_tokens_starter_shadow_md",
-      "community": 238,
+      "community": 114,
       "norm_label": "md"
     },
     {
@@ -7150,7 +7150,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_design_system_resolve_dial",
-      "community": 124,
+      "community": 74,
       "norm_label": "_resolve_dial()"
     },
     {
@@ -7320,7 +7320,7 @@
       "source_location": "L319",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_design_system_designsystemgenerator_multi_domain_search",
-      "community": 124,
+      "community": 74,
       "norm_label": "._multi_domain_search()"
     },
     {
@@ -7360,7 +7360,7 @@
       "source_location": "L445",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_design_system_designsystemgenerator_extract_results",
-      "community": 124,
+      "community": 74,
       "norm_label": "._extract_results()"
     },
     {
@@ -7370,7 +7370,7 @@
       "source_location": "L449",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_design_system_designsystemgenerator_generate",
-      "community": 124,
+      "community": 74,
       "norm_label": ".generate()"
     },
     {
@@ -7520,7 +7520,7 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_design_system_rationale_91",
-      "community": 124,
+      "community": 74,
       "norm_label": "bucket a 1-10 dial value into its tier config. returns none if value is none."
     },
     {
@@ -7640,7 +7640,7 @@
       "source_location": "L321",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_design_system_rationale_321",
-      "community": 124,
+      "community": 74,
       "norm_label": "execute searches across multiple domains."
     },
     {
@@ -7680,7 +7680,7 @@
       "source_location": "L446",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_design_system_rationale_446",
-      "community": 124,
+      "community": 74,
       "norm_label": "extract results list from search result dict."
     },
     {
@@ -7690,7 +7690,7 @@
       "source_location": "L451",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_design_system_rationale_451",
-      "community": 124,
+      "community": 74,
       "norm_label": "generate complete design system recommendation.          variance/motion/densi"
     },
     {
@@ -9290,7 +9290,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_tests_test_design_system_mode_testendtoendcoherence",
-      "community": 74,
+      "community": 55,
       "norm_label": "testendtoendcoherence"
     },
     {
@@ -9300,7 +9300,7 @@
       "source_location": "L143",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_tests_test_design_system_mode_testendtoendcoherence_test_dark_query_gets_a_dark_background",
-      "community": 74,
+      "community": 55,
       "norm_label": ".test_dark_query_gets_a_dark_background()"
     },
     {
@@ -9320,7 +9320,7 @@
       "source_location": "L171",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_tests_test_design_system_mode_testendtoendcoherence_test_dark_query_foreground_is_lighter_than_background",
-      "community": 74,
+      "community": 55,
       "norm_label": ".test_dark_query_foreground_is_lighter_than_background()"
     },
     {
@@ -9330,7 +9330,7 @@
       "source_location": "L179",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_tests_test_design_system_mode_testendtoendcoherence_test_dark_query_does_not_advise_against_dark_mode",
-      "community": 74,
+      "community": 55,
       "norm_label": ".test_dark_query_does_not_advise_against_dark_mode()"
     },
     {
@@ -9350,7 +9350,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "agents_skills_ui_ux_pro_max_scripts_tests_test_design_system_mode_rationale_139",
-      "community": 74,
+      "community": 55,
       "norm_label": "the exact reproduction from issue #428."
     },
     {
@@ -14147,7 +14147,7 @@
       "label": "styles",
       "file_type": "code",
       "source_file": "src/components/mission/InterplanetaryJourney.tsx",
-      "source_location": "L568",
+      "source_location": "L685",
       "_origin": "ast",
       "id": "src_components_mission_interplanetaryjourney_styles",
       "community": 96,
@@ -20280,7 +20280,7 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "claude_skills_design_taste_frontend_skill_1_the_three_dials_core_configuration",
-      "community": 191,
+      "community": 238,
       "norm_label": "1. the three dials (core configuration)"
     },
     {
@@ -20290,7 +20290,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "claude_skills_design_taste_frontend_skill_1_a_dial_inference_design_read_dial_values",
-      "community": 191,
+      "community": 238,
       "norm_label": "1.a dial inference (design read \u2192 dial values)"
     },
     {
@@ -20300,7 +20300,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "claude_skills_design_taste_frontend_skill_1_b_use_case_presets",
-      "community": 191,
+      "community": 238,
       "norm_label": "1.b use-case presets"
     },
     {
@@ -20310,7 +20310,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "claude_skills_design_taste_frontend_skill_1_c_how_the_dials_drive_output",
-      "community": 191,
+      "community": 238,
       "norm_label": "1.c how the dials drive output"
     },
     {
@@ -26610,7 +26610,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "claude_skills_imagegen_frontend_web_skill",
-      "community": 188,
+      "community": 247,
       "norm_label": "skill.md"
     },
     {
@@ -26620,7 +26620,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "claude_skills_imagegen_frontend_web_skill_hard_output_rule_read_first",
-      "community": 188,
+      "community": 247,
       "norm_label": "hard output rule \u2014 read first"
     },
     {
@@ -26630,7 +26630,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "claude_skills_imagegen_frontend_web_skill_hero_composition_bias_read_first",
-      "community": 188,
+      "community": 247,
       "norm_label": "hero composition bias \u2014 read first"
     },
     {
@@ -63260,7 +63260,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/mission/InterplanetaryJourney.tsx",
-      "source_location": "L568",
+      "source_location": "L685",
       "weight": 1.0,
       "source": "src_components_mission_interplanetaryjourney",
       "target": "src_components_mission_interplanetaryjourney_styles",
