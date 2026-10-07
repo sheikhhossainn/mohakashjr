@@ -12,6 +12,7 @@ import {
 import { Colors } from '../src/theme/colors';
 import { Typography } from '../src/theme/typography';
 import { LevelUpModal } from '../src/components/LevelUpModal';
+import { AutoUpdateBanner } from '../src/components/AutoUpdateBanner';
 import { AppLogo } from '../src/components/AppLogo';
 import { useAppStore } from '../src/state/useAppStore';
 
@@ -125,6 +126,9 @@ export default function RootLayout() {
 
         {/* Global Celebratory Promotion Modal on Level-Up */}
         <LevelUpModal />
+
+        {/* In-App Automatic OTA Update Notification & Reload Banner */}
+        <AutoUpdateBanner />
       </View>
     </SafeAreaProvider>
   );
