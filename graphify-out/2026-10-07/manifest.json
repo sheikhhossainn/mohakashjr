@@ -115,8 +115,8 @@
     "semantic_hash": ""
   },
   "CONTEXT.md": {
-    "mtime": 1791178940.2493222,
-    "ast_hash": "6b61c5626d269525bb1650f061cada81",
+    "mtime": 1791348141.0916708,
+    "ast_hash": "ff56c4701a26df69c1871305429ef76c",
     "semantic_hash": ""
   },
   "IMPLEMENTATION_PLAN.md": {
@@ -140,13 +140,13 @@
     "semantic_hash": ""
   },
   "implemented_features.md": {
-    "mtime": 1791178917.4269178,
-    "ast_hash": "eb0102bae0ad4b4b0bf36f1c58475789",
+    "mtime": 1791348095.702541,
+    "ast_hash": "39043a184e4d723911cf3d707ebcdba7",
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1791178925.5465407,
-    "ast_hash": "cc9ac5c266d50149552f94ca687ce115",
+    "mtime": 1791348130.0321264,
+    "ast_hash": "3b05afd67d9ef1fb748380905f237b71",
     "semantic_hash": ""
   },
   "TEAMCONTRIBUTION.md": {
@@ -165,8 +165,8 @@
     "semantic_hash": ""
   },
   "app/(tabs)/index.tsx": {
-    "mtime": 1791147249.528112,
-    "ast_hash": "b3175006e587c033932cd353aab70e8a",
+    "mtime": 1791346985.3238504,
+    "ast_hash": "441bb32693a50d787f4f8544678b2234",
     "semantic_hash": ""
   },
   "app/(tabs)/lessons.tsx": {
@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "app/(tabs)/mission.tsx": {
-    "mtime": 1791172984.2299352,
-    "ast_hash": "d191f348ee358e6fe51ab28722cbc8d9",
+    "mtime": 1791347870.9510067,
+    "ast_hash": "6ecc46929e9272ba616751ef22c4cec5",
     "semantic_hash": ""
   },
   "app/(tabs)/profile.tsx": {
@@ -200,8 +200,8 @@
     "semantic_hash": ""
   },
   "app/quiz/[id].tsx": {
-    "mtime": 1791147249.5331104,
-    "ast_hash": "816775dc3fbe23c6009d46cdf6659af2",
+    "mtime": 1791347097.3305972,
+    "ast_hash": "4b8f62a80396347e0ba26d185febbfa1",
     "semantic_hash": ""
   },
   "app/quiz/index.tsx": {
@@ -220,8 +220,8 @@
     "semantic_hash": ""
   },
   "src/components/MascotFeedbackSlot.tsx": {
-    "mtime": 1791147249.6350303,
-    "ast_hash": "967e4febac4a5e1709608993322a841c",
+    "mtime": 1791346959.1531613,
+    "ast_hash": "a84dabc9cc6ae62e3338bc966a459193",
     "semantic_hash": ""
   },
   "src/components/XPProgressBar.tsx": {
@@ -280,8 +280,8 @@
     "semantic_hash": ""
   },
   "HANDOFF.md": {
-    "mtime": 1791178951.0567005,
-    "ast_hash": "9c413beefcece9a0a16897acc6808a2c",
+    "mtime": 1791348159.3320882,
+    "ast_hash": "e8e98c1dec2887312ce666031e81e8d2",
     "semantic_hash": ""
   },
   "src/components/DoubleBezelCard.tsx": {
@@ -1080,8 +1080,8 @@
     "semantic_hash": ""
   },
   "src/components/mission/AtmosphericJourney.tsx": {
-    "mtime": 1791147249.6430292,
-    "ast_hash": "658847dbdad6f194f511c1787b6ad38f",
+    "mtime": 1791347197.9155388,
+    "ast_hash": "54a988c800d3a238d2b427c79e6166be",
     "semantic_hash": ""
   },
   ".claude/skills/ui-ux-pro-max/scripts/core.py": {
@@ -1280,8 +1280,8 @@
     "semantic_hash": ""
   },
   "src/components/SpaceHub.tsx": {
-    "mtime": 1791172886.9673843,
-    "ast_hash": "7c13597b46611474824f669c19e1e832",
+    "mtime": 1791347792.4445276,
+    "ast_hash": "46552c187f6bd7372561597caf1a7f07",
     "semantic_hash": ""
   },
   "src/content/spaceDestinations.ts": {
@@ -1345,8 +1345,8 @@
     "semantic_hash": ""
   },
   "src/components/PlanetaryDossier.tsx": {
-    "mtime": 1791172954.5196748,
-    "ast_hash": "c6e457bb9df287018c844a31e2e10cfa",
+    "mtime": 1791347823.117041,
+    "ast_hash": "36b318173a6c262baf4b8a8d16674a11",
     "semantic_hash": ""
   },
   "tests/planetaryDossiers.test.ts": {
@@ -1362,6 +1362,31 @@
   "eas.json": {
     "mtime": 1791178449.8057258,
     "ast_hash": "f76f7a9193d3e23b67a113b710176232",
+    "semantic_hash": ""
+  },
+  "src/components/CosmicTopicIllustration.tsx": {
+    "mtime": 1791347947.9466102,
+    "ast_hash": "3dd2195b1e12dc4eafda189ef7dcdebe",
+    "semantic_hash": ""
+  },
+  "src/components/mission/PlanetaryMissionSimulator.tsx": {
+    "mtime": 1791347563.154683,
+    "ast_hash": "f88a8bff42c3c9bdf079791263632dc1",
+    "semantic_hash": ""
+  },
+  "src/content/planetaryMissionsData.ts": {
+    "mtime": 1791347757.607431,
+    "ast_hash": "a5f991f36c736d32fe0a9413f3495bca",
+    "semantic_hash": ""
+  },
+  "src/utils/cosmicTopics.ts": {
+    "mtime": 1791347999.7677026,
+    "ast_hash": "bd01779c829b3e9894416161f6006404",
+    "semantic_hash": ""
+  },
+  "tests/planetaryMissions.test.ts": {
+    "mtime": 1791348041.157014,
+    "ast_hash": "47437002fab24e63be3f1d3b3f5dc663",
     "semantic_hash": ""
   }
 }

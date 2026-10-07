@@ -33,7 +33,8 @@ export const CosmicTopicIllustration: React.FC<CosmicTopicIllustrationProps> = (
   size = 72,
 }) => {
   const resolvedTopic: CosmicTopic = topic || detectCosmicTopic(textToDetect, 'moon');
-  const uid = `cti-${resolvedTopic}-${Math.floor(Math.random() * 1000)}`;
+  const instanceId = React.useId().replace(/:/g, '_');
+  const uid = `cti-${resolvedTopic}-${instanceId}`;
 
   const renderGraphic = () => {
     switch (resolvedTopic) {

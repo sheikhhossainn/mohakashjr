@@ -237,6 +237,7 @@
   "235": "md",
   "236": "1. THE THREE DIALS (Core Configuration)",
   "237": "6",
+  "238": "muted-foreground",
   "239": "Agent Skill: Principal UI/UX Architect & Motion Choreographer (Awwwards-Tier)",
   "240": "SKILL: Industrial Brutalism & Tactical Telemetry UI",
   "241": "Design System: Taste Standard",
@@ -245,5 +246,7 @@
   "244": "Full-Output Enforcement",
   "245": "padding-y",
   "246": "none",
-  "248": "destructive"
+  "247": "primary",
+  "248": "destructive",
+  "249": "primary-hover"
 }

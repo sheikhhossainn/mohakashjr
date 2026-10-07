@@ -67,8 +67,16 @@ export const PlanetaryMissionSimulator: React.FC<PlanetaryMissionSimulatorProps>
   const actionShakeAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const scanProgressAnim = useRef(new Animated.Value(0)).current;
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentStage: PlanetaryMissionStage = mission.stages[currentStageIndex];
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   // Reset stage task state upon advancing
   useEffect(() => {
@@ -76,6 +84,7 @@ export const PlanetaryMissionSimulator: React.FC<PlanetaryMissionSimulatorProps>
     setTogglesState({});
     setIsSimulatingAction(false);
     scanProgressAnim.setValue(0);
+    if (timerRef.current) clearTimeout(timerRef.current);
   }, [currentStageIndex]);
 
   // Credit 120 XP upon finishing
@@ -117,7 +126,7 @@ export const PlanetaryMissionSimulator: React.FC<PlanetaryMissionSimulatorProps>
     ]).start();
 
     // Timed simulation of task completion
-    setTimeout(() => {
+    timerRef.current = setTimeout(() => {
       successHaptic();
       setIsSimulatingAction(false);
       setStageTaskCompleted(true);
@@ -140,7 +149,7 @@ export const PlanetaryMissionSimulator: React.FC<PlanetaryMissionSimulatorProps>
     setStageTaskCompleted(false);
     setTogglesState({});
     setIsMissionFinished(false);
-    setXpAwarded(false);
+    // Keep xpAwarded = true so repeated replays in the same session don't farm XP
   };
 
   // ─── Completion & Flight Debrief Screen ──────────────────────────────────
@@ -176,7 +185,9 @@ export const PlanetaryMissionSimulator: React.FC<PlanetaryMissionSimulatorProps>
             <View style={styles.xpRewardBox}>
               <Sparkles size={24} color={Colors.gold} fill={Colors.gold} />
               <View>
-                <Text style={styles.xpRewardTitle}>+১২০ XP অর্জিত হয়েছে!</Text>
+                <Text style={styles.xpRewardTitle}>
+                  {isEn ? '+120 XP Awarded!' : '+১২০ XP অর্জিত হয়েছে!'}
+                </Text>
                 <Text style={styles.xpRewardDesc}>
                   {isEn ? 'Added to your NASA Cadet Dossier' : 'তোমার মহাকাশ ক্যাডেট ডসিয়ারে জমা হয়েছে'}
                 </Text>
@@ -387,9 +398,9 @@ export const PlanetaryMissionSimulator: React.FC<PlanetaryMissionSimulatorProps>
                   stageTaskCompleted ? (
                     <CheckCircle2 size={20} color={Colors.textDark} />
                   ) : currentStage.task.type === 'thrust_burn' ? (
-                    <Flame size={20} color="#FFFFFF" fill="#FF8A00" />
+                    <Flame size={20} color={Colors.textDark} fill="#FF8A00" />
                   ) : (
-                    <Rocket size={20} color="#FFFFFF" />
+                    <Rocket size={20} color={Colors.textDark} />
                   )
                 }
               />
