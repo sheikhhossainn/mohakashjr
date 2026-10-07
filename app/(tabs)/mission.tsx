@@ -9,6 +9,7 @@ import { GentleButton } from '../../src/components/GentleButton';
 import { MascotReaction } from '../../src/components/MascotReaction';
 import { AstronautAvatar } from '../../src/components/AstronautAvatar';
 import { MoonLandingMission, MissionStage } from '../../src/components/mission';
+import { PlanetaryMissionSimulator } from '../../src/components/mission/PlanetaryMissionSimulator';
 import { SpaceHub } from '../../src/components/SpaceHub';
 import { useAppStore } from '../../src/state/useAppStore';
 import { getTranslation } from '../../src/i18n/translations';
@@ -45,15 +46,18 @@ export default function MissionScreen() {
   const [screen, setScreen] = useState<'hub' | 'moon' | 'dossier'>('hub');
   const [selectedDestination, setSelectedDestination] = useState<DestinationId>('moon');
   const [isMissionActive, setIsMissionActive] = useState(false);
+  const [activePlanetMission, setActivePlanetMission] = useState<DestinationId | null>(null);
   const [missionStartStage, setMissionStartStage] = useState<MissionStage>('suit_up');
 
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
+  const isAnyMissionActive = isMissionActive || activePlanetMission !== null;
+
   React.useEffect(() => {
     navigation.setOptions({
-      headerShown: !isMissionActive && screen !== 'dossier',
-      tabBarStyle: isMissionActive
+      headerShown: !isAnyMissionActive && screen !== 'dossier',
+      tabBarStyle: isAnyMissionActive
         ? { display: 'none' }
         : {
             backgroundColor: Colors.surface,
@@ -69,14 +73,26 @@ export default function MissionScreen() {
             elevation: 4,
           },
     });
-  }, [isMissionActive, screen, navigation, insets.bottom]);
+  }, [isAnyMissionActive, screen, navigation, insets.bottom]);
 
   const startMissionAtStage = (stage: MissionStage) => {
     setMissionStartStage(stage);
     setIsMissionActive(true);
   };
 
-  // If cadet has launched the mission, show the full multi-stage simulation game
+  // If cadet has launched a planetary mission simulation
+  if (activePlanetMission) {
+    return (
+      <View style={[styles.activeMissionContainer, { paddingTop: insets.top }]}>
+        <PlanetaryMissionSimulator
+          destinationId={activePlanetMission}
+          onExit={() => setActivePlanetMission(null)}
+        />
+      </View>
+    );
+  }
+
+  // If cadet has launched the moon landing mission game
   if (isMissionActive) {
     return (
       <View style={[styles.activeMissionContainer, { paddingTop: insets.top }]}>
@@ -99,6 +115,13 @@ export default function MissionScreen() {
         onLaunchMoon={() => {
           setScreen('moon');
         }}
+        onLaunchMission={(id) => {
+          if (id === 'moon') {
+            setScreen('moon');
+          } else {
+            setActivePlanetMission(id);
+          }
+        }}
       />
     );
   }
@@ -110,6 +133,13 @@ export default function MissionScreen() {
         language={language}
         onBack={() => setScreen('hub')}
         onLaunchMoon={() => setScreen('moon')}
+        onLaunchMission={(id) => {
+          if (id === 'moon') {
+            setScreen('moon');
+          } else {
+            setActivePlanetMission(id);
+          }
+        }}
         onSelectDestination={(id) => setSelectedDestination(id)}
       />
     );

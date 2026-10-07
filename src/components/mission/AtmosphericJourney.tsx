@@ -200,7 +200,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
   const [journeyComplete, setJourneyComplete] = useState(false);
 
   // Animation values
-  const rocketY = useRef(new Animated.Value(H * 0.42)).current;
+  const rocketY = useRef(new Animated.Value(0)).current;
   const rocketShake = useRef(new Animated.Value(0)).current;
   const srbSeparation = useRef(new Animated.Value(0)).current;
   const exhaustScale = useRef(new Animated.Value(1)).current;
@@ -309,8 +309,8 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
         Animated.timing(boostFlare, { toValue: 1, duration: 400, useNativeDriver: true }),
       ]),
       Animated.sequence([
-        Animated.timing(rocketY, { toValue: H * 0.36, duration: 300, easing: Easing.out(Easing.quad), useNativeDriver: false }),
-        Animated.timing(rocketY, { toValue: H * 0.40, duration: 500, easing: Easing.inOut(Easing.quad), useNativeDriver: false }),
+        Animated.timing(rocketY, { toValue: -24, duration: 300, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+        Animated.timing(rocketY, { toValue: 0, duration: 500, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
       ]),
       Animated.sequence([
         Animated.timing(rocketShake, { toValue: 6, duration: 50, useNativeDriver: true }),
@@ -337,8 +337,8 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
       Animated.timing(factOpacity, { toValue: 0, duration: 220, useNativeDriver: true }),
       Animated.timing(factSlide, { toValue: -24, duration: 220, useNativeDriver: true }),
       Animated.sequence([
-        Animated.timing(rocketY, { toValue: H * 0.28, duration: 400, easing: Easing.in(Easing.quad), useNativeDriver: false }),
-        Animated.timing(rocketY, { toValue: H * 0.40, duration: 500, easing: Easing.out(Easing.quad), useNativeDriver: false }),
+        Animated.timing(rocketY, { toValue: -55, duration: 400, easing: Easing.in(Easing.quad), useNativeDriver: true }),
+        Animated.timing(rocketY, { toValue: 0, duration: 500, easing: Easing.out(Easing.quad), useNativeDriver: true }),
       ]),
     ]).start(() => {
       setCurrentLayerIndex((prev) => prev + 1);
@@ -571,8 +571,7 @@ export const AtmosphericJourney: React.FC<AtmosphericJourneyProps> = ({
         style={[
           styles.rocketPositioner,
           {
-            top: rocketY,
-            transform: [{ translateX: rocketShake }],
+            transform: [{ translateY: rocketY }, { translateX: rocketShake }],
           },
         ]}
       >
@@ -951,6 +950,7 @@ const styles = StyleSheet.create({
   },
   rocketPositioner: {
     position: 'absolute',
+    top: H * 0.40,
     left: W * 0.5 - 45,
     zIndex: 20,
     alignItems: 'center',

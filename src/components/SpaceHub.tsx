@@ -15,16 +15,18 @@ interface SpaceHubProps {
   language: AppLanguage;
   onOpenDestination: (id: DestinationId) => void;
   onLaunchMoon?: () => void;
+  onLaunchMission?: (id: DestinationId) => void;
 }
 
 /**
  * SpaceHub — pick where to fly or explore.
- * Moon landing simulation is live; all 8 worlds feature rich interactive Planetary Dossiers!
+ * Moon landing simulation is live; all 8 worlds feature rich interactive Planetary Missions & Dossiers!
  */
 export const SpaceHub: React.FC<SpaceHubProps> = ({
   language,
   onOpenDestination,
   onLaunchMoon,
+  onLaunchMission,
 }) => {
   const t = getTranslation(language).spaceHub;
   const en = language === 'en';
@@ -91,31 +93,42 @@ export const SpaceHub: React.FC<SpaceHubProps> = ({
 
                   {/* Actions Row */}
                   <View style={styles.ctaRow}>
-                    {live && onLaunchMoon ? (
-                      <View style={styles.moonActionsRow}>
-                        <Pressable
-                          onPress={(e) => {
-                            e.stopPropagation();
-                            tapHaptic();
+                    <View style={styles.moonActionsRow}>
+                      <Pressable
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          tapHaptic();
+                          if (d.id === 'moon' && onLaunchMoon) {
                             onLaunchMoon();
-                          }}
-                          style={styles.launchBtn}
+                          } else if (onLaunchMission) {
+                            onLaunchMission(d.id);
+                          } else {
+                            onOpenDestination(d.id);
+                          }
+                        }}
+                        style={[
+                          styles.launchBtn,
+                          d.id !== 'moon' && styles.launchBtnPlanet,
+                        ]}
+                        accessibilityRole="button"
+                        accessibilityLabel={`${t.playMission} ${name}`}
+                      >
+                        <Rocket size={13} color={d.id === 'moon' ? Colors.textDark : Colors.primaryDark} />
+                        <Text
+                          style={[
+                            styles.launchBtnText,
+                            d.id !== 'moon' && styles.launchBtnTextPlanet,
+                          ]}
                         >
-                          <Rocket size={13} color={Colors.textDark} />
-                          <Text style={styles.launchBtnText}>{t.playMission}</Text>
-                        </Pressable>
+                          {d.id === 'moon' ? t.playMission : (en ? 'Fly Mission' : 'অভিযান শুরু')}
+                        </Text>
+                      </Pressable>
 
-                        <View style={styles.dossierLinkRow}>
-                          <Text style={styles.dossierLinkText}>{t.viewDossier}</Text>
-                          <ChevronRight size={14} color={Colors.primary} />
-                        </View>
-                      </View>
-                    ) : (
                       <View style={styles.dossierLinkRow}>
                         <Text style={styles.dossierLinkText}>{t.viewDossier}</Text>
                         <ChevronRight size={14} color={Colors.primary} />
                       </View>
-                    )}
+                    </View>
                   </View>
                 </View>
               </ScalePressable>
@@ -272,10 +285,18 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: Radius.sm,
   },
+  launchBtnPlanet: {
+    backgroundColor: Colors.primaryBg,
+    borderWidth: 1,
+    borderColor: 'rgba(99, 102, 241, 0.3)',
+  },
   launchBtnText: {
     fontSize: Typography.size.caption,
     fontFamily: Typography.family.headingSemi,
     color: Colors.textDark,
+  },
+  launchBtnTextPlanet: {
+    color: Colors.primaryDark,
   },
   dossierLinkRow: {
     flexDirection: 'row',

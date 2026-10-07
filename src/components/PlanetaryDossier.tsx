@@ -67,6 +67,7 @@ interface PlanetaryDossierProps {
   language: AppLanguage;
   onBack: () => void;
   onLaunchMoon: () => void;
+  onLaunchMission?: (id: DestinationId) => void;
   onSelectDestination: (id: DestinationId) => void;
 }
 
@@ -75,6 +76,7 @@ export const PlanetaryDossier: React.FC<PlanetaryDossierProps> = ({
   language,
   onBack,
   onLaunchMoon,
+  onLaunchMission,
   onSelectDestination,
 }) => {
   const insets = useSafeAreaInsets();
@@ -588,23 +590,31 @@ export const PlanetaryDossier: React.FC<PlanetaryDossierProps> = ({
           )}
         </StoryCard>
 
-        {/* 7. Action Footer: Launch Moon or Navigate */}
+        {/* 7. Action Footer: Launch Mission or Navigate */}
         <View style={styles.actionFooter}>
-          {destination.id === 'moon' && (
-            <View style={styles.launchMoonWrap}>
-              <GentleButton
-                title={t.launchMoonCta}
-                onPress={() => {
-                  tapHaptic();
+          <View style={styles.launchMoonWrap}>
+            <GentleButton
+              title={
+                destination.id === 'moon'
+                  ? t.launchMoonCta
+                  : (isEn
+                      ? `Launch ${destination.name_en} Mission`
+                      : `${destination.name_bn} অভিযান শুরু করো`)
+              }
+              onPress={() => {
+                tapHaptic();
+                if (destination.id === 'moon') {
                   onLaunchMoon();
-                }}
-                variant="gold"
-                size="large"
-                fullWidth
-                icon={<Rocket size={18} color={Colors.textDark} />}
-              />
-            </View>
-          )}
+                } else if (onLaunchMission) {
+                  onLaunchMission(destination.id);
+                }
+              }}
+              variant="gold"
+              size="large"
+              fullWidth
+              icon={<Rocket size={18} color={Colors.textDark} />}
+            />
+          </View>
 
           {/* Navigation to Previous & Next Planet */}
           <View style={styles.navButtonsRow}>

@@ -131,8 +131,12 @@ export const MascotFeedbackSlot: React.FC<MascotFeedbackSlotProps> = ({
 const styles = StyleSheet.create({
   outerContainer: {
     marginVertical: 12,
+    width: '100%',
+    alignSelf: 'stretch',
   },
   bubbleCard: {
+    width: '100%',
+    alignSelf: 'stretch',
     borderRadius: 22,
     borderWidth: 2,
     padding: 16,
@@ -152,33 +156,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    flex: 1,
   },
   headerTitle: {
     fontSize: Typography.size.bodySmall,
     fontWeight: Typography.weight.bold,
+    flexShrink: 1,
   },
   bodyRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
+    width: '100%',
   },
   avatarSlot: {
     justifyContent: 'center',
     alignItems: 'center',
+    flexShrink: 0,
   },
   speechTextCol: {
     flex: 1,
+    minWidth: 0,
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderRadius: 16,
-    padding: 12,
+    padding: 14,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.12)',
   },
   speechText: {
     color: Colors.text,
     fontSize: Typography.size.bodySmall,
-    lineHeight: Typography.lineHeight.bodySmall,
+    lineHeight: Typography.lineHeight.body,
     fontWeight: Typography.weight.medium,
+    flexWrap: 'wrap',
   },
   hintBox: {
     marginTop: 12,

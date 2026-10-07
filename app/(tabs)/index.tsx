@@ -8,6 +8,7 @@ import { StoryCard } from '../../src/components/StoryCard';
 import { GentleButton } from '../../src/components/GentleButton';
 import { AppLogo } from '../../src/components/AppLogo';
 import { PlanetImage } from '../../src/components/PlanetImage';
+import { CosmicTopicIllustration } from '../../src/components/CosmicTopicIllustration';
 import { ProgressRing } from '../../src/components/ProgressRing';
 import { StarField } from '../../src/components/StarField';
 import { useAppStore, RANK_THRESHOLDS } from '../../src/state/useAppStore';
@@ -165,7 +166,10 @@ export default function DashboardScreen() {
                 {nextTitle}
               </Text>
             </View>
-            <PlanetImage id="moon" size={72} />
+            <CosmicTopicIllustration
+              textToDetect={allDone ? 'moon' : `${nextLesson?.title_bn ?? ''} ${nextLesson?.summary_bn ?? ''} ${nextLesson?.icon_name ?? ''}`}
+              size={72}
+            />
           </View>
 
           {!!nextSummary && (

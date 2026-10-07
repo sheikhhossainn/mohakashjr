@@ -10,6 +10,7 @@ import { GentleButton } from '../../src/components/GentleButton';
 import { MascotFeedbackSlot } from '../../src/components/MascotFeedbackSlot';
 import { AstronautAvatar } from '../../src/components/AstronautAvatar';
 import { ConfettiEffect } from '../../src/components/ConfettiEffect';
+import { CosmicTopicIllustration } from '../../src/components/CosmicTopicIllustration';
 import { QuizQuestion, QuizAttemptRecord } from '../../src/content/schema';
 import { getQuizQuestionsByLessonId, saveQuizAttempt } from '../../src/services/quizService';
 import { useAppStore } from '../../src/state/useAppStore';
@@ -208,15 +209,17 @@ export default function QuizScreen() {
           </View>
 
           {/* Mascot Celebrate Reaction */}
-          <MascotFeedbackSlot
-            state={finalScore > 0 ? 'celebrate' : 'incorrect'}
-            title={isPerfect ? 'অনবদ্য নৈপুণ্য!' : 'দারুণ প্রচেষ্টা!'}
-            message={
-              isPerfect
-                ? 'চমৎকার! মহাকাশ বিজ্ঞানের প্রতিটি জটিল প্রশ্নের বিজ্ঞানসম্মত রহস্য বুঝে নিয়েছো।'
-                : 'খুব ভালো চেষ্টা করেছো! মহাকাশের রহস্য ধীরে ধীরে আরও পরিষ্কার হয়ে উঠবে।'
-            }
-          />
+          <View style={{ width: '100%' }}>
+            <MascotFeedbackSlot
+              state={finalScore > 0 ? 'celebrate' : 'incorrect'}
+              title={isPerfect ? 'অনবদ্য নৈপুণ্য!' : 'দারুণ প্রচেষ্টা!'}
+              message={
+                isPerfect
+                  ? 'চমৎকার! মহাকাশ বিজ্ঞানের প্রতিটি জটিল প্রশ্নের বিজ্ঞানসম্মত রহস্য বুঝে নিয়েছো।'
+                  : 'খুব ভালো চেষ্টা করেছো! মহাকাশের রহস্য ধীরে ধীরে আরও পরিষ্কার হয়ে উঠবে।'
+              }
+            />
+          </View>
 
           {/* Action CTAs */}
           <View style={styles.summaryActions}>
@@ -271,10 +274,20 @@ export default function QuizScreen() {
         </View>
       </View>
 
-      {/* Question Prompt in Single-Surface StoryCard */}
+      {/* Question Prompt in Single-Surface StoryCard with Dynamic Topic Illustration */}
       <StoryCard accent="primary" style={styles.questionCardMargin}>
-        <Text style={styles.promptLabel}>একটু ভাবো তো...</Text>
-        <Text style={styles.promptText}>{currentQ.prompt_bn}</Text>
+        <View style={styles.questionTopRow}>
+          <View style={styles.questionTextCol}>
+            <Text style={styles.promptLabel}>একটু ভাবো তো...</Text>
+            <Text style={styles.promptText}>{currentQ.prompt_bn}</Text>
+          </View>
+          <View style={styles.questionIllustrationBox}>
+            <CosmicTopicIllustration
+              textToDetect={`${currentQ.prompt_bn} ${currentQ.explanation_bn}`}
+              size={60}
+            />
+          </View>
+        </View>
       </StoryCard>
 
       {/* 4 Interactive Option Cards */}
@@ -286,20 +299,26 @@ export default function QuizScreen() {
           let cardStyle = styles.optionCard;
           let badgeStyle = styles.optionBadge;
           let badgeTextStyle = styles.badgeLabel;
+          let optionTextStyle = styles.optionText;
 
           if (isAnswerSubmitted) {
             if (isCorrectAnswer) {
               cardStyle = { ...cardStyle, ...styles.optionCardCorrect };
               badgeStyle = { ...badgeStyle, ...styles.optionBadgeCorrect };
-              badgeTextStyle = { ...badgeTextStyle, color: '#0F1128' };
+              badgeTextStyle = { ...badgeTextStyle, color: '#0B1026', fontFamily: Typography.family.heading };
+              optionTextStyle = { ...optionTextStyle, color: '#FFFFFF', fontFamily: Typography.family.notoBold };
             } else if (isSelected) {
               cardStyle = { ...cardStyle, ...styles.optionCardIncorrect };
               badgeStyle = { ...badgeStyle, ...styles.optionBadgeIncorrect };
-              badgeTextStyle = { ...badgeTextStyle, color: '#FFFFFF' };
+              badgeTextStyle = { ...badgeTextStyle, color: '#0B1026', fontFamily: Typography.family.heading };
+              optionTextStyle = { ...optionTextStyle, color: '#FFFFFF', fontFamily: Typography.family.notoBold };
+            } else {
+              cardStyle = { ...cardStyle, ...styles.optionCardDimmed };
             }
           } else if (isSelected) {
             cardStyle = { ...cardStyle, ...styles.optionCardSelected };
             badgeStyle = { ...badgeStyle, ...styles.optionBadgeSelected };
+            badgeTextStyle = { ...badgeTextStyle, color: '#0B1026', fontFamily: Typography.family.heading };
           }
 
           return (
@@ -313,13 +332,13 @@ export default function QuizScreen() {
               <View style={badgeStyle}>
                 <Text style={badgeTextStyle}>{OPTION_PREFIXES[idx]}</Text>
               </View>
-              <Text style={styles.optionText}>{option}</Text>
+              <Text style={optionTextStyle}>{option}</Text>
 
               {isAnswerSubmitted && isCorrectAnswer && (
-                <CheckCircle2 size={20} color={Colors.emerald} style={styles.indicatorIcon} />
+                <CheckCircle2 size={22} color={Colors.emerald} style={styles.indicatorIcon} />
               )}
               {isAnswerSubmitted && isSelected && !isCorrectAnswer && (
-                <AlertCircle size={20} color={Colors.coral} style={styles.indicatorIcon} />
+                <AlertCircle size={22} color={Colors.coral} style={styles.indicatorIcon} />
               )}
             </ScalePressable>
           );
@@ -331,7 +350,11 @@ export default function QuizScreen() {
         <View style={styles.feedbackContainer}>
           <MascotFeedbackSlot
             state={isCorrect ? 'correct' : 'incorrect'}
-            message={currentQ.explanation_bn}
+            message={
+              !isCorrect
+                ? currentQ.explanation_bn.replace(/^(দারুণ!|সঠিক!)\s*/, 'মহাকাশ তথ্য: ')
+                : currentQ.explanation_bn
+            }
             hint={currentQ.hint_bn}
           />
 
@@ -429,6 +452,25 @@ const styles = StyleSheet.create({
   questionCardMargin: {
     marginBottom: 18,
   },
+  questionTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  questionTextCol: {
+    flex: 1,
+  },
+  questionIllustrationBox: {
+    width: 64,
+    height: 64,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
   promptLabel: {
     color: Colors.primary,
     fontSize: Typography.size.caption,
@@ -460,19 +502,25 @@ const styles = StyleSheet.create({
   },
   optionCardSelected: {
     borderColor: Colors.primary,
+    borderWidth: 2,
     backgroundColor: Colors.backgroundTertiary,
   },
   optionCardCorrect: {
     borderColor: Colors.emerald,
-    backgroundColor: Colors.emeraldBg,
+    borderWidth: 2,
+    backgroundColor: 'rgba(93, 211, 158, 0.20)',
   },
   optionCardIncorrect: {
     borderColor: Colors.coral,
-    backgroundColor: Colors.coralBg,
+    borderWidth: 2,
+    backgroundColor: 'rgba(255, 122, 144, 0.20)',
+  },
+  optionCardDimmed: {
+    opacity: 0.52,
   },
   optionBadge: {
-    width: 34,
-    height: 34,
+    width: 36,
+    height: 36,
     borderRadius: 12,
     backgroundColor: Colors.surfaceWarm,
     justifyContent: 'center',
@@ -525,6 +573,7 @@ const styles = StyleSheet.create({
   },
   summaryCardWrapper: {
     alignItems: 'center',
+    width: '100%',
   },
   avatarWrapper: {
     marginBottom: 12,
