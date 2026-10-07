@@ -8,7 +8,7 @@ import { ScalePressable } from '../../src/components/ScalePressable';
 import { StoryCard } from '../../src/components/StoryCard';
 import { GentleButton } from '../../src/components/GentleButton';
 import { MascotFeedbackSlot } from '../../src/components/MascotFeedbackSlot';
-import { AstronautAvatar } from '../../src/components/AstronautAvatar';
+import { CelebrationAstronaut } from '../../src/components/CelebrationAstronaut';
 import { ConfettiEffect } from '../../src/components/ConfettiEffect';
 import { CosmicTopicIllustration } from '../../src/components/CosmicTopicIllustration';
 import { QuizQuestion, QuizAttemptRecord } from '../../src/content/schema';
@@ -23,6 +23,7 @@ import {
   HelpCircle,
   ArrowRight,
   BookOpen,
+  Award,
 } from 'lucide-react-native';
 
 const BENGALI_DIGITS = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
@@ -39,6 +40,36 @@ function toBengaliNumber(num: number): string {
     .split('')
     .map((d) => BENGALI_DIGITS[parseInt(d, 10)] || d)
     .join('');
+}
+
+function getDebrief(score: number, total: number) {
+  const ratio = total > 0 ? score / total : 0;
+  if (ratio === 1) {
+    return {
+      title: 'অনবদ্য মহাকাশ বিজয়!',
+      badge: '১০০% নির্ভুল অনুসন্ধান',
+      message: 'চমৎকার! মহাকাশ বিজ্ঞানের প্রতিটি জটিল প্রশ্নের বিজ্ঞানসম্মত রহস্য তুমি নিখুঁতভাবে উন্মোচন করেছো। তুমি সত্যিকারের মহাকাশচারী!',
+    };
+  }
+  if (ratio >= 0.6) {
+    return {
+      title: 'দারুণ অন্বেষণ!',
+      badge: 'দক্ষ মহাকাশ অভিযাত্রী',
+      message: 'খুব ভালো নৈপুণ্য! মহাকাশের অধিকাংশ রহস্যই তুমি আয়ত্ত করে ফেলেছো। আরেকটু অনুশীলনেই তুমি পূর্ণ নম্বর পাবে।',
+    };
+  }
+  if (ratio >= 0.3) {
+    return {
+      title: 'প্রশংসনীয় অভিযান!',
+      badge: 'অগ্রসর ক্যাডেট',
+      message: 'বেশ ভালো প্রচেষ্টা! মহাকাশের কিছু রহস্য সমাধান হয়েছে, বাকিগুলো পাঠশালা আবার পড়ে ঝালিয়ে নাও।',
+    };
+  }
+  return {
+    title: 'মহাকাশ প্রশিক্ষণ!',
+    badge: 'অভিযাত্রী ক্যাডেট',
+    message: 'হাল ছেড়ো না! মহাকাশ গবেষণায় প্রতিটি ভুলই নতুন কিছু শেখার ধাপ। পাঠশালাটি আবার পড়ে নতুন করে চেষ্টা করো।',
+  };
 }
 
 export default function QuizScreen() {
@@ -170,83 +201,88 @@ export default function QuizScreen() {
   if (isQuizComplete) {
     const finalScore = score;
     const isPerfect = finalScore === questions.length;
+    const debrief = getDebrief(finalScore, questions.length);
 
     return (
       <View style={styles.root}>
-      <ScreenHeader title="কুইজ অভিযান" subtitle={id === 'placement' ? 'অভিযাত্রা সূচনা' : 'কৌতূহল যাচাই'} />
-      <ScrollView contentContainerStyle={styles.summaryContainer} showsVerticalScrollIndicator={false}>
-        <StatusBar barStyle="light-content" />
-        {finalScore > 0 && <ConfettiEffect active />}
+        <ScreenHeader title="কুইজ অভিযান" subtitle={id === 'placement' ? 'অভিযাত্রা সূচনা' : 'কৌতূহল যাচাই'} />
+        <ScrollView contentContainerStyle={styles.summaryContainer} showsVerticalScrollIndicator={false}>
+          <StatusBar barStyle="light-content" />
+          {finalScore > 0 && <ConfettiEffect active />}
 
-        <StoryCard accent={isPerfect ? 'gold' : 'primary'} style={styles.summaryCardWrapper}>
-          {/* Avatar Celebration */}
-          <View style={styles.avatarWrapper}>
-            <AstronautAvatar size={82} rank={rank} showHalo />
-          </View>
-
-          <Text style={styles.summaryTitle}>দারুণ অন্বেষণ!</Text>
-          <Text style={styles.summarySubtitle}>
-            তুমি {toBengaliNumber(questions.length)}টি অনুসন্ধানের মধ্যে {toBengaliNumber(finalScore)}টির রহস্য উন্মোচন করেছো!
-          </Text>
-
-          {/* Star Rating Display */}
-          <View style={styles.starsRow}>
-            {[...Array(questions.length)].map((_, i) => (
-              <Star
-                key={i}
-                size={28}
-                color={i < finalScore ? Colors.gold : 'rgba(255, 255, 255, 0.15)'}
-                fill={i < finalScore ? Colors.gold : 'transparent'}
-              />
-            ))}
-          </View>
-
-          {/* XP Reward Showcase */}
-          <View style={styles.xpRewardBox}>
-            <Zap size={22} color={Colors.gold} fill={Colors.gold} />
-            <View>
-              <Text style={styles.xpRewardTitle}>
-                {earnedXP > 0 ? `+${toBengaliNumber(earnedXP)} XP অর্জিত হয়েছে!` : 'নতুন XP নেই'}
-              </Text>
-              <Text style={styles.xpRewardDesc}>
-                {earnedXP > 0
-                  ? 'তোমার মহাকাশ গবেষণার ঝুলিতে জমা হয়েছে'
-                  : 'আগের সেরা স্কোরের চেয়ে বেশি নম্বর পেলে নতুন XP পাবে'}
-              </Text>
+          <StoryCard accent={isPerfect ? 'gold' : 'primary'} style={styles.summaryCardWrapper}>
+            {/* Expressive Outcome-Driven Victory Astronaut */}
+            <View style={styles.avatarWrapper}>
+              <CelebrationAstronaut score={finalScore} total={questions.length} rank={rank} size={130} />
             </View>
-          </View>
 
-          {/* Mascot Celebrate Reaction */}
-          <View style={{ width: '100%' }}>
-            <MascotFeedbackSlot
-              state={finalScore > 0 ? 'celebrate' : 'incorrect'}
-              title={isPerfect ? 'অনবদ্য নৈপুণ্য!' : 'দারুণ প্রচেষ্টা!'}
-              message={
-                isPerfect
-                  ? 'চমৎকার! মহাকাশ বিজ্ঞানের প্রতিটি জটিল প্রশ্নের বিজ্ঞানসম্মত রহস্য বুঝে নিয়েছো।'
-                  : 'খুব ভালো চেষ্টা করেছো! মহাকাশের রহস্য ধীরে ধীরে আরও পরিষ্কার হয়ে উঠবে।'
-              }
-            />
-          </View>
+            <Text style={styles.summaryTitle}>{debrief.title}</Text>
+            <Text style={styles.summarySubtitle}>
+              তুমি {toBengaliNumber(questions.length)}টি অনুসন্ধানের মধ্যে {toBengaliNumber(finalScore)}টির রহস্য উন্মোচন করেছো!
+            </Text>
 
-          {/* Action CTAs */}
-          <View style={styles.summaryActions}>
-            <GentleButton
-              title="পরবর্তী পাঠশালায় চলো"
-              onPress={() => router.push('/(tabs)/lessons')}
-              variant="gold"
-              size="normal"
-            />
-            <GentleButton
-              title="আবার বোঝার চেষ্টা করো"
-              onPress={handleRetry}
-              variant="outline"
-              size="normal"
-              icon={<RotateCcw size={16} color={Colors.text} />}
-            />
-          </View>
-        </StoryCard>
-      </ScrollView>
+            {/* Star Rating Display */}
+            <View style={styles.starsRow}>
+              {[...Array(questions.length)].map((_, i) => (
+                <Star
+                  key={i}
+                  size={28}
+                  color={i < finalScore ? Colors.gold : 'rgba(255, 255, 255, 0.15)'}
+                  fill={i < finalScore ? Colors.gold : 'transparent'}
+                />
+              ))}
+            </View>
+
+            {/* XP Reward Showcase */}
+            <View style={[styles.xpRewardBox, earnedXP === 0 && styles.xpRewardBoxStored]}>
+              <View style={[styles.xpIconBadge, earnedXP === 0 && styles.xpIconBadgeStored]}>
+                <Zap
+                  size={20}
+                  color={earnedXP > 0 ? Colors.gold : Colors.primary}
+                  fill={earnedXP > 0 ? Colors.gold : Colors.primary}
+                />
+              </View>
+              <View style={styles.xpTextCol}>
+                <Text style={[styles.xpRewardTitle, earnedXP === 0 && styles.xpRewardTitleStored]}>
+                  {earnedXP > 0
+                    ? `+${toBengaliNumber(earnedXP)} XP অর্জিত হয়েছে!`
+                    : `সর্বোচ্চ স্কোর সংরক্ষিত (+${toBengaliNumber(xpForScore(finalScore, questions.length))} XP)`}
+                </Text>
+                <Text style={styles.xpRewardDesc}>
+                  {earnedXP > 0
+                    ? 'তোমার মহাকাশ গবেষণার ঝুলিতে জমা হয়েছে'
+                    : 'আগের সেরা স্কোরের চেয়ে বেশি পেলে নতুন XP যোগ হবে'}
+                </Text>
+              </View>
+            </View>
+
+            {/* Clean Full-Width Debrief Box */}
+            <View style={styles.debriefCard}>
+              <View style={styles.debriefHeader}>
+                <Award size={16} color={Colors.gold} />
+                <Text style={styles.debriefBadgeText}>{debrief.badge}</Text>
+              </View>
+              <Text style={styles.debriefMessage}>{debrief.message}</Text>
+            </View>
+
+            {/* Action CTAs */}
+            <View style={styles.summaryActions}>
+              <GentleButton
+                title="পরবর্তী পাঠশালায় চলো"
+                onPress={() => router.push('/(tabs)/lessons')}
+                variant="gold"
+                size="normal"
+              />
+              <GentleButton
+                title="আবার বোঝার চেষ্টা করো"
+                onPress={handleRetry}
+                variant="outline"
+                size="normal"
+                icon={<RotateCcw size={16} color={Colors.text} />}
+              />
+            </View>
+          </StoryCard>
+        </ScrollView>
       </View>
     );
   }
@@ -599,53 +635,109 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   avatarWrapper: {
-    marginBottom: 12,
+    marginBottom: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   summaryTitle: {
     color: Colors.text,
-    fontSize: Typography.size.hero,
+    fontSize: Typography.size.h1,
     fontFamily: Typography.family.heading,
     marginBottom: 6,
+    textAlign: 'center',
   },
   summarySubtitle: {
     color: Colors.textSecondary,
     fontSize: Typography.size.body,
     fontFamily: Typography.family.notoRegular,
     textAlign: 'center',
-    marginBottom: 18,
+    marginBottom: 16,
     lineHeight: Typography.lineHeight.body,
   },
   starsRow: {
     flexDirection: 'row',
     gap: 12,
     marginBottom: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   xpRewardBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 200, 107, 0.12)',
-    paddingHorizontal: 18,
+    backgroundColor: '#231F18',
+    paddingHorizontal: 16,
     paddingVertical: 14,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: Colors.gold,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#FFC94D',
     gap: 12,
     width: '100%',
     marginBottom: 14,
+    overflow: 'hidden',
+  },
+  xpRewardBoxStored: {
+    backgroundColor: '#141C34',
+    borderColor: Colors.borderMedium,
+  },
+  xpIconBadge: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: '#3D2E14',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  xpIconBadgeStored: {
+    backgroundColor: '#1E2858',
+  },
+  xpTextCol: {
+    flex: 1,
+    backgroundColor: 'transparent',
   },
   xpRewardTitle: {
     color: Colors.gold,
     fontSize: Typography.size.body,
     fontFamily: Typography.family.heading,
+    marginBottom: 2,
+  },
+  xpRewardTitleStored: {
+    color: Colors.primary,
   },
   xpRewardDesc: {
     color: Colors.textSecondary,
     fontSize: Typography.size.caption,
     fontFamily: Typography.family.notoRegular,
+    lineHeight: 18,
+  },
+  debriefCard: {
+    width: '100%',
+    backgroundColor: '#16233B',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    marginBottom: 16,
+    overflow: 'hidden',
+  },
+  debriefHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  debriefBadgeText: {
+    color: Colors.gold,
+    fontSize: Typography.size.caption,
+    fontFamily: Typography.family.headingSemi,
+  },
+  debriefMessage: {
+    color: Colors.text,
+    fontSize: Typography.size.bodySmall,
+    fontFamily: Typography.family.notoRegular,
+    lineHeight: 22,
   },
   summaryActions: {
     width: '100%',
     gap: 12,
-    marginTop: 16,
   },
 });

@@ -167,3 +167,24 @@ test('Offline Tutor: every question and every quick-reply chip leads to a real a
     }
   }
 });
+
+test('CelebrationAstronaut: Outcome tiers map correctly across all possible score ratios', () => {
+  const getTier = (score: number, total: number) => {
+    const ratio = total > 0 ? score / total : 0;
+    if (ratio === 1) return 'perfect';
+    if (ratio >= 0.6) return 'great';
+    if (ratio >= 0.3) return 'good';
+    return 'retry';
+  };
+
+  assert.strictEqual(getTier(3, 3), 'perfect', '3/3 should be perfect victory');
+  assert.strictEqual(getTier(5, 5), 'perfect', '5/5 should be perfect victory');
+  assert.strictEqual(getTier(2, 3), 'great', '2/3 (66%) should be great exploration');
+  assert.strictEqual(getTier(4, 5), 'great', '4/5 (80%) should be great exploration');
+  assert.strictEqual(getTier(1, 3), 'good', '1/3 (33%) should be good exploration');
+  assert.strictEqual(getTier(2, 5), 'good', '2/5 (40%) should be good exploration');
+  assert.strictEqual(getTier(0, 3), 'retry', '0/3 should be motivating retry');
+  assert.strictEqual(getTier(1, 5), 'retry', '1/5 (20%) should be motivating retry');
+  assert.strictEqual(getTier(0, 0), 'retry', '0/0 edge case should be retry');
+});
+

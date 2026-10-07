@@ -1,16 +1,16 @@
 # Graph Report - mohakashjr  (2026-10-07)
 
 ## Corpus Check
-- 267 files · ~458,966 words
+- 267 files · ~459,183 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3602 nodes · 4873 edges · 250 communities (207 shown, 43 thin omitted)
+- 3602 nodes · 4873 edges · 249 communities (206 shown, 43 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 213 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b654f54c`
+- Built from commit: `f74f2f7d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -264,7 +264,6 @@
 - none
 - 8
 - destructive
-- TestLandingAndStackContract
 
 ## God Nodes (most connected - your core abstractions)
 1. `TailwindConfigGenerator` - 57 edges
@@ -293,7 +292,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (250 total, 43 thin omitted)
+## Communities (249 total, 43 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -397,7 +396,7 @@ Nodes (53): $type, $value, $type, $value, $type, $value, $type, $value (+45 more
 
 ### Community 37 - "HANDOFF — 2026-09-22 21:23"
 Cohesion: 0.33
-Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-07 20:05, Immediate next steps, Just completed
+Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-07 20:45, Immediate next steps, Just completed
 
 ### Community 38 - "BM25"
 Cohesion: 0.07
@@ -520,8 +519,8 @@ Cohesion: 0.09
 Nodes (22): @apply Directive, Best Practices, Color Customization, Complete Tailwind Config, Configuration Examples, Content Configuration, Custom Color Palette, Custom Font Sizes (+14 more)
 
 ### Community 68 - "read_rows"
-Cohesion: 0.24
-Nodes (4): split_values(), style_identities(), TestGeneratedCatalogContract, TestStyleIdentityContract
+Cohesion: 0.21
+Nodes (4): split_values(), style_identities(), TestLandingAndStackContract, TestStyleIdentityContract
 
 ### Community 69 - "search"
 Cohesion: 0.11
@@ -728,8 +727,8 @@ Cohesion: 0.22
 Nodes (6): Path, Initialize generator.          Args:             typescript: If True, generat, Determine default output path., Create base configuration structure., Get default content paths for framework., Any
 
 ### Community 121 - "parse_decision_rules"
-Cohesion: 0.24
-Nodes (7): apply_decision_rules(), _object_without_duplicates(), parse_decision_rules(), Return deterministic mutations and an audit trail; never execute data., Parse the canonical condition -> action-array representation., _validate_action(), _check_reasoning_contract()
+Cohesion: 0.17
+Nodes (9): Find matching reasoning rule for a category., Apply reasoning rules to search results., apply_decision_rules(), _object_without_duplicates(), parse_decision_rules(), Return deterministic mutations and an audit trail; never execute data., Parse the canonical condition -> action-array representation., _validate_action() (+1 more)
 
 ### Community 122 - "_run"
 Cohesion: 0.28
@@ -740,8 +739,8 @@ Cohesion: 0.25
 Nodes (9): _exact_match_diagnostic(), _legacy_successor_guidance(), _normalize(), Apply longest-first synonym substitution at token boundaries., Whether a stack query explicitly targets an older framework generation., Choose one coherent applicability generation for stack retrieval., Prefer the explicit successor row for a brand-new app on legacy-only stacks., _stack_query_requests_legacy() (+1 more)
 
 ### Community 124 - "input"
-Cohesion: 0.14
-Nodes (8): Execute searches across multiple domains., Find matching reasoning rule for a category., Apply reasoning rules to search results., Select best matching result based on priority keywords., Extract results list from search result dict., Generate complete design system recommendation.          variance/motion/densi, Bucket a 1-10 dial value into its tier config. Returns None if value is None., _resolve_dial()
+Cohesion: 0.18
+Nodes (6): Execute searches across multiple domains., Select best matching result based on priority keywords., Extract results list from search result dict., Generate complete design system recommendation.          variance/motion/densi, Bucket a 1-10 dial value into its tier config. Returns None if value is None., _resolve_dial()
 
 ### Community 125 - "radius"
 Cohesion: 0.05
@@ -791,10 +790,6 @@ Nodes (8): _exact_row_identity(), Suggest complete public identities so a retry 
 Cohesion: 0.40
 Nodes (4): Brand Guidelines Template, Document Structure, Extractable Fields, Usage
 
-### Community 137 - "$type"
-Cohesion: 0.12
-Nodes (20): AITutorChatScreen(), ChatMessage, hasInternet(), styles, AnimatedMascot(), AnimatedMascotProps, styles, MascotFeedbackSlot() (+12 more)
-
 ### Community 138 - "radius"
 Cohesion: 0.60
 Nodes (5): radius, radius, radius, $type, $value
@@ -824,8 +819,8 @@ Cohesion: 0.43
 Nodes (3): _filter_anti_patterns_for_mode(), Drop "avoid dark mode" advice once dark mode is the resolved answer., TestAntiPatternGating
 
 ### Community 147 - "destructive-foreground"
-Cohesion: 0.10
-Nodes (31): LessonReaderScreen(), BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), xpForScore(), LessonsScreen() (+23 more)
+Cohesion: 0.07
+Nodes (45): LessonReaderScreen(), BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), xpForScore(), LessonsScreen() (+37 more)
 
 ### Community 148 - "muted"
 Cohesion: 0.67
@@ -1016,8 +1011,8 @@ Cohesion: 0.40
 Nodes (5): 21. MOBILE ANTI-AI-TELLS RULE, Copy AI tells, Layout AI tells, UI clutter tells, Visual AI tells
 
 ### Community 220 - "default"
-Cohesion: 0.07
-Nodes (42): styles, styles, BN_DIGITS, QuizHubScreen(), styles, toBn(), styles, AnimatedXPBar() (+34 more)
+Cohesion: 0.06
+Nodes (48): styles, styles, BN_DIGITS, QuizHubScreen(), styles, toBn(), styles, AnimatedMascot() (+40 more)
 
 ### Community 221 - "7. DIAL DEFINITIONS (Technical Reference)"
 Cohesion: 0.50
@@ -1131,7 +1126,7 @@ Nodes (3): destructive, $type, $value
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `DesignSystemGenerator` connect `DesignSystemGenerator` to `read_rows`, `search`, `design_system.py`, `_resolve_color_mode`, `destructive`, `_select_palette_for_mode`, `TestLandingAndStackContract`, `input`, `BM25`, `detect_domain`?**
+- **Why does `DesignSystemGenerator` connect `DesignSystemGenerator` to `read_rows`, `search`, `$type`, `design_system.py`, `_resolve_color_mode`, `destructive`, `_select_palette_for_mode`, `parse_decision_rules`, `input`, `BM25`, `detect_domain`?**
   _High betweenness centrality (0.007) - this node is a cross-community bridge._
 - **Why does `BM25` connect `BM25` to `search`, `BM25`, `DesignSystemGenerator`, `design_system.py`, `detect_domain`?**
   _High betweenness centrality (0.005) - this node is a cross-community bridge._
