@@ -11,6 +11,7 @@ import { SpaceChoiceBadge } from '../../src/components/SpaceChoiceBadge';
 import { GentleButton } from '../../src/components/GentleButton';
 import { LanguageSwitch } from '../../src/components/LanguageSwitch';
 import { useAppStore, RANK_THRESHOLDS, ARCHETYPES } from '../../src/state/useAppStore';
+import { RankTier } from '../../src/content/schema';
 import {
   CheckCircle2,
   Shield,
@@ -51,32 +52,33 @@ export default function ProfileScreen() {
     0
   );
 
-  const suitTiers = [
+  const suitTiers: {
+    tier: RankTier;
+    title: string;
+    unlocked: boolean;
+    condition: string;
+  }[] = [
     {
       tier: 'Cadet',
       title: language === 'en' ? 'Space Cadet Suit' : 'স্পেস ক্যাডেট স্যুট',
-      icon: '👨‍🚀',
       unlocked: true,
       condition: language === 'en' ? 'Starting tier' : 'শুরুর স্তর',
     },
     {
       tier: 'Astronaut',
       title: language === 'en' ? 'Golden Visor Suit' : 'গোল্ডেন ভিসার স্যুট',
-      icon: '🌟',
       unlocked: rank !== 'Cadet',
       condition: language === 'en' ? 'Unlocks at 201 XP' : '২০১ XP অর্জনে আনলক',
     },
     {
       tier: 'Mission Specialist',
       title: language === 'en' ? 'Deep Space Nebula Suit' : 'ডিপ স্পেস নেবুলা স্যুট',
-      icon: '🌌',
       unlocked: rank === 'Mission Specialist' || rank === 'Commander',
       condition: language === 'en' ? 'Unlocks at 601 XP' : '৬০১ XP অর্জনে আনলক',
     },
     {
       tier: 'Commander',
       title: language === 'en' ? 'Mars Commander Golden Suit' : 'মার্স কমান্ডার গোল্ডেন স্যুট',
-      icon: '👑',
       unlocked: rank === 'Commander',
       condition: language === 'en' ? 'Unlocks at 1201 XP' : '১২০১ XP অর্জনে আনলক',
     },
@@ -152,7 +154,10 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.avatarSection}>
-          <AstronautAvatar size={84} rank={rank} showHalo />
+          <View style={styles.avatarPedestal}>
+            <View style={styles.avatarGlowBackdrop} />
+            <AstronautAvatar size={96} rank={rank} showHalo animated />
+          </View>
           <Text style={styles.nameText}>{displayName}</Text>
 
           <View style={styles.rankPill}>
@@ -190,7 +195,14 @@ export default function ProfileScreen() {
             key={suit.tier}
             style={[styles.suitCard, !suit.unlocked && styles.suitCardLocked]}
           >
-            <Text style={styles.suitIcon}>{suit.icon}</Text>
+            <View style={[styles.suitAvatarWrap, !suit.unlocked && styles.suitAvatarWrapLocked]}>
+              <AstronautAvatar
+                size={48}
+                rank={suit.tier}
+                showHalo={false}
+                animated={suit.unlocked}
+              />
+            </View>
             <Text style={[styles.suitTitle, !suit.unlocked && styles.textMuted]}>
               {suit.title}
             </Text>
@@ -372,11 +384,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
+  avatarPedestal: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#121832',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 6,
+    position: 'relative',
+    marginBottom: 6,
+  },
+  avatarGlowBackdrop: {
+    position: 'absolute',
+    width: 98,
+    height: 98,
+    borderRadius: 49,
+    backgroundColor: 'rgba(56, 189, 248, 0.08)',
+  },
   nameText: {
     color: Colors.text,
     fontSize: Typography.size.h1,
     fontFamily: Typography.family.heading,
-    marginTop: 10,
+    marginTop: 6,
     marginBottom: 6,
   },
   rankPill: {
@@ -441,11 +477,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   suitCardLocked: {
-    opacity: 0.55,
+    opacity: 0.65,
   },
-  suitIcon: {
-    fontSize: 28,
-    marginBottom: 6,
+  suitAvatarWrap: {
+    width: 62,
+    height: 62,
+    borderRadius: 18,
+    backgroundColor: '#131A33',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    overflow: 'hidden',
+  },
+  suitAvatarWrapLocked: {
+    backgroundColor: '#0F1426',
+    borderColor: 'rgba(255, 255, 255, 0.04)',
+    opacity: 0.6,
   },
   suitTitle: {
     color: Colors.text,

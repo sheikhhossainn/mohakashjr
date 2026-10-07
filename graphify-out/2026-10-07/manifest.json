@@ -200,8 +200,8 @@
     "semantic_hash": ""
   },
   "app/quiz/[id].tsx": {
-    "mtime": 1791384047.6998928,
-    "ast_hash": "915ff9dea9cdc73315c389059f8b1cf2",
+    "mtime": 1791384818.291833,
+    "ast_hash": "a9443be2ff04d8fa1d8e651d95fc25d7",
     "semantic_hash": ""
   },
   "app/quiz/index.tsx": {
@@ -900,8 +900,8 @@
     "semantic_hash": ""
   },
   "tests/content.test.ts": {
-    "mtime": 1791147249.6590393,
-    "ast_hash": "03e54d03cf1c3c3644d85a0388ffcd5d",
+    "mtime": 1791384862.4392936,
+    "ast_hash": "c887658de37f8b0b0a3771afac5c4113",
     "semantic_hash": ""
   },
   "docs/AI_TUTOR_PROMPT.md": {
@@ -1387,6 +1387,11 @@
   "tests/planetaryMissions.test.ts": {
     "mtime": 1791348041.157014,
     "ast_hash": "47437002fab24e63be3f1d3b3f5dc663",
+    "semantic_hash": ""
+  },
+  "src/components/CelebrationAstronaut.tsx": {
+    "mtime": 1791384651.8368976,
+    "ast_hash": "b14709c2c7896676249ab346a40730ac",
     "semantic_hash": ""
   }
 }

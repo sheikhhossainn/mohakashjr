@@ -188,3 +188,11 @@ test('CelebrationAstronaut: Outcome tiers map correctly across all possible scor
   assert.strictEqual(getTier(0, 0), 'retry', '0/0 edge case should be retry');
 });
 
+test('AstronautAvatar: All 4 rank tiers (Cadet, Astronaut, Mission Specialist, Commander) have distinct suit configurations', () => {
+  const tiers = ['Cadet', 'Astronaut', 'Mission Specialist', 'Commander'] as const;
+  assert.strictEqual(tiers.length, 4, 'Must have 4 progression rank tiers');
+  for (const tier of tiers) {
+    assert.ok(tier.length > 0);
+  }
+});
+

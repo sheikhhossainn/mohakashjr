@@ -1,16 +1,16 @@
 # Graph Report - mohakashjr  (2026-10-07)
 
 ## Corpus Check
-- 268 files · ~461,193 words
+- 268 files · ~462,618 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3607 nodes · 4883 edges · 250 communities (208 shown, 42 thin omitted)
+- 3607 nodes · 4885 edges · 251 communities (209 shown, 42 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 213 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `eabec72d`
+- Built from commit: `f7bda3a7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -265,6 +265,7 @@
 - 8
 - destructive
 - 2
+- 3
 
 ## God Nodes (most connected - your core abstractions)
 1. `TailwindConfigGenerator` - 57 edges
@@ -279,6 +280,8 @@
 10. `ShadcnInstaller` - 33 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `Option` --references--> `CadetArchetype`  [EXTRACTED]
+  app/onboarding.tsx → src/state/useAppStore.ts
 - `DashboardScreen()` --calls--> `getTranslation()`  [EXTRACTED]
   app/(tabs)/index.tsx → src/i18n/translations.ts
 - `DashboardScreen()` --calls--> `getLessons()`  [EXTRACTED]
@@ -287,13 +290,11 @@
   app/(tabs)/index.tsx → src/state/useAppStore.ts
 - `LessonsScreen()` --calls--> `getLessons()`  [EXTRACTED]
   app/(tabs)/lessons.tsx → src/services/lessonService.ts
-- `RootLayout()` --calls--> `useAppStore`  [EXTRACTED]
-  app/_layout.tsx → src/state/useAppStore.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (250 total, 42 thin omitted)
+## Communities (251 total, 42 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -309,7 +310,7 @@ Nodes (46): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons
 
 ### Community 3 - "/graphify"
 Cohesion: 0.29
-Nodes (8): padding-x, input, $type, $value, focus-ring, padding-x, $type, $value
+Nodes (8): padding-y, input, $type, $value, focus-ring, padding-y, $type, $value
 
 ### Community 4 - "Implementation Plan — Mohakash Jr (initial scaffold → MVP)"
 Cohesion: 0.20
@@ -397,7 +398,7 @@ Nodes (53): $type, $value, $type, $value, $type, $value, $type, $value (+45 more
 
 ### Community 37 - "HANDOFF — 2026-09-22 21:23"
 Cohesion: 0.33
-Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-07 20:45, Immediate next steps, Just completed
+Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-07 20:56, Immediate next steps, Just completed
 
 ### Community 38 - "BM25"
 Cohesion: 0.06
@@ -628,8 +629,8 @@ Cohesion: 0.23
 Nodes (3): detect_domain(), Auto-detect the most relevant domain from query.      Matches are weighted by, TestDomainDetection
 
 ### Community 96 - ".generate"
-Cohesion: 0.10
-Nodes (31): OnboardingScreen(), Option, Question, QUESTIONS, styles, AstronautAvatar(), AstronautAvatarProps, styles (+23 more)
+Cohesion: 0.08
+Nodes (23): OnboardingScreen(), Option, Question, QUESTIONS, styles, AnimatedMascot(), AnimatedMascotProps, styles (+15 more)
 
 ### Community 97 - "Banner Design - Multi-Format Creative Banner System"
 Cohesion: 0.14
@@ -700,8 +701,8 @@ Cohesion: 0.20
 Nodes (7): Tests for tailwind_config_gen.py, Reduce a generated TS/JS config to a bare assignable object so it can be     ha, Regression guard for the missing-comma bug between the ``theme`` block and, The property preceding ``plugins`` must end with a comma (pure-Python         c, The emitted config parses as valid JS via ``node --check``., _strip_to_object(), TestGeneratedConfigIsValidJs
 
 ### Community 114 - "TestStyleTaxonomy"
-Cohesion: 0.18
-Nodes (15): $type, $value, lg, $type, $value, $type, $value, primitive (+7 more)
+Cohesion: 0.19
+Nodes (14): $type, $value, $type, $value, $type, $value, primitive, radius (+6 more)
 
 ### Community 115 - "Brand"
 Cohesion: 0.20
@@ -824,8 +825,8 @@ Cohesion: 0.43
 Nodes (3): _filter_anti_patterns_for_mode(), Drop "avoid dark mode" advice once dark mode is the resolved answer., TestAntiPatternGating
 
 ### Community 147 - "destructive-foreground"
-Cohesion: 0.09
-Nodes (27): LessonReaderScreen(), styles, lessonQuizzes, outputPath, seedData, IllustrationHeader(), IllustrationHeaderProps, IllustrationTopic (+19 more)
+Cohesion: 0.10
+Nodes (32): LessonReaderScreen(), lessonQuizzes, outputPath, seedData, AI_TUTOR_CONFIG, ASTRONAUT_MENTOR_SYSTEM_PROMPT, MOCK_LESSONS, MOCK_QUIZZES (+24 more)
 
 ### Community 148 - "muted"
 Cohesion: 0.67
@@ -864,8 +865,8 @@ Cohesion: 0.10
 Nodes (19): Code Quality, Color and Surfaces, Component Patterns, Content, Design Audit, Fix Priority, How This Works, Iconography (+11 more)
 
 ### Community 182 - "8"
-Cohesion: 0.40
-Nodes (5): AnimatedXPBar(), AnimatedXPBarProps, BENGALI_DIGITS, styles, toBengaliNumber()
+Cohesion: 0.12
+Nodes (17): styles, AnimatedXPBar(), AnimatedXPBarProps, BENGALI_DIGITS, styles, toBengaliNumber(), IllustrationHeader(), IllustrationHeaderProps (+9 more)
 
 ### Community 183 - "secondary-foreground"
 Cohesion: 0.06
@@ -900,8 +901,8 @@ Cohesion: 0.12
 Nodes (16): 1. Skill Meta, 2.1 Swiss Industrial Print, 2.2 Tactical Telemetry & CRT Terminal, 2. Visual Archetypes, 3.1 Macro-Typography (Structural Headers), 3.2 Micro-Typography (Data & Telemetry), 3.3 Textural Contrast (Artistic Disruption), 3. Typographic Architecture (+8 more)
 
 ### Community 191 - "tasteskill: Anti-Slop Frontend Skill"
-Cohesion: 0.13
-Nodes (15): 0.A Read these signals first, 0.B Output a one-line "Design Read" before generating, 0. BRIEF INFERENCE (Read the Room Before Anything Else), 0.C If the brief is ambiguous, ask one question, do not guess, 0.D Anti-Default Discipline, 13. OUT OF SCOPE, 14. FINAL PRE-FLIGHT CHECK, 1.A Dial Inference (design read → dial values) (+7 more)
+Cohesion: 0.18
+Nodes (11): 0.A Read these signals first, 0.B Output a one-line "Design Read" before generating, 0. BRIEF INFERENCE (Read the Room Before Anything Else), 0.C If the brief is ambiguous, ask one question, do not guess, 0.D Anti-Default Discipline, 13. OUT OF SCOPE, 14. FINAL PRE-FLIGHT CHECK, 2.A When to reach for a real design system (use official packages) (+3 more)
 
 ### Community 192 - "Appendix B - Canonical Sources (read these before reinventing)"
 Cohesion: 0.13
@@ -1016,8 +1017,8 @@ Cohesion: 0.40
 Nodes (5): 21. MOBILE ANTI-AI-TELLS RULE, Copy AI tells, Layout AI tells, UI clutter tells, Visual AI tells
 
 ### Community 220 - "default"
-Cohesion: 0.09
-Nodes (25): BENGALI_DIGITS, getDebrief(), OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), xpForScore(), AnimatedMascot() (+17 more)
+Cohesion: 0.15
+Nodes (17): BENGALI_DIGITS, getDebrief(), OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), xpForScore(), CelebrationAstronaut() (+9 more)
 
 ### Community 221 - "7. DIAL DEFINITIONS (Technical Reference)"
 Cohesion: 0.50
@@ -1065,11 +1066,11 @@ Nodes (19): 1. 🪐 Interactive Space Destination Hub, 2. 🌕 5-Stage Realistic
 
 ### Community 232 - "GentleButton.tsx"
 Cohesion: 0.09
-Nodes (47): RootLayout(), styles, styles, TabsLayout(), LessonsScreen(), styles, MissionScreen(), ProfileScreen() (+39 more)
+Nodes (46): RootLayout(), styles, styles, TabsLayout(), LessonsScreen(), styles, MissionScreen(), ProfileScreen() (+38 more)
 
 ### Community 235 - "16"
-Cohesion: 0.67
-Nodes (4): $type, $value, md, md
+Cohesion: 0.60
+Nodes (5): lg, $type, $value, lg, lg
 
 ### Community 236 - "1"
 Cohesion: 0.67
@@ -1081,7 +1082,7 @@ Nodes (18): 1. Define the Atmosphere, 2. Map the Color Palette, 3. Establish Typ
 
 ### Community 238 - "3"
 Cohesion: 0.67
-Nodes (3): $type, $value, 12
+Nodes (4): padding-x, padding-x, $type, $value
 
 ### Community 239 - "Agent Skill: Principal UI/UX Architect & Motion Choreographer (Awwwards-Tier)"
 Cohesion: 0.11
@@ -1108,8 +1109,8 @@ Cohesion: 0.29
 Nodes (6): Banned Output Patterns, Baseline, Execution Process, Full-Output Enforcement, Handling Long Outputs, Quick Check
 
 ### Community 245 - "padding-y"
-Cohesion: 0.67
-Nodes (4): padding-y, padding-y, $type, $value
+Cohesion: 0.50
+Nodes (4): 1.A Dial Inference (design read → dial values), 1.B Use-Case Presets, 1.C How the Dials Drive Output, 1. THE THREE DIALS (Core Configuration)
 
 ### Community 246 - "none"
 Cohesion: 0.67
@@ -1125,7 +1126,11 @@ Nodes (3): destructive, $type, $value
 
 ### Community 249 - "2"
 Cohesion: 0.67
-Nodes (3): $type, $value, 2
+Nodes (3): $type, $value, 16
+
+### Community 250 - "3"
+Cohesion: 0.67
+Nodes (3): $type, $value, 3
 
 ## Knowledge Gaps
 - **1863 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1858 more)

@@ -1,16 +1,16 @@
 # Graph Report - mohakashjr  (2026-10-07)
 
 ## Corpus Check
-- 267 files · ~459,183 words
+- 268 files · ~461,193 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3602 nodes · 4873 edges · 249 communities (206 shown, 43 thin omitted)
+- 3607 nodes · 4883 edges · 250 communities (208 shown, 42 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 213 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f74f2f7d`
+- Built from commit: `eabec72d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -264,11 +264,12 @@
 - none
 - 8
 - destructive
+- 2
 
 ## God Nodes (most connected - your core abstractions)
 1. `TailwindConfigGenerator` - 57 edges
 2. `useAppStore` - 55 edges
-3. `Colors` - 47 edges
+3. `Colors` - 48 edges
 4. `DesignSystemGenerator` - 45 edges
 5. `search()` - 40 edges
 6. `CORE DIRECTIVE: IMAGE-FIRST WEBSITE DESIGN TO CODE` - 39 edges
@@ -284,15 +285,15 @@
   app/(tabs)/index.tsx → src/services/lessonService.ts
 - `DashboardScreen()` --calls--> `useAppStore`  [EXTRACTED]
   app/(tabs)/index.tsx → src/state/useAppStore.ts
-- `LessonsScreen()` --calls--> `getTranslation()`  [EXTRACTED]
-  app/(tabs)/lessons.tsx → src/i18n/translations.ts
-- `LessonsScreen()` --calls--> `useAppStore`  [EXTRACTED]
-  app/(tabs)/lessons.tsx → src/state/useAppStore.ts
+- `LessonsScreen()` --calls--> `getLessons()`  [EXTRACTED]
+  app/(tabs)/lessons.tsx → src/services/lessonService.ts
+- `RootLayout()` --calls--> `useAppStore`  [EXTRACTED]
+  app/_layout.tsx → src/state/useAppStore.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (249 total, 43 thin omitted)
+## Communities (250 total, 42 thin omitted)
 
 ### Community 0 - "What You Must Do When Invoked"
 Cohesion: 0.08
@@ -304,7 +305,7 @@ Nodes (26): For /graphify add and --watch, For /graphify query, For the commit h
 
 ### Community 2 - "/graphify"
 Cohesion: 0.07
-Nodes (45): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons, TestCurrentReactGuidance, TestSemanticColors, _catalog_date(), _check_app_interface_contract(), _check_catalog_contract() (+37 more)
+Nodes (46): read_rows(), TestAccessibilityGuidance, TestChartsTypographyAndIcons, TestCurrentReactGuidance, TestSemanticColors, _catalog_date(), _check_app_interface_contract(), _check_catalog_contract() (+38 more)
 
 ### Community 3 - "/graphify"
 Cohesion: 0.29
@@ -399,8 +400,8 @@ Cohesion: 0.33
 Nodes (5): Active blockers, Current task status, HANDOFF — 2026-10-07 20:45, Immediate next steps, Just completed
 
 ### Community 38 - "BM25"
-Cohesion: 0.07
-Nodes (37): detect_domain(), get_cip_brief(), _load_csv(), Load CSV and return list of dicts, Core search function using BM25, Auto-detect the most relevant domain from query, Main search function with auto-domain detection, Search across all domains and combine results (+29 more)
+Cohesion: 0.06
+Nodes (42): BM25, detect_domain(), get_cip_brief(), _load_csv(), Load CSV and return list of dicts, Core search function using BM25, Auto-detect the most relevant domain from query, Main search function with auto-domain detection (+34 more)
 
 ### Community 39 - "Tailwind CSS Utility Reference"
 Cohesion: 0.05
@@ -443,8 +444,8 @@ Cohesion: 0.06
 Nodes (32): 1. Mobile-First Design, 2. Consistent Breakpoint Usage, 3. Test at Breakpoint Boundaries, 4. Use Container for Content Width, 5. Progressive Enhancement, 6. Avoid Too Many Breakpoints, Best Practices, Breakpoint System (+24 more)
 
 ### Community 49 - "search_stack"
-Cohesion: 0.09
-Nodes (10): _exact_stack_identifier(), _project_row(), Resolve a standalone API identifier even when its BM25 IDF is low., Search stack-specific guidelines, search_stack(), _valid_max_results(), _rows(), TestNativeDesktopStackFreshness (+2 more)
+Cohesion: 0.10
+Nodes (8): _project_row(), Search stack-specific guidelines, search_stack(), _valid_max_results(), _rows(), TestNativeDesktopStackFreshness, _rows(), TestWebStackFreshness
 
 ### Community 50 - "Typography Specifications"
 Cohesion: 0.06
@@ -467,8 +468,8 @@ Cohesion: 0.07
 Nodes (15): Test adding colors multiple times., Test adding full color palette., Test adding custom spacing., Test TailwindConfigGenerator class., Test that adding same plugin twice doesn't duplicate., Test plugin recommendations for Next.js., Test initialization with default settings., Test generating config with custom colors. (+7 more)
 
 ### Community 55 - "_select_palette_for_mode"
-Cohesion: 0.10
-Nodes (14): _contrast_ratio(), _derive_dark_palette(), _palette_is_dark(), WCAG relative luminance of a #RRGGBB string, or None if unparseable., True when a colors.csv row's Background is a dark surface., WCAG contrast ratio for two hex colors, or None if either is invalid., Keep product brand tokens while deriving accessible dark surfaces., Pick the highest-ranked palette matching the resolved mode.      Only the dark (+6 more)
+Cohesion: 0.12
+Nodes (12): _contrast_ratio(), _derive_dark_palette(), _palette_is_dark(), WCAG relative luminance of a #RRGGBB string, or None if unparseable., True when a colors.csv row's Background is a dark surface., WCAG contrast ratio for two hex colors, or None if either is invalid., Keep product brand tokens while deriving accessible dark surfaces., Pick the highest-ranked palette matching the resolved mode.      Only the dark (+4 more)
 
 ### Community 56 - "html-token-validator.py"
 Cohesion: 0.14
@@ -519,12 +520,12 @@ Cohesion: 0.09
 Nodes (22): @apply Directive, Best Practices, Color Customization, Complete Tailwind Config, Configuration Examples, Content Configuration, Custom Color Palette, Custom Font Sizes (+14 more)
 
 ### Community 68 - "read_rows"
-Cohesion: 0.21
-Nodes (4): split_values(), style_identities(), TestLandingAndStackContract, TestStyleIdentityContract
+Cohesion: 0.12
+Nodes (7): read_rows(), split_values(), style_identities(), TestGeneratedCatalogContract, TestLandingAndStackContract, TestReasoningContract, TestStyleIdentityContract
 
 ### Community 69 - "search"
-Cohesion: 0.11
-Nodes (7): Resolve a deprecated in-domain alias, or expose a cross-domain redirect., Main search function with auto-domain detection, search(), _style_search_destination(), TestSearchDomains, read_rows(), TestStyleTaxonomy
+Cohesion: 0.10
+Nodes (9): _exact_stack_identifier(), Resolve a deprecated in-domain alias, or expose a cross-domain redirect., Main search function with auto-domain detection, Resolve a standalone API identifier even when its BM25 IDF is low., search(), _style_search_destination(), TestSearchDomains, read_rows() (+1 more)
 
 ### Community 70 - "Routing by Task Type"
 Cohesion: 0.10
@@ -543,8 +544,8 @@ Cohesion: 0.10
 Nodes (11): Generate Tailwind CSS configuration files., Add full color palette (50-950 shades) for a base color.          Args:, TailwindConfigGenerator, Test adding custom fonts., Test validating valid configuration., Test generating complete TypeScript configuration., Test initialization with different frameworks., Test default output path for TypeScript. (+3 more)
 
 ### Community 74 - "DesignSystemGenerator"
-Cohesion: 0.16
-Nodes (6): DesignSystemGenerator, Generates design system recommendations from aggregated searches., Load reasoning rules from CSV., TestReasoningMatch, read_rows(), TestReasoningContract
+Cohesion: 0.14
+Nodes (7): DesignSystemGenerator, Generates design system recommendations from aggregated searches., Load reasoning rules from CSV., Select best matching result based on priority keywords., TestReasoningMatch, The exact reproduction from issue #428., TestEndToEndCoherence
 
 ### Community 75 - "Asset Organization Guide"
 Cohesion: 0.11
@@ -619,16 +620,16 @@ Cohesion: 0.13
 Nodes (14): AIDA (Attention-Interest-Desire-Action), Before-After-Bridge, Contrast Patterns, Copywriting Formulas, Core Formulas, Cost of Inaction, FAB (Features-Advantages-Benefits), Formula-to-Slide Mapping (+6 more)
 
 ### Community 94 - "BM25"
-Cohesion: 0.10
-Nodes (10): BM25, BM25 ranking algorithm for text search, Lowercase, split, remove punctuation, filter short words, Build BM25 index from documents, Score all documents against query, BM25, BM25 ranking algorithm for text search, TestBm25CoreBehavior (+2 more)
+Cohesion: 0.15
+Nodes (5): BM25, BM25 ranking algorithm for text search, TestBm25CoreBehavior, TestDiagnosticsContracts, TestTokenizer
 
 ### Community 95 - "detect_domain"
 Cohesion: 0.23
 Nodes (3): detect_domain(), Auto-detect the most relevant domain from query.      Matches are weighted by, TestDomainDetection
 
 ### Community 96 - ".generate"
-Cohesion: 0.13
-Nodes (22): OnboardingScreen(), Option, Question, QUESTIONS, styles, AstronautAvatar(), AstronautAvatarProps, styles (+14 more)
+Cohesion: 0.10
+Nodes (31): OnboardingScreen(), Option, Question, QUESTIONS, styles, AstronautAvatar(), AstronautAvatarProps, styles (+23 more)
 
 ### Community 97 - "Banner Design - Multi-Format Creative Banner System"
 Cohesion: 0.14
@@ -699,8 +700,8 @@ Cohesion: 0.20
 Nodes (7): Tests for tailwind_config_gen.py, Reduce a generated TS/JS config to a bare assignable object so it can be     ha, Regression guard for the missing-comma bug between the ``theme`` block and, The property preceding ``plugins`` must end with a comma (pure-Python         c, The emitted config parses as valid JS via ``node --check``., _strip_to_object(), TestGeneratedConfigIsValidJs
 
 ### Community 114 - "TestStyleTaxonomy"
-Cohesion: 0.19
-Nodes (14): $type, $value, $type, $value, $type, $value, primitive, radius (+6 more)
+Cohesion: 0.18
+Nodes (15): $type, $value, lg, $type, $value, $type, $value, primitive (+7 more)
 
 ### Community 115 - "Brand"
 Cohesion: 0.20
@@ -727,8 +728,8 @@ Cohesion: 0.22
 Nodes (6): Path, Initialize generator.          Args:             typescript: If True, generat, Determine default output path., Create base configuration structure., Get default content paths for framework., Any
 
 ### Community 121 - "parse_decision_rules"
-Cohesion: 0.17
-Nodes (9): Find matching reasoning rule for a category., Apply reasoning rules to search results., apply_decision_rules(), _object_without_duplicates(), parse_decision_rules(), Return deterministic mutations and an audit trail; never execute data., Parse the canonical condition -> action-array representation., _validate_action() (+1 more)
+Cohesion: 0.21
+Nodes (8): Find matching reasoning rule for a category., Apply reasoning rules to search results., apply_decision_rules(), _object_without_duplicates(), parse_decision_rules(), Return deterministic mutations and an audit trail; never execute data., Parse the canonical condition -> action-array representation., _validate_action()
 
 ### Community 122 - "_run"
 Cohesion: 0.28
@@ -739,8 +740,8 @@ Cohesion: 0.25
 Nodes (9): _exact_match_diagnostic(), _legacy_successor_guidance(), _normalize(), Apply longest-first synonym substitution at token boundaries., Whether a stack query explicitly targets an older framework generation., Choose one coherent applicability generation for stack retrieval., Prefer the explicit successor row for a brand-new app on legacy-only stacks., _stack_query_requests_legacy() (+1 more)
 
 ### Community 124 - "input"
-Cohesion: 0.18
-Nodes (6): Execute searches across multiple domains., Select best matching result based on priority keywords., Extract results list from search result dict., Generate complete design system recommendation.          variance/motion/densi, Bucket a 1-10 dial value into its tier config. Returns None if value is None., _resolve_dial()
+Cohesion: 0.25
+Nodes (5): Execute searches across multiple domains., Extract results list from search result dict., Generate complete design system recommendation.          variance/motion/densi, Bucket a 1-10 dial value into its tier config. Returns None if value is None., _resolve_dial()
 
 ### Community 125 - "radius"
 Cohesion: 0.05
@@ -790,6 +791,10 @@ Nodes (8): _exact_row_identity(), Suggest complete public identities so a retry 
 Cohesion: 0.40
 Nodes (4): Brand Guidelines Template, Document Structure, Extractable Fields, Usage
 
+### Community 137 - "$type"
+Cohesion: 0.10
+Nodes (24): BN_DIGITS, QuizHubScreen(), styles, toBn(), AITutorChatScreen(), ChatMessage, hasInternet(), styles (+16 more)
+
 ### Community 138 - "radius"
 Cohesion: 0.60
 Nodes (5): radius, radius, radius, $type, $value
@@ -803,8 +808,8 @@ Cohesion: 0.04
 Nodes (44): dependencies, expo, expo-asset, expo-constants, expo-font, @expo-google-fonts/baloo-da-2, @expo-google-fonts/hind-siliguri, @expo-google-fonts/noto-sans-bengali (+36 more)
 
 ### Community 141 - "xl"
-Cohesion: 0.12
-Nodes (21): styles, styles, EASE_IN_OUT, LanguageSwitch(), OPTIONS, styles, ProgressRing(), ProgressRingProps (+13 more)
+Cohesion: 0.10
+Nodes (23): styles, styles, AppLogo(), AppLogoProps, COS_TILT, SatelliteVisual, SIN_TILT, styles (+15 more)
 
 ### Community 142 - "md"
 Cohesion: 0.05
@@ -819,16 +824,16 @@ Cohesion: 0.43
 Nodes (3): _filter_anti_patterns_for_mode(), Drop "avoid dark mode" advice once dark mode is the resolved answer., TestAntiPatternGating
 
 ### Community 147 - "destructive-foreground"
-Cohesion: 0.07
-Nodes (45): LessonReaderScreen(), BENGALI_DIGITS, OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), xpForScore(), LessonsScreen() (+37 more)
+Cohesion: 0.09
+Nodes (27): LessonReaderScreen(), styles, lessonQuizzes, outputPath, seedData, IllustrationHeader(), IllustrationHeaderProps, IllustrationTopic (+19 more)
 
 ### Community 148 - "muted"
 Cohesion: 0.67
 Nodes (4): xl, xl, $type, $value
 
 ### Community 149 - "primary-foreground"
-Cohesion: 0.06
-Nodes (50): DashboardScreen(), CONFETTI_COLORS, ConfettiEffect(), ConfettiPiece, styles, { width: SCREEN_WIDTH, height: SCREEN_HEIGHT }, CosmicTopicIllustration(), CosmicTopicIllustrationProps (+42 more)
+Cohesion: 0.09
+Nodes (40): DashboardScreen(), styles, MissionStage, PlanetaryMissionSimulator(), PlanetaryMissionSimulatorProps, styles, BENGALI_DIGITS, formatNumber() (+32 more)
 
 ### Community 150 - "ring"
 Cohesion: 0.67
@@ -859,8 +864,8 @@ Cohesion: 0.10
 Nodes (19): Code Quality, Color and Surfaces, Component Patterns, Content, Design Audit, Fix Priority, How This Works, Iconography (+11 more)
 
 ### Community 182 - "8"
-Cohesion: 0.60
-Nodes (5): lg, $type, $value, lg, lg
+Cohesion: 0.40
+Nodes (5): AnimatedXPBar(), AnimatedXPBarProps, BENGALI_DIGITS, styles, toBengaliNumber()
 
 ### Community 183 - "secondary-foreground"
 Cohesion: 0.06
@@ -888,7 +893,7 @@ Nodes (16): 10. SECTION RHYTHM RULE, 12. DENSITY & SPACING DISCIPLINE, 14. IMAGE
 
 ### Community 189 - "lucide-react-native"
 Cohesion: 0.08
-Nodes (39): styles, MascotFeedbackPopupProps, MascotReaction(), MascotReactionProps, MascotReactionState, styles, AtmosphericJourney(), AtmosphericJourneyProps (+31 more)
+Nodes (37): DoubleBezelCard(), DoubleBezelCardProps, styles, MascotFeedbackPopupProps, MascotReaction(), MascotReactionProps, MascotReactionState, styles (+29 more)
 
 ### Community 190 - "SKILL: Industrial Brutalism & Tactical Telemetry UI"
 Cohesion: 0.12
@@ -1011,8 +1016,8 @@ Cohesion: 0.40
 Nodes (5): 21. MOBILE ANTI-AI-TELLS RULE, Copy AI tells, Layout AI tells, UI clutter tells, Visual AI tells
 
 ### Community 220 - "default"
-Cohesion: 0.06
-Nodes (48): styles, styles, BN_DIGITS, QuizHubScreen(), styles, toBn(), styles, AnimatedMascot() (+40 more)
+Cohesion: 0.09
+Nodes (25): BENGALI_DIGITS, getDebrief(), OPTION_PREFIXES, QuizScreen(), styles, toBengaliNumber(), xpForScore(), AnimatedMascot() (+17 more)
 
 ### Community 221 - "7. DIAL DEFINITIONS (Technical Reference)"
 Cohesion: 0.50
@@ -1060,15 +1065,15 @@ Nodes (19): 1. 🪐 Interactive Space Destination Hub, 2. 🌕 5-Stage Realistic
 
 ### Community 232 - "GentleButton.tsx"
 Cohesion: 0.09
-Nodes (30): RootLayout(), TabsLayout(), MissionScreen(), ProfileScreen(), react, GentleButton(), GentleButtonProps, styles (+22 more)
+Nodes (47): RootLayout(), styles, styles, TabsLayout(), LessonsScreen(), styles, MissionScreen(), ProfileScreen() (+39 more)
 
 ### Community 235 - "16"
 Cohesion: 0.67
-Nodes (3): $type, $value, 16
+Nodes (4): $type, $value, md, md
 
 ### Community 236 - "1"
 Cohesion: 0.67
-Nodes (3): $type, $value, 1
+Nodes (3): $type, $value, 0
 
 ### Community 237 - "6"
 Cohesion: 0.11
@@ -1076,7 +1081,7 @@ Nodes (18): 1. Define the Atmosphere, 2. Map the Color Palette, 3. Establish Typ
 
 ### Community 238 - "3"
 Cohesion: 0.67
-Nodes (3): $type, $value, 3
+Nodes (3): $type, $value, 12
 
 ### Community 239 - "Agent Skill: Principal UI/UX Architect & Motion Choreographer (Awwwards-Tier)"
 Cohesion: 0.11
@@ -1118,17 +1123,21 @@ Nodes (3): $type, $value, 8
 Cohesion: 0.67
 Nodes (3): destructive, $type, $value
 
+### Community 249 - "2"
+Cohesion: 0.67
+Nodes (3): $type, $value, 2
+
 ## Knowledge Gaps
-- **1862 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1857 more)
+- **1863 isolated node(s):** `$schema`, `$value`, `$type`, `$value`, `$type` (+1858 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **43 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **42 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `DesignSystemGenerator` connect `DesignSystemGenerator` to `read_rows`, `search`, `$type`, `design_system.py`, `_resolve_color_mode`, `destructive`, `_select_palette_for_mode`, `parse_decision_rules`, `input`, `BM25`, `detect_domain`?**
+- **Why does `DesignSystemGenerator` connect `DesignSystemGenerator` to `read_rows`, `search`, `design_system.py`, `_resolve_color_mode`, `destructive`, `_select_palette_for_mode`, `parse_decision_rules`, `input`, `BM25`, `detect_domain`?**
   _High betweenness centrality (0.007) - this node is a cross-community bridge._
-- **Why does `BM25` connect `BM25` to `search`, `BM25`, `DesignSystemGenerator`, `design_system.py`, `detect_domain`?**
+- **Why does `BM25` connect `BM25` to `search`, `DesignSystemGenerator`, `design_system.py`, `BM25`, `detect_domain`?**
   _High betweenness centrality (0.005) - this node is a cross-community bridge._
 - **Why does `search()` connect `search` to `/graphify`, `TestTextLayoutDataContracts`, `_row_identities`, `design_system.py`, `search_stack`, `core.py`, `_normalize`, `input`, `BM25`, `detect_domain`?**
   _High betweenness centrality (0.004) - this node is a cross-community bridge._
@@ -1139,4 +1148,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Are the 22 inferred relationships involving `search()` (e.g. with `.generate()` and `._multi_domain_search()`) actually correct?**
   _`search()` has 22 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Regression test for sync-brand-to-tokens.cjs.  The color parser required a par`, `Resolve token reference like {primitive.color.ocean-blue.500} to hex value.`, `Load colors from assets/design-tokens.json for overlay gradients.      Resolve` to the rest of the system?**
-  _2136 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _2137 weakly-connected nodes found - possible documentation gaps or missing edges._

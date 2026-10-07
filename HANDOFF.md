@@ -1,26 +1,22 @@
-# HANDOFF — 2026-10-07 20:56
+# HANDOFF — 2026-10-07 21:05
 
 ## Current task status
-Completely overhauled the Quiz Completion / Victory Screen (`app/quiz/[id].tsx`): replaced the static flat astronaut helmet with an expressive, hardware-accelerated animated vector mascot (`CelebrationAstronaut.tsx`) that dynamically responds to the cadet's quiz performance, removed competing duplicate mascot heads, added a full-width mission debrief card, and upgraded the XP showcase with solid calibrated surfaces. All 43 tests pass with 0 TypeScript errors.
+Completely overhauled the Astronaut Avatar and the Profile / "Me" section (`src/components/AstronautAvatar.tsx`, `app/(tabs)/profile.tsx`): replaced the simplistic flat avatar with an agency-grade, hardware-accelerated vector NASA space suit illustration, gave it a dedicated double-bezel concentric cosmic pedestal on the Profile card, and replaced generic emojis in the Suit Progression Grid with authentic vector suit previews. All 44 tests pass with 0 TypeScript errors.
 
 ## Just completed
-1. **Dynamic Expressive Victory Astronaut (`src/components/CelebrationAstronaut.tsx`)**:
-   - Built a high-craft vector SVG illustration featuring 100% native UI-thread hardware-accelerated zero-G floating physics (`translateY: -8` to `+8`), gentle cosmic halo pulsing, and waving arm motion.
-   - Designed 4 outcome tiers directly reacting to the score:
-     - **Perfect (100% / 3 of 3)**: Triumphant victory pose with both arms raised high (`\o/`), golden star trophy in hand, victory laurel wreath on helmet, golden starlight halo.
-     - **Great (60-99% / 2 of 3)**: Cheerful waving arm + confident thumbs up, bright smiling golden visor with star reflections, cyan/emerald orbital rings.
-     - **Good (30-59% / 1 of 3)**: Encouraging explorer pose with friendly wave, cosmic scanner/tablet in hand, warm smile.
-     - **Retry (<30% / 0 of 3)**: Reassuring open arms holding a cosmic star compass, encouraging the cadet to learn and try again.
-2. **Completion View Clutter Elimination & Single-Surface Polish (`app/quiz/[id].tsx`)**:
-   - Replaced static `AstronautAvatar` with `<CelebrationAstronaut size={130} score={finalScore} total={questions.length} rank={rank} />`.
-   - Eliminated the second competing robot head by removing `MascotFeedbackSlot` from the results screen.
-   - Built a clean, full-width **Mission Debrief Card** (`styles.debriefCard`, solid surface `#16233B`, subtle border) with dedicated Captain's evaluation badge and comfortable multi-line Bengali typography with diacritic protection.
-   - Upgraded XP showcase: solid calibrated `#231F18` gold victory card with `#FFC94D` border and glowing circular Zap badge when XP is earned; solid `#141C34` telemetry card preserving previous best score when replayed.
-3. **Automated Testing & Type Safety**:
-   - Added unit test in `tests/content.test.ts` verifying all score-ratio-to-tier mappings (3/3 perfect, 2/3 great, 1/3 good, 0/3 retry, and edge cases).
-   - 43/43 unit tests passing (`npm test`).
+1. **High-Craft Spacesuit Vector Avatar (`src/components/AstronautAvatar.tsx`)**:
+   - Built a NASA-inspired vector SVG avatar featuring 100% native UI-thread hardware-accelerated zero-G floating physics (`translateY: -3` to `+3`), pulsating telemetry beacon, and ambient orbital halo with stardust particles.
+   - Dual-layer composite aerodynamic helmet with multi-stop linear/radial gradient, specular dome rim light, crown ridge, and titanium locking neck ring with latch bolts.
+   - Panoramic thermal sun visor tailored to Rank Tier (Azure Cadet, Apollo Gold, Nebula Specialist, Solar Commander) with realistic starlight glints and glass depth (eliminated crude pink blush artifacts).
+   - Pressurized space suit torso with articulated ribbed arm joints, rank shoulder epaulets, dual braided cryogenic umbilical hoses, and chest Display & Control Module (DCM) with digital telemetry bars, active status LEDs, and rank crest.
+   - Optional `animated` prop (`true` by default, `false` for compact static thumbnails).
+2. **Profile / "Me" Screen Elevation (`app/(tabs)/profile.tsx`)**:
+   - Elevated the Cadet ID card with a double-bezel concentric cosmic pedestal (`avatarPedestal`) with subtle ambient cyan glow backdrop (`avatarGlowBackdrop`), making the cadet's avatar look like an official astronaut dossier.
+   - Replaced generic suit emojis (`👨‍🚀`, `🌟`, `🌌`, `👑`) in the Suit Progression Grid with authentic vector `AstronautAvatar` suit previews in dedicated rounded capsules (`suitAvatarWrap`), displaying the actual suit evolution across Cadet, Astronaut, Mission Specialist, and Commander tiers.
+3. **Verification & Quality Gates**:
+   - Added unit test in `tests/content.test.ts` verifying all 4 `RankTier` suit configurations.
+   - 44/44 unit tests passing (`npm test`).
    - 0 TypeScript compilation errors (`npx tsc --noEmit`).
-4. **Knowledge Graph & Bookkeeping**:
    - Updated `graphify` knowledge graph (`graphify update .`).
    - Updated `implemented_features.md`, `AGENTS.md`, and `HANDOFF.md`.
 
@@ -29,5 +25,4 @@ Completely overhauled the Quiz Completion / Victory Screen (`app/quiz/[id].tsx`)
 
 ## Immediate next steps
 1. Commit changes to feature branch `feature/quiz-ui-and-daily-bonus-fix`.
-2. Present the solution to the user with full architectural and visual breakdown.
-3. Prompt user for Git credentials confirmation per mandatory Rule 5 before pushing to remote.
+2. Present changes to the user and request Git push confirmation per mandatory Rule 5.
